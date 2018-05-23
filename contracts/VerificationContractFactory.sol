@@ -2,20 +2,27 @@ pragma solidity 0.4.24;
 
 
 import "./Ownable.sol";
-import "./EmailVerification.sol";
+import "./BaseSimpleVerification.sol";
 
 contract VerificationContractFactory {
-    address private verifier;
+    address private _accountStorage;
+    address private _verifier;
     uint private rewardAmount;
 
     constructor() public {
-        verifier = address(0);
+        _verifier = address(0);
         rewardAmount = 1;
     }
 
-    function createEmailVerification(bytes32 account, bytes32 emailHash)
+    function createEmailVerification(bytes32 account)
             public returns(address createdContract) {
-        createdContract = new EmailVerification(account, emailHash,
-            verifier, rewardAmount);
+        createdContract = new BaseSimpleVerification(_accountStorage, account,
+            _verifier, rewardAmount, AccountStorage.AccountFieldName.Email);
+    }
+
+    function createPhoneVerification(bytes32 account)
+            public returns(address createdContract) {
+        createdContract = new BaseSimpleVerification(_accountStorage, account,
+            _verifier, rewardAmount, AccountStorage.AccountFieldName.Phone);
     }
 }
