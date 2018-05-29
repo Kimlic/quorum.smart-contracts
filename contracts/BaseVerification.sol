@@ -1,19 +1,20 @@
 pragma solidity 0.4.24;
 
 
-import "./AccountStorage.sol";
+import "./AccountStorageAdapter.sol";
 
 contract BaseVerification {
-    AccountStorage internal _accountStorage;
-    bytes32 internal _accountIndex;
+    AccountStorageAdapter internal _accountStorage;
+    address internal _accountIndex;
     address internal _verifier;
     uint internal _rewardAmount;
 
-    constructor(address accountStorage, bytes32 account, address verifier, uint rewardAmount) public {
+    constructor(AccountStorageAdapter accountStorage, address account, address verifier, uint rewardAmount) public {
 
         _accountIndex = account;
         _verifier = verifier;
         _rewardAmount = rewardAmount;
+        _accountStorage = accountStorage;
         
         setVerificationMeta();
     }
