@@ -1,30 +1,36 @@
-pragma solidity 0.4.24;
+pragma solidity ^0.4.23;
 
 
 import "./Ownable.sol";
-import "./BaseSimpleVerification.sol";
+import "./BaseVerification.sol";
 import "./AccountStorageAdapter.sol";
+import "./WithKimlicContext.sol";
+import "./KimlicContractsContext.sol";
 
-contract VerificationContractFactory {
-    AccountStorageAdapter private _accountStorage;
-    address private _verifier;
-    uint private rewardAmount;
+contract VerificationContractFactory is WithKimlicContext {
+    mapping(address=>bool) createdContracts;
 
-    constructor() public {
-        _verifier = address(0);
-        _accountStorage = AccountStorageAdapter(address(0));
-        rewardAmount = 1;
+    uint private _rewardAmount;
+
+    constructor(KimlicContractsContext context) public WithKimlicContext(context) {
+        _rewardAmount = 1;
     }
 
     function createEmailVerification(address account)
-            public returns(address createdContract) {
-        createdContract = new BaseSimpleVerification(_accountStorage, account,
-            _verifier, rewardAmount, AccountStorage.AccountFieldName.Email);
+            public returns(BaseVerification createdContract) {
+
+        createdContract = new BaseVerification(_context, account,
+            _rewardAmount, AccountStorageAdapter.AccountFieldName.Email);
+        createdContract.transferOwnership(msg.sender);
+        createdContracts[address(createdContract)] = true;
     }
 
     function createPhoneVerification(address account)
-            public returns(address createdContract) {
-        createdContract = new BaseSimpleVerification(_accountStorage, account,
-            _verifier, rewardAmount, AccountStorage.AccountFieldName.Phone);
+            public returns(BaseVerification createdContract) {
+
+        createdContract = new BaseVerification(_context, account,
+            _rewardAmount, AccountStorageAdapter.AccountFieldName.Phone);
+        createdContract.transferOwnership(msg.sender);
+        createdContracts[address(createdContract)] = true;
     }
 }

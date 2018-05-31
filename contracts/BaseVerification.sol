@@ -1,26 +1,30 @@
 pragma solidity ^0.4.23;
 
 
+import "./Ownable.sol";
+import "./WithKimlicContext.sol";
+import "./KimlicContractsContext.sol";
 import "./AccountStorageAdapter.sol";
 
-contract BaseVerification {
-    AccountStorageAdapter internal _accountStorage;
-    address internal _accountIndex;
-    address internal _verifier;
+contract BaseVerification is WithKimlicContext, Ownable {
+    AccountStorageAdapter.AccountFieldName public accountFieldName;
+    address internal _accountAddress;
     uint internal _rewardAmount;
 
-    constructor(AccountStorageAdapter accountStorage, address account, address verifier, uint rewardAmount) public {
+    constructor(KimlicContractsContext context, address account, uint rewardAmount, AccountStorageAdapter.AccountFieldName fieldName) public
+        WithKimlicContext(context) {
 
-        _accountIndex = account;
-        _verifier = verifier;
+        _accountAddress = account;
         _rewardAmount = rewardAmount;
-        _accountStorage = accountStorage;
-        
-        setVerificationMeta();
+        accountFieldName = fieldName;
     }
 
-    function setVerificationResult(bool verificationResult) public;
+    function setVerificationResult(bool verificationResult) public {
+        require(_context.kimlicToken().balanceOf(address(this)) == _rewardAmount);
 
-    function setVerificationMeta() public;
-    
+        _context.kimlicToken().transfer(owner, _rewardAmount);
+
+        _context.accountStorageAdapter().setVerificationResult(
+            _accountAddress, accountFieldName, verificationResult, owner, block.timestamp);
+    }
 }

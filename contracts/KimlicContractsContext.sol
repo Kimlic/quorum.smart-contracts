@@ -5,6 +5,8 @@ import "./Ownable.sol";
 import "./BaseStorage.sol";
 import "./AccountStorageAdapter.sol";
 import "./KimlicToken.sol";
+import "./ProvisioningPrice.sol";
+import "./ProvisioningContractFactory.sol";
 
 contract KimlicContractsContext is Ownable {
     
@@ -13,6 +15,10 @@ contract KimlicContractsContext is Ownable {
     AccountStorageAdapter public accountStorageAdapter;
 
     KimlicToken public kimlicToken;
+
+    ProvisioningPrice public provisioningPrice;
+
+    ProvisioningContractFactory public provisioningContractFactory;
 
     address public verificationFactory;
 
@@ -36,5 +42,13 @@ contract KimlicContractsContext is Ownable {
 
     function setVerificationFactory(address verificationFactoryAddress) public onlyOwner() {
         verificationFactory = verificationFactoryAddress;
+    }
+
+    function setProvisioningPrice(address provisioningPriceAddress) public onlyOwner() {
+        provisioningPrice = provisioningPriceAddress;
+    }
+
+    function setprovisioningContractFactory(address provisioningContractFactoryAddress) public onlyOwner() {
+        provisioningContractFactory = provisioningContractFactoryAddress;
     }
 }

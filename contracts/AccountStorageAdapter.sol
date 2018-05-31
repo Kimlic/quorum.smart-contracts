@@ -8,6 +8,7 @@ import "./KimlicContractsContext.sol";
 contract AccountStorageAdapter is Ownable, WithKimlicContext {
 
     /// public attributes ///
+    mapping (uint=>string) AccountFieldNames;
     
     /// private attributes ///
     KimlicContractsContext private _context;

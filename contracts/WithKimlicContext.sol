@@ -5,7 +5,7 @@ import "./KimlicContractsContext.sol";
 
 contract WithKimlicContext {
     
-    KimlicContractsContext private _context;
+    KimlicContractsContext internal _context;
 
     constructor (KimlicContractsContext context) public {
         _context = context;
