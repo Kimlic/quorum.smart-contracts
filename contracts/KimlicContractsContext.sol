@@ -7,6 +7,8 @@ import "./AccountStorageAdapter.sol";
 import "./KimlicToken.sol";
 import "./ProvisioningPrice.sol";
 import "./ProvisioningContractFactory.sol";
+import "./VerificationContractFactory.sol";
+import "./BaseStorage.sol";
 
 contract KimlicContractsContext is Ownable {
     
@@ -20,11 +22,11 @@ contract KimlicContractsContext is Ownable {
 
     ProvisioningContractFactory public provisioningContractFactory;
 
-    address public verificationFactory;
+    VerificationContractFactory public verificationContractFactory;
 
-    address public provisionContractFactory;
+    address public communityTokenWalletAddress;
 
-    constructor (address accountStorageAddress) public {
+    function setAccountStorage(address accountStorageAddress) public onlyOwner() {
         accountStorage = BaseStorage(accountStorageAddress);
     }
 
@@ -36,19 +38,19 @@ contract KimlicContractsContext is Ownable {
         kimlicToken = KimlicToken(kimlicTokenAddress);
     }
 
-    function setProvisionContractFactory(address provisionContractFactoryAddress) public onlyOwner() {
-        provisionContractFactory = provisionContractFactoryAddress;
-    }
-
-    function setVerificationFactory(address verificationFactoryAddress) public onlyOwner() {
-        verificationFactory = verificationFactoryAddress;
+    function vetVerificationContractFactory(address verificationContractFactoryAddress) public onlyOwner() {
+        verificationContractFactory = VerificationContractFactory(verificationContractFactoryAddress);
     }
 
     function setProvisioningPrice(address provisioningPriceAddress) public onlyOwner() {
-        provisioningPrice = provisioningPriceAddress;
+        provisioningPrice = ProvisioningPrice(provisioningPriceAddress);
     }
 
     function setprovisioningContractFactory(address provisioningContractFactoryAddress) public onlyOwner() {
-        provisioningContractFactory = provisioningContractFactoryAddress;
+        provisioningContractFactory = ProvisioningContractFactory(provisioningContractFactoryAddress);
     }
+
+    function setCommunityTokenWalletAddress(address communityTokenWalletAddressAddress) public onlyOwner() {
+        communityTokenWalletAddress = ProvisioningContractFactory(communityTokenWalletAddressAddress);
+    }    
 }

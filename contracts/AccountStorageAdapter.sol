@@ -1,11 +1,10 @@
 pragma solidity ^0.4.23;
 
 
-import "./WithKimlicContext.sol";
 import "./Ownable.sol";
 import "./KimlicContractsContext.sol";
 
-contract AccountStorageAdapter is Ownable, WithKimlicContext {
+contract AccountStorageAdapter is Ownable {
 
     /// public attributes ///
     mapping (uint=>string) AccountFieldNames;
@@ -16,16 +15,15 @@ contract AccountStorageAdapter is Ownable, WithKimlicContext {
 
     /// Structures ///
 
-    struct Meta {
+    /*struct Meta {
         string data;
         string objectType;
-        string keys;
         bool isVerified;
         address verifiedBy;
         uint256 verifiedAt;
     }
 
-    /*struct Account {
+    struct Account {
         Meta identity;
         Meta phone;
         Meta email;
@@ -38,49 +36,58 @@ contract AccountStorageAdapter is Ownable, WithKimlicContext {
 
     enum AccountFieldName { Email, Phone, Identity, Device, Documents, Addresses }
 
-    enum MetaFieldName { Data, ObjectType, Keys, IsVerified, VerifiedBy, VerifiedAt }
+    enum MetaFieldName { Data, ObjectType, IsVerified, VerifiedBy, VerifiedAt } //TODO do we still need IsVerified?
 
     /// Constructors ///
 
-    constructor (KimlicContractsContext context) public WithKimlicContext(context) {
+    constructor (KimlicContractsContext context) public {
+        _context = context;
     }
     
     /// public methods ///
 
-    function setAccountData(
-        address accountAddress, string identityHash,
-        string phoneHash, string emailHash, bytes32 deviceHash) public {
+    function setAccountData(string identityHash, string phoneHash, string emailHash, bytes32 deviceHash) public {
         
-        updateAccountField(accountAddress, emailHash, AccountFieldName.Email);
-        updateAccountField(accountAddress, phoneHash, AccountFieldName.Phone);
-        updateAccountField(accountAddress, identityHash, AccountFieldName.Identity);
+        updateAccountField(msg.sender, emailHash, AccountFieldName.Email);
+        updateAccountField(msg.sender, phoneHash, AccountFieldName.Phone);
+        updateAccountField(msg.sender, identityHash, AccountFieldName.Identity);
 
-        bytes memory deviceHashKey = abi.encode(accountAddress, convertAccountFieldNameToString(AccountFieldName.Device));
+        bytes memory deviceHashKey = abi.encode(msg.sender, convertAccountFieldNameToString(AccountFieldName.Device));
         bytes32 storedDeviceHash = _context.accountStorage().getBytes32(keccak256(deviceHashKey));
         if(storedDeviceHash != deviceHash) {
             _context.accountStorage().setBytes32(keccak256(deviceHashKey), deviceHash);
         }
     }
 
-    function addAddress(string data, string objectType, string keys) public {
-        addNewFieldItem(msg.sender, AccountFieldName.Addresses, data, objectType, keys);
+    function addAddress(string data, string objectType) public {
+        addNewFieldItem(msg.sender, AccountFieldName.Addresses, data, objectType);
     }
 
-    function addDocument(string data, string objectType, string keys) public {
-        addNewFieldItem(msg.sender, AccountFieldName.Documents, data, objectType, keys);
+    function addDocument(string data, string objectType) public {
+        addNewFieldItem(msg.sender, AccountFieldName.Documents, data, objectType);
     }
 
+    function getAccountDataVerifiedBy(address accountAddress, AccountFieldName accountFieldName) public view returns(address verifiedBy) {
+        uint index = getFieldHistoryLength(accountAddress, accountFieldName);
+        return getAccountDataVerifiedBy(accountAddress, accountFieldName, index);
+    }
+
+    function getAccountDataVerifiedBy(address accountAddress, AccountFieldName accountFieldName, uint index)
+            public view verificationorProvisioningContractOnly() returns(address verifiedBy) {
+        string memory fieldName = convertAccountFieldNameToString(accountFieldName);
+        bytes memory verifiedByKey = abi.encode(accountAddress, fieldName, index, convertMetaFieldNameToString(MetaFieldName.VerifiedBy));
+        verifiedBy = _context.accountStorage().getAddress(keccak256(verifiedByKey));
+    }
     
     function getAccountData(address accountAddress, AccountFieldName accountFieldName)
-        public view returns(string data, string objectType, string keys,
-            bool isVerified, address verifiedBy, uint256 verifiedAt) {
+        public view returns(string data, string objectType, bool isVerified, address verifiedBy, uint256 verifiedAt) {
 
-        return getAccountData(accountAddress, accountFieldName, 0);
+        uint index = getFieldHistoryLength(accountAddress, accountFieldName);
+        return getAccountData(accountAddress, accountFieldName, index);
     }
 
     function getAccountData(address accountAddress, AccountFieldName accountFieldName, uint index)
-        public view returns(string data, string objectType, string keys,
-            bool isVerified, address verifiedBy, uint256 verifiedAt) {
+        public view verificationorProvisioningContractOnly() returns(string data, string objectType, bool isVerified, address verifiedBy, uint256 verifiedAt) {
 
         string memory fieldName = convertAccountFieldNameToString(accountFieldName);
 
@@ -89,9 +96,6 @@ contract AccountStorageAdapter is Ownable, WithKimlicContext {
         
         bytes memory objectTypeKey = abi.encode(accountAddress, fieldName, index, convertMetaFieldNameToString(MetaFieldName.ObjectType));
         objectType = _context.accountStorage().getString(keccak256(objectTypeKey));
-        
-        bytes memory keysKey = abi.encode(accountAddress, fieldName, index, convertMetaFieldNameToString(MetaFieldName.Keys));
-        keys = _context.accountStorage().getString(keccak256(keysKey));
         
         bytes memory isVerifiedKey = abi.encode(accountAddress, fieldName, index, convertMetaFieldNameToString(MetaFieldName.IsVerified));
         isVerified = _context.accountStorage().getBool(keccak256(isVerifiedKey));
@@ -113,7 +117,7 @@ contract AccountStorageAdapter is Ownable, WithKimlicContext {
 
     function setVerificationResult(
         address accountAddress, AccountFieldName accountFieldName, uint index,
-        bool isVerified, address verifiedBy, uint verifiedAt) public {
+        bool isVerified, address verifiedBy, uint verifiedAt) public verificationContractOnly() {
         
         string memory fieldName = convertAccountFieldNameToString(accountFieldName);
 
@@ -142,14 +146,14 @@ contract AccountStorageAdapter is Ownable, WithKimlicContext {
         bytes memory dataKey = abi.encode(accountAddress, fieldName, index, convertMetaFieldNameToString(MetaFieldName.Data));
         string memory storedData = _context.accountStorage().getString(keccak256(dataKey));
         if (!isEqualStrings(storedData, data)) {
-            addNewFieldItem(accountAddress, accountFieldName, data, "", "");
+            addNewFieldItem(accountAddress, accountFieldName, data, "");
         }
     }
 
 
     function addNewFieldItem(
         address accountAddress, AccountFieldName accountFieldName,
-        string data, string objectType, string keys) private {
+        string data, string objectType) private {
 
         uint index = getFieldHistoryLength(accountAddress, accountFieldName) + 1;
         
@@ -159,10 +163,7 @@ contract AccountStorageAdapter is Ownable, WithKimlicContext {
         _context.accountStorage().setString(keccak256(newDataKey), data);
 
         bytes memory objectTypeKey = abi.encode(accountAddress, fieldName, index, convertMetaFieldNameToString(MetaFieldName.ObjectType));
-        _context.accountStorage().setString(keccak256(objectTypeKey), data);
-
-        bytes memory keysKey = abi.encode(accountAddress, fieldName, index, convertMetaFieldNameToString(MetaFieldName.Keys));
-        _context.accountStorage().setString(keccak256(keysKey), data);
+        _context.accountStorage().setString(keccak256(objectTypeKey), objectType);
         
         bytes memory fieldHistoryLengthKey = abi.encode(accountAddress, accountFieldName, lengthCaption);
         _context.accountStorage().setUint(keccak256(fieldHistoryLengthKey), index);
@@ -199,9 +200,6 @@ contract AccountStorageAdapter is Ownable, WithKimlicContext {
         else if (metaFieldName == MetaFieldName.ObjectType) {
             enumCaption = "objectType";
         }
-        else if (metaFieldName == MetaFieldName.Keys) {
-            enumCaption = "keys";
-        }
         else if (metaFieldName == MetaFieldName.IsVerified) {
             enumCaption = "isVerified";
         }
@@ -218,5 +216,17 @@ contract AccountStorageAdapter is Ownable, WithKimlicContext {
 
     function isEqualStrings(string leftValue, string rightValue) private pure returns(bool isEqual){
         isEqual = keccak256(bytes(leftValue)) == keccak256(bytes(rightValue));
+    }
+
+    modifier verificationContractOnly() {
+        require(_context.verificationContractFactory().createdContracts(msg.sender));
+        _;
+    }
+
+    modifier verificationorProvisioningContractOnly() {
+        require(
+            _context.verificationContractFactory().createdContracts(msg.sender) ||
+            _context.provisioningContractFactory().createdContracts(msg.sender));
+        _;
     }
 }

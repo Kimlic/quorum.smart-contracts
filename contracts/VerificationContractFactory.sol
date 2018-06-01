@@ -4,32 +4,33 @@ pragma solidity ^0.4.23;
 import "./Ownable.sol";
 import "./BaseVerification.sol";
 import "./AccountStorageAdapter.sol";
-import "./WithKimlicContext.sol";
 import "./KimlicContractsContext.sol";
 
-contract VerificationContractFactory is WithKimlicContext {
-    mapping(address=>bool) createdContracts;
+contract VerificationContractFactory {
+    mapping(address=>bool) public createdContracts;
 
     uint private _rewardAmount;
+    KimlicContractsContext private _context;
 
-    constructor(KimlicContractsContext context) public WithKimlicContext(context) {
+    constructor(KimlicContractsContext context) public {
+        _context = context;
         _rewardAmount = 1;
     }
 
-    function createEmailVerification(address account)
+    function createEmailVerification(address account, address coOwnerAddress)
             public returns(BaseVerification createdContract) {
 
         createdContract = new BaseVerification(_context, account,
-            _rewardAmount, AccountStorageAdapter.AccountFieldName.Email);
+            _rewardAmount, coOwnerAddress, AccountStorageAdapter.AccountFieldName.Email);
         createdContract.transferOwnership(msg.sender);
         createdContracts[address(createdContract)] = true;
     }
 
-    function createPhoneVerification(address account)
+    function createPhoneVerification(address account, address coOwnerAddress)
             public returns(BaseVerification createdContract) {
 
         createdContract = new BaseVerification(_context, account,
-            _rewardAmount, AccountStorageAdapter.AccountFieldName.Phone);
+            _rewardAmount, coOwnerAddress, AccountStorageAdapter.AccountFieldName.Phone);
         createdContract.transferOwnership(msg.sender);
         createdContracts[address(createdContract)] = true;
     }
