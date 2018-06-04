@@ -16,3 +16,6 @@ config/test/contracts.json
 build
 bin
 dist
+.soliumignore
+.soliumrc.json
+
