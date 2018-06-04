@@ -17,7 +17,7 @@ contract BaseVerification is Ownable {
     constructor(
         KimlicContractsContext context, address account, uint rewardAmount, address coOwnerAddress,
         AccountStorageAdapter.AccountFieldName fieldName) public {
-        
+
         coOwner = coOwnerAddress;
         _context = context;
         _accountAddress = account;
