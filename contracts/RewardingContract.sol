@@ -16,11 +16,11 @@ contract RewardingContract is Ownable {
         _context = context;
     }
 
-    function setMilestone1Reward(uint rewardAmount) public {
+    function setMilestone1Reward(uint rewardAmount) public onlyOwner() {
         mielstone1Reward = rewardAmount;
     }
 
-    function setMilestone2Reward(uint rewardAmount) public {
+    function setMilestone2Reward(uint rewardAmount)  public onlyOwner() {
         mielstone2Reward = rewardAmount;
     }
 

@@ -27,7 +27,7 @@ contract AccountStorageAdapter is Ownable {
         Meta identity;
         Meta phone;
         Meta email;
-        Meta[] documents;//TODO: Return to this part on 2nd sprint
+        Meta[] documents;
         Meta[] addresses;
         bytes32 device;
     }*/
@@ -129,13 +129,15 @@ contract AccountStorageAdapter is Ownable {
         
         bytes memory verifiedAtKey = abi.encode(accountAddress, fieldName, index, convertMetaFieldNameToString(MetaFieldName.VerifiedAt));
         _context.accountStorage().setUint(keccak256(verifiedAtKey), verifiedAt);
+
+        _context.rewardingContract().checkMilestones(accountAddress, accountFieldName);
     }
     
     function getFieldHistoryLength(address accountAddress, AccountFieldName accountFieldName) public view returns(uint length){
         bytes memory fieldHistoryLengthKey = abi.encode(accountAddress, accountFieldName, lengthCaption);
         length = _context.accountStorage().getUint(keccak256(fieldHistoryLengthKey));
     }
-    
+
     /// private methods ///
 
     function updateAccountField(address accountAddress, string data, AccountFieldName accountFieldName) private {

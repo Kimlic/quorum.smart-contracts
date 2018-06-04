@@ -9,6 +9,7 @@ import "./ProvisioningPrice.sol";
 import "./ProvisioningContractFactory.sol";
 import "./VerificationContractFactory.sol";
 import "./BaseStorage.sol";
+import "./RewardingContract.sol";
 
 contract KimlicContractsContext is Ownable {
     
@@ -26,6 +27,8 @@ contract KimlicContractsContext is Ownable {
 
     address public communityTokenWalletAddress;
 
+    RewardingContract public rewardingContract;
+
     function setAccountStorage(address accountStorageAddress) public onlyOwner() {
         accountStorage = BaseStorage(accountStorageAddress);
     }
@@ -38,7 +41,7 @@ contract KimlicContractsContext is Ownable {
         kimlicToken = KimlicToken(kimlicTokenAddress);
     }
 
-    function vetVerificationContractFactory(address verificationContractFactoryAddress) public onlyOwner() {
+    function setVerificationContractFactory(address verificationContractFactoryAddress) public onlyOwner() {
         verificationContractFactory = VerificationContractFactory(verificationContractFactoryAddress);
     }
 
@@ -46,11 +49,15 @@ contract KimlicContractsContext is Ownable {
         provisioningPrice = ProvisioningPrice(provisioningPriceAddress);
     }
 
-    function setprovisioningContractFactory(address provisioningContractFactoryAddress) public onlyOwner() {
+    function setProvisioningContractFactory(address provisioningContractFactoryAddress) public onlyOwner() {
         provisioningContractFactory = ProvisioningContractFactory(provisioningContractFactoryAddress);
     }
 
     function setCommunityTokenWalletAddress(address communityTokenWalletAddressAddress) public onlyOwner() {
         communityTokenWalletAddress = ProvisioningContractFactory(communityTokenWalletAddressAddress);
-    }    
+    }
+
+    function setRewardingContract(address rewardingContractAddress) public onlyOwner() {
+        rewardingContract = RewardingContract(rewardingContractAddress);
+    }
 }
