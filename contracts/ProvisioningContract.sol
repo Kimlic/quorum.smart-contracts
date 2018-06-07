@@ -9,36 +9,42 @@ import "./KimlicToken.sol";
 import "./BaseVerification.sol";
 
 contract ProvisioningContract is Ownable {
+    
+    /// public attributes ///
     address public relyingParty;
     address public account;
     Status public status;
 
+    /// private attributes ///
     KimlicContractsContext private _context;
-    //TODO find how to fix error "TypeError: Definition of base has to precede definition of derived contract" and replace by WithKimlicContext
     RequiredData[] private requiredDataArray;
     uint private expectedReward;
-    ProvisioningContractFactory private _factory;
 
+    /// structures ///
     struct RequiredData {
         AccountStorageAdapter.AccountFieldName fieldName;
         uint index;
         uint reward;
         address coOwner;
         address attestationParty;
-    }
+    }//TODO move to factory?
 
-    enum Status { DataInitialization, WaitingForTokens, Finished }
+    /// enums ///
+    enum Status { DataInitialization, WaitingForTokens, Finished } //TODO move to factory?
 
+    /// constructors ///
     constructor (KimlicContractsContext context, address accountAddress) public {
-        _factory = ProvisioningContractFactory(msg.sender);
+        require(msg.sender == address(_context.provisioningContractFactory()));
+
         _context = context;
         account = accountAddress;
         status = Status.DataInitialization;
     }
 
+    /// public methods ///
     function addRequiredData(AccountStorageAdapter.AccountFieldName accountFieldName, uint index) public {        
         address verifiedBy = _context.accountStorageAdapter()
-            .getAccountDataVerifiedBy(account, accountFieldName);
+            .getLastAccountDataVerifiedBy(account, accountFieldName);
 
         BaseVerification verificationContract = BaseVerification(verifiedBy);    
         
@@ -77,6 +83,8 @@ contract ProvisioningContract is Ownable {
     }
     
 
+    /// private methods ///
+    
     //TODO check gas consumption. Even with gas price 0 we still have gas limits
     function sendRewards() private {            
         ProvisioningContractFactory factory = _context.provisioningContractFactory();

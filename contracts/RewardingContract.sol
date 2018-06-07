@@ -7,15 +7,19 @@ import "./KimlicContractsContext.sol";
 import "./BaseVerification.sol";
 
 contract RewardingContract is Ownable {
+    /// public attributes ///
     uint public mielstone1Reward;
     uint public mielstone2Reward;
     
+    /// private attributes ///
     KimlicContractsContext private _context;
 
+    /// Constructors ///
     constructor (KimlicContractsContext context) public {
         _context = context;
     }
 
+    /// public methods ///
     function setMilestone1Reward(uint rewardAmount) public onlyOwner() {
         mielstone1Reward = rewardAmount;
     }
@@ -36,6 +40,7 @@ contract RewardingContract is Ownable {
         }
     }
 
+    /// private methods ///
     function checkMilestone1(address accountAddress, AccountStorageAdapter.AccountFieldName accountFieldName) private {
         if (getIsDataVerified(accountAddress, AccountStorageAdapter.AccountFieldName.Email) &&
             getIsDataVerified(accountAddress, AccountStorageAdapter.AccountFieldName.Phone)) {
@@ -54,7 +59,7 @@ contract RewardingContract is Ownable {
     function getIsDataVerified(address accountAddress, AccountStorageAdapter.AccountFieldName accountFieldName) 
             private view returns(bool isVerified) {
         address verifiedBy = _context.accountStorageAdapter()
-            .getAccountDataVerifiedBy(accountAddress, accountFieldName);
+            .getLastAccountDataVerifiedBy(accountAddress, accountFieldName);
         
         if (verifiedBy != address(0)) {
             BaseVerification verificationContract = BaseVerification(verifiedBy);   

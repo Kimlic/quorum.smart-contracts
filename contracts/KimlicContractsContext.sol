@@ -13,6 +13,7 @@ import "./RewardingContract.sol";
 
 contract KimlicContractsContext is Ownable {
     
+    /// public attributes ///
     BaseStorage public accountStorage;
 
     AccountStorageAdapter public accountStorageAdapter;
@@ -29,6 +30,7 @@ contract KimlicContractsContext is Ownable {
 
     RewardingContract public rewardingContract;
 
+    /// public methods ///
     function setAccountStorage(address accountStorageAddress) public onlyOwner() {
         accountStorage = BaseStorage(accountStorageAddress);
     }

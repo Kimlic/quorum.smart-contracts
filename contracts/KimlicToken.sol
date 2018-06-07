@@ -6,6 +6,7 @@ import "./StandardToken.sol";
 
 contract KimlicToken is StandardToken, Ownable {
 
+    /// constructors ///
     constructor () public Ownable() {
         
         totalSupply_ = 150000000;

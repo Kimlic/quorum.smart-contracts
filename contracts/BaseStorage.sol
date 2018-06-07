@@ -4,26 +4,31 @@ pragma solidity ^0.4.23;
 import "./KimlicContractsContext.sol";
 
 contract BaseStorage {
+    /// private attributes ///
     mapping(bytes32 => uint256)    private uIntStorage;
     mapping(bytes32 => string)     private stringStorage;
     mapping(bytes32 => address)    private addressStorage;
-    mapping(bytes32 => bytes32)      private bytes32Storage;
+    mapping(bytes32 => bytes32)    private bytes32Storage;
     mapping(bytes32 => bool)       private boolStorage;
     mapping(bytes32 => int256)     private intStorage;
 
     KimlicContractsContext private _context;
 
+    /// constructors ///
     constructor (KimlicContractsContext context) public {
         _context = context;
     }
 
+    /// modifiers ///
     modifier accountStorageAdapterOnly() {
-        require(msg.sender == address(_context.accountStorageAdapter()));
+        require(msg.sender == address(_context.accountStorageAdapter()) || msg.sender == _context.owner());
         _;
     }
 
-    /**** Get Methods ***********/
+    /// public methods ///
 
+    /**** Get Methods ***********/
+    
     /// @param _key The key for the record
     function getAddress(bytes32 _key) external view accountStorageAdapterOnly() returns (address) {
         return addressStorage[_key];

@@ -7,16 +7,20 @@ import "./AccountStorageAdapter.sol";
 import "./KimlicContractsContext.sol";
 
 contract VerificationContractFactory {
+    /// public attributes ///
     mapping(address=>bool) public createdContracts;
 
+    /// private attributes ///
     uint private _rewardAmount;
     KimlicContractsContext private _context;
 
+    /// Constructors ///
     constructor(KimlicContractsContext context) public {
         _context = context;
         _rewardAmount = 1;
     }
 
+    /// public methods ///
     function createEmailVerification(address account, address coOwnerAddress)
             public returns(BaseVerification createdContract) {
 

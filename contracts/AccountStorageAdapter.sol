@@ -13,32 +13,13 @@ contract AccountStorageAdapter is Ownable {
     KimlicContractsContext private _context;
     string constant lengthCaption = "length";
 
-    /// Structures ///
-
-    /*struct Meta {
-        string data;
-        string objectType;
-        bool isVerified;
-        address verifiedBy;
-        uint256 verifiedAt;
-    }
-
-    struct Account {
-        Meta identity;
-        Meta phone;
-        Meta email;
-        Meta[] documents;
-        Meta[] addresses;
-        bytes32 device;
-    }*/
-
     /// Enums ///
 
     enum AccountFieldName { Email, Phone, Identity, Device, Documents, Addresses }
 
     enum MetaFieldName { Data, ObjectType, IsVerified, VerifiedBy, VerifiedAt } //TODO do we still need IsVerified?
 
-    /// Constructors ///
+    /// constructors ///
 
     constructor (KimlicContractsContext context) public {
         _context = context;
@@ -67,19 +48,19 @@ contract AccountStorageAdapter is Ownable {
         addNewFieldItem(msg.sender, AccountFieldName.Documents, data, objectType);
     }
 
-    function getAccountDataVerifiedBy(address accountAddress, AccountFieldName accountFieldName) public view returns(address verifiedBy) {
+    function getLastAccountDataVerifiedBy(address accountAddress, AccountFieldName accountFieldName) public view returns(address verifiedBy) {
         uint index = getFieldHistoryLength(accountAddress, accountFieldName);
         return getAccountDataVerifiedBy(accountAddress, accountFieldName, index);
     }
 
     function getAccountDataVerifiedBy(address accountAddress, AccountFieldName accountFieldName, uint index)
-            public view verificationorProvisioningContractOnly() returns(address verifiedBy) {
+            public view checkReadingDataRestrictions(accountAddress) returns(address verifiedBy) {
         string memory fieldName = convertAccountFieldNameToString(accountFieldName);
         bytes memory verifiedByKey = abi.encode(accountAddress, fieldName, index, convertMetaFieldNameToString(MetaFieldName.VerifiedBy));
         verifiedBy = _context.accountStorage().getAddress(keccak256(verifiedByKey));
     }
 
-    function getAccountData(address accountAddress, AccountFieldName accountFieldName)
+    function getLastAccountData(address accountAddress, AccountFieldName accountFieldName)
         public view returns(string data, string objectType, bool isVerified, address verifiedBy, uint256 verifiedAt) {
 
         uint index = getFieldHistoryLength(accountAddress, accountFieldName);
@@ -89,7 +70,7 @@ contract AccountStorageAdapter is Ownable {
     function getAccountData(address accountAddress, AccountFieldName accountFieldName, uint index)
         public
         view
-        verificationorProvisioningContractOnly()
+        checkReadingDataRestrictions(accountAddress)
         returns(string data, string objectType, bool isVerified, address verifiedBy, uint256 verifiedAt) {
 
         string memory fieldName = convertAccountFieldNameToString(accountFieldName);
@@ -120,7 +101,7 @@ contract AccountStorageAdapter is Ownable {
 
     function setVerificationResult(
         address accountAddress, AccountFieldName accountFieldName, uint index,
-        bool isVerified, address verifiedBy, uint verifiedAt) public verificationContractOnly() {
+        bool isVerified, address verifiedBy, uint verifiedAt) public verificationContractOrOwnerOnly() {
 
         string memory fieldName = convertAccountFieldNameToString(accountFieldName);
 
@@ -223,15 +204,19 @@ contract AccountStorageAdapter is Ownable {
         isEqual = keccak256(bytes(leftValue)) == keccak256(bytes(rightValue));
     }
 
-    modifier verificationContractOnly() {
-        require(_context.verificationContractFactory().createdContracts(msg.sender));
+    modifier verificationContractOrOwnerOnly() {
+        require(
+            _context.verificationContractFactory().createdContracts(msg.sender) ||
+            msg.sender == _context.owner());
         _;
     }
 
-    modifier verificationorProvisioningContractOnly() {
+    modifier checkReadingDataRestrictions(address account) {
         require(
             _context.verificationContractFactory().createdContracts(msg.sender) ||
-            _context.provisioningContractFactory().createdContracts(msg.sender));
+            _context.provisioningContractFactory().createdContracts(msg.sender) ||
+            msg.sender == _context.owner() ||
+            msg.sender == account);
         _;
     }
 }

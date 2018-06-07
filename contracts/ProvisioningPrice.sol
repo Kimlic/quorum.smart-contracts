@@ -5,8 +5,10 @@ import "./AccountStorageAdapter.sol";
 
 contract ProvisioningPrice is Ownable {
 
+    /// private attributes ///
     mapping (uint=>uint) private _priceMap;
 
+    /// public methods ///
     function setPrice(AccountStorageAdapter.AccountFieldName accountFieldName, uint price) public onlyOwner() {
         _priceMap[uint(accountFieldName)] = price;
     }
