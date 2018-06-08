@@ -1,16 +1,16 @@
 pragma solidity ^0.4.23;
 
 
+import "./WithKimlicContext.sol";
 import "./openzeppelin-solidity/Ownable.sol";
 import "./KimlicContractsContext.sol";
+import "./AccountStorage.sol";
 
-contract AccountStorageAdapter is Ownable {
+contract AccountStorageAdapter is Ownable, WithKimlicContext {
 
     /// public attributes ///
-    mapping (uint=>string) AccountFieldNames;
 
     /// private attributes ///
-    KimlicContractsContext private _context;
     string constant lengthCaption = "length";
 
     /// Enums ///
@@ -21,8 +21,7 @@ contract AccountStorageAdapter is Ownable {
 
     /// constructors ///
 
-    constructor (KimlicContractsContext context) public {
-        _context = context;
+    constructor (address contextstorage) public WithKimlicContext(contextstorage) {
     }
 
     /// public methods ///
@@ -32,11 +31,13 @@ contract AccountStorageAdapter is Ownable {
         updateAccountField(msg.sender, emailHash, AccountFieldName.Email);
         updateAccountField(msg.sender, phoneHash, AccountFieldName.Phone);
         updateAccountField(msg.sender, identityHash, AccountFieldName.Identity);
+        
+        AccountStorage accountStorage = getContext().getAccountStorage();
 
         bytes memory deviceHashKey = abi.encode(msg.sender, convertAccountFieldNameToString(AccountFieldName.Device));
-        bytes32 storedDeviceHash = _context.accountStorage().getBytes32(keccak256(deviceHashKey));
+        bytes32 storedDeviceHash = accountStorage.getBytes32(keccak256(deviceHashKey));
         if(storedDeviceHash != deviceHash) {
-            _context.accountStorage().setBytes32(keccak256(deviceHashKey), deviceHash);
+            accountStorage.setBytes32(keccak256(deviceHashKey), deviceHash);
         }
     }
 
@@ -57,7 +58,7 @@ contract AccountStorageAdapter is Ownable {
             public view checkReadingDataRestrictions(accountAddress) returns(address verifiedBy) {
         string memory fieldName = convertAccountFieldNameToString(accountFieldName);
         bytes memory verifiedByKey = abi.encode(accountAddress, fieldName, index, convertMetaFieldNameToString(MetaFieldName.VerifiedBy));
-        verifiedBy = _context.accountStorage().getAddress(keccak256(verifiedByKey));
+        verifiedBy = getContext().getAccountStorage().getAddress(keccak256(verifiedByKey));
     }
 
     function getLastAccountData(address accountAddress, AccountFieldName accountFieldName)
@@ -74,21 +75,23 @@ contract AccountStorageAdapter is Ownable {
         returns(string data, string objectType, bool isVerified, address verifiedBy, uint256 verifiedAt) {
 
         string memory fieldName = convertAccountFieldNameToString(accountFieldName);
+        
+        AccountStorage accountStorage = getContext().getAccountStorage();
 
         bytes memory dataKey = abi.encode(accountAddress, fieldName, index, convertMetaFieldNameToString(MetaFieldName.Data));
-        data = _context.accountStorage().getString(keccak256(dataKey));
+        data = accountStorage.getString(keccak256(dataKey));
 
         bytes memory objectTypeKey = abi.encode(accountAddress, fieldName, index, convertMetaFieldNameToString(MetaFieldName.ObjectType));
-        objectType = _context.accountStorage().getString(keccak256(objectTypeKey));
+        objectType = accountStorage.getString(keccak256(objectTypeKey));
 
         bytes memory isVerifiedKey = abi.encode(accountAddress, fieldName, index, convertMetaFieldNameToString(MetaFieldName.IsVerified));
-        isVerified = _context.accountStorage().getBool(keccak256(isVerifiedKey));
+        isVerified = accountStorage.getBool(keccak256(isVerifiedKey));
 
         bytes memory verifiedByKey = abi.encode(accountAddress, fieldName, index, convertMetaFieldNameToString(MetaFieldName.VerifiedBy));
-        verifiedBy = _context.accountStorage().getAddress(keccak256(verifiedByKey));
+        verifiedBy = accountStorage.getAddress(keccak256(verifiedByKey));
 
         bytes memory verifiedAtKey = abi.encode(accountAddress, fieldName, index, convertMetaFieldNameToString(MetaFieldName.VerifiedAt));
-        verifiedAt = _context.accountStorage().getUint(keccak256(verifiedAtKey));
+        verifiedAt = accountStorage.getUint(keccak256(verifiedAtKey));
     }
 
     function setVerificationResult(
@@ -104,22 +107,24 @@ contract AccountStorageAdapter is Ownable {
         bool isVerified, address verifiedBy, uint verifiedAt) public verificationContractOrOwnerOnly() {
 
         string memory fieldName = convertAccountFieldNameToString(accountFieldName);
+        
+        AccountStorage accountStorage = getContext().getAccountStorage();
 
         bytes memory isVerifiedKey = abi.encode(accountAddress, fieldName, index, convertMetaFieldNameToString(MetaFieldName.IsVerified));
-        _context.accountStorage().setBool(keccak256(isVerifiedKey), isVerified);
+        accountStorage.setBool(keccak256(isVerifiedKey), isVerified);
 
         bytes memory verifiedByKey = abi.encode(accountAddress, fieldName, index, convertMetaFieldNameToString(MetaFieldName.VerifiedBy));
-        _context.accountStorage().setAddress(keccak256(verifiedByKey), verifiedBy);
+        accountStorage.setAddress(keccak256(verifiedByKey), verifiedBy);
 
         bytes memory verifiedAtKey = abi.encode(accountAddress, fieldName, index, convertMetaFieldNameToString(MetaFieldName.VerifiedAt));
-        _context.accountStorage().setUint(keccak256(verifiedAtKey), verifiedAt);
+        accountStorage.setUint(keccak256(verifiedAtKey), verifiedAt);
 
-        _context.rewardingContract().checkMilestones(accountAddress, accountFieldName);
+        getContext().getRewardingContract().checkMilestones(accountAddress, accountFieldName);
     }
 
     function getFieldHistoryLength(address accountAddress, AccountFieldName accountFieldName) public view returns(uint length){
         bytes memory fieldHistoryLengthKey = abi.encode(accountAddress, accountFieldName, lengthCaption);
-        length = _context.accountStorage().getUint(keccak256(fieldHistoryLengthKey));
+        length = getContext().getAccountStorage().getUint(keccak256(fieldHistoryLengthKey));
     }
 
     /// private methods ///
@@ -130,7 +135,7 @@ contract AccountStorageAdapter is Ownable {
         uint index = getFieldHistoryLength(accountAddress, accountFieldName);
 
         bytes memory dataKey = abi.encode(accountAddress, fieldName, index, convertMetaFieldNameToString(MetaFieldName.Data));
-        string memory storedData = _context.accountStorage().getString(keccak256(dataKey));
+        string memory storedData = getContext().getAccountStorage().getString(keccak256(dataKey));
         if (!isEqualStrings(storedData, data)) {
             addNewFieldItem(accountAddress, accountFieldName, data, "");
         }
@@ -144,15 +149,17 @@ contract AccountStorageAdapter is Ownable {
         uint index = getFieldHistoryLength(accountAddress, accountFieldName) + 1;
 
         string memory fieldName = convertAccountFieldNameToString(accountFieldName);
+        
+        AccountStorage accountStorage = getContext().getAccountStorage();
 
         bytes memory newDataKey = abi.encode(accountAddress, fieldName, index, convertMetaFieldNameToString(MetaFieldName.Data));
-        _context.accountStorage().setString(keccak256(newDataKey), data);
+        accountStorage.setString(keccak256(newDataKey), data);
 
         bytes memory objectTypeKey = abi.encode(accountAddress, fieldName, index, convertMetaFieldNameToString(MetaFieldName.ObjectType));
-        _context.accountStorage().setString(keccak256(objectTypeKey), objectType);
+        accountStorage.setString(keccak256(objectTypeKey), objectType);
 
         bytes memory fieldHistoryLengthKey = abi.encode(accountAddress, accountFieldName, lengthCaption);
-        _context.accountStorage().setUint(keccak256(fieldHistoryLengthKey), index);
+        accountStorage.setUint(keccak256(fieldHistoryLengthKey), index);
     }
 
     function convertAccountFieldNameToString(AccountFieldName accountFieldName) private pure returns(string memory enumCaption) {
@@ -206,16 +213,16 @@ contract AccountStorageAdapter is Ownable {
 
     modifier verificationContractOrOwnerOnly() {
         require(
-            _context.verificationContractFactory().createdContracts(msg.sender) ||
-            msg.sender == _context.owner());
+            getContext().getVerificationContractFactory().createdContracts(msg.sender) ||
+            msg.sender == getContext().owner());
         _;
     }
 
     modifier checkReadingDataRestrictions(address account) {
         require(
-            _context.verificationContractFactory().createdContracts(msg.sender) ||
-            _context.provisioningContractFactory().createdContracts(msg.sender) ||
-            msg.sender == _context.owner() ||
+            getContext().getVerificationContractFactory().createdContracts(msg.sender) ||
+            getContext().getProvisioningContractFactory().createdContracts(msg.sender) ||
+            msg.sender == getContext().owner() ||
             msg.sender == account);
         _;
     }

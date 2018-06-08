@@ -2,8 +2,9 @@ pragma solidity ^0.4.23;
 
 import "./KimlicContractsContext.sol";
 import "./ProvisioningContract.sol";
+import "./WithKimlicContext.sol";
 
-contract ProvisioningContractFactory {
+contract ProvisioningContractFactory is WithKimlicContext {
     /// public attributes ///
     mapping(address=>bool) public createdContracts;
     uint8 public communityTokenWalletInterestPercent;
@@ -12,16 +13,14 @@ contract ProvisioningContractFactory {
     uint8 public coOwnerInterestPercent;
     
     /// private attributes ///
-    KimlicContractsContext private _context;
 
     /// Constructors ///
-    constructor (KimlicContractsContext context) public {
-        _context = context;
+    constructor (address contextStorage) public WithKimlicContext(contextStorage) {
     }
 
     /// public methods ///
     function createProvisioningContract(address account) public returns(ProvisioningContract createdContract) {
-        createdContract = new ProvisioningContract(_context, account);
+        createdContract = new ProvisioningContract(_storage, account);
         createdContract.transferOwnership(msg.sender);
         createdContracts[address(createdContract)] = true;
     }

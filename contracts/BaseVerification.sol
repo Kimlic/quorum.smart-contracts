@@ -4,34 +4,36 @@ pragma solidity ^0.4.23;
 import "./openzeppelin-solidity/Ownable.sol";
 import "./KimlicContractsContext.sol";
 import "./AccountStorageAdapter.sol";
+import "./WithKimlicContext.sol";
+import "./KimlicToken.sol";
 
-contract BaseVerification is Ownable {
+contract BaseVerification is Ownable, WithKimlicContext {
     AccountStorageAdapter.AccountFieldName public accountFieldName;
     address public coOwner;
     bool public isVerified;
 
     address internal _accountAddress;
     uint internal _rewardAmount;
-    KimlicContractsContext internal _context;
 
     constructor(
-        KimlicContractsContext context, address account, uint rewardAmount, address coOwnerAddress,
-        AccountStorageAdapter.AccountFieldName fieldName) public {
+        address contextStorage, address account, uint rewardAmount, address coOwnerAddress,
+        AccountStorageAdapter.AccountFieldName fieldName) public WithKimlicContext(contextStorage) {
 
         coOwner = coOwnerAddress;
-        _context = context;
         _accountAddress = account;
         _rewardAmount = rewardAmount;
         accountFieldName = fieldName;
     }
 
     function setVerificationResult(bool verificationResult) public {
-        require(_context.kimlicToken().balanceOf(address(this)) == _rewardAmount);
+        KimlicContractsContext context = getContext();
+        KimlicToken token = context.getKimlicToken();
+        require(token.balanceOf(address(this)) == _rewardAmount);
         isVerified = verificationResult;
 
-        _context.kimlicToken().transfer(owner, _rewardAmount);
+        token.transfer(owner, _rewardAmount);
 
-        _context.accountStorageAdapter().setVerificationResult(
+        context.getAccountStorageAdapter().setVerificationResult(
             _accountAddress, accountFieldName, verificationResult, address(this), block.timestamp);
     }
 }

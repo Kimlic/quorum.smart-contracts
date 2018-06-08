@@ -7,8 +7,9 @@ import "./KimlicContractsContext.sol";
 import "./AccountStorageAdapter.sol";
 import "./KimlicToken.sol";
 import "./BaseVerification.sol";
+import "./WithKimlicContext.sol";
 
-contract ProvisioningContract is Ownable {
+contract ProvisioningContract is Ownable, WithKimlicContext {
     
     /// public attributes ///
     address public relyingParty;
@@ -16,7 +17,6 @@ contract ProvisioningContract is Ownable {
     Status public status;
 
     /// private attributes ///
-    KimlicContractsContext private _context;
     RequiredData[] private requiredDataArray;
     uint private expectedReward;
 
@@ -33,22 +33,24 @@ contract ProvisioningContract is Ownable {
     enum Status { DataInitialization, WaitingForTokens, Finished } //TODO move to factory?
 
     /// constructors ///
-    constructor (KimlicContractsContext context, address accountAddress) public {
-        require(msg.sender == address(_context.provisioningContractFactory()));
+    constructor (address contextStorage, address accountAddress) public WithKimlicContext(contextStorage) {
+        require(msg.sender == address(getContext().getProvisioningContractFactory()));
 
-        _context = context;
         account = accountAddress;
         status = Status.DataInitialization;
     }
 
     /// public methods ///
-    function addRequiredData(AccountStorageAdapter.AccountFieldName accountFieldName, uint index) public {        
-        address verifiedBy = _context.accountStorageAdapter()
+    function addRequiredData(AccountStorageAdapter.AccountFieldName accountFieldName, uint index) public {     
+
+        KimlicContractsContext context = getContext();
+
+        address verifiedBy = context.getAccountStorageAdapter()
             .getLastAccountDataVerifiedBy(account, accountFieldName);
 
         BaseVerification verificationContract = BaseVerification(verifiedBy);    
         
-        uint reward = _context.provisioningPrice().getPrice(accountFieldName);
+        uint reward = context.getProvisioningPrice().getPrice(accountFieldName);
 
         RequiredData memory data = RequiredData(
         {
@@ -69,8 +71,9 @@ contract ProvisioningContract is Ownable {
             status = Status.WaitingForTokens;
         } 
         else if (status == Status.WaitingForTokens) {
-            require(_context.kimlicToken().balanceOf(address(this)) == expectedReward);
+            require(getContext().getKimlicToken().balanceOf(address(this)) == expectedReward);
             status = Status.Finished;
+            sendRewards();
         }
     }
 
@@ -79,16 +82,19 @@ contract ProvisioningContract is Ownable {
 
         RequiredData storage requiredData = requiredDataArray[requiredDataArrayIndex];
         
-        return _context.accountStorageAdapter().getAccountData(account, requiredData.fieldName, requiredData.index);
+        return getContext().getAccountStorageAdapter().getAccountData(account, requiredData.fieldName, requiredData.index);
     }
     
 
     /// private methods ///
 
     //TODO check gas consumption. Even with gas price 0 we still have gas limits
-    function sendRewards() private {            
-        ProvisioningContractFactory factory = _context.provisioningContractFactory();
-        KimlicToken kimlicToken = _context.kimlicToken();
+    function sendRewards() private {
+
+        KimlicContractsContext context = getContext();
+
+        ProvisioningContractFactory factory = context.getProvisioningContractFactory();
+        KimlicToken kimlicToken = context.getKimlicToken();
 
         uint communityTokenWalletInterestPercent = factory.communityTokenWalletInterestPercent();
         uint attestationPartyInterestPercent = factory.attestationPartyInterestPercent();

@@ -2,13 +2,13 @@ pragma solidity ^0.4.23;
 
 
 contract BaseStorage {
-    /// private attributes ///
-    mapping(bytes32 => uint256)    private uIntStorage;
-    mapping(bytes32 => string)     private stringStorage;
-    mapping(bytes32 => address)    private addressStorage;
-    mapping(bytes32 => bytes32)    private bytes32Storage;
-    mapping(bytes32 => bool)       private boolStorage;
-    mapping(bytes32 => int256)     private intStorage;
+    /// internal attributes ///
+    mapping(bytes32 => uint256)    internal uIntStorage;
+    mapping(bytes32 => string)     internal stringStorage;
+    mapping(bytes32 => address)    internal addressStorage;
+    mapping(bytes32 => bytes32)    internal bytes32Storage;
+    mapping(bytes32 => bool)       internal boolStorage;
+    mapping(bytes32 => int256)     internal intStorage;
 
     /// modifiers ///
     modifier accessRestriction() {

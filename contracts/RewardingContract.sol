@@ -5,18 +5,17 @@ import "./openzeppelin-solidity/Ownable.sol";
 import "./AccountStorageAdapter.sol";
 import "./KimlicContractsContext.sol";
 import "./BaseVerification.sol";
+import "./WithKimlicContext.sol";
 
-contract RewardingContract is Ownable {
+contract RewardingContract is Ownable, WithKimlicContext {
     /// public attributes ///
     uint public mielstone1Reward;
     uint public mielstone2Reward;
     
     /// private attributes ///
-    KimlicContractsContext private _context;
-
+    
     /// Constructors ///
-    constructor (KimlicContractsContext context) public {
-        _context = context;
+    constructor (address contextStorage) public WithKimlicContext(contextStorage) {
     }
 
     /// public methods ///
@@ -45,20 +44,20 @@ contract RewardingContract is Ownable {
         if (getIsDataVerified(accountAddress, AccountStorageAdapter.AccountFieldName.Email) &&
             getIsDataVerified(accountAddress, AccountStorageAdapter.AccountFieldName.Phone)) {
             
-            _context.kimlicToken().transfer(accountAddress, mielstone2Reward);
+            getContext().getKimlicToken().transfer(accountAddress, mielstone2Reward);
         }
         
     }
 
     function checkMilestone2(address accountAddress) private {
         if (getIsDataVerified(accountAddress, AccountStorageAdapter.AccountFieldName.Identity)) {
-            _context.kimlicToken().transfer(accountAddress, mielstone2Reward);
+            getContext().getKimlicToken().transfer(accountAddress, mielstone2Reward);
         }
     }
 
     function getIsDataVerified(address accountAddress, AccountStorageAdapter.AccountFieldName accountFieldName) 
             private view returns(bool isVerified) {
-        address verifiedBy = _context.accountStorageAdapter()
+        address verifiedBy = getContext().getAccountStorageAdapter()
             .getLastAccountDataVerifiedBy(accountAddress, accountFieldName);
         
         if (verifiedBy != address(0)) {

@@ -3,19 +3,18 @@ pragma solidity ^0.4.23;
 
 import "./KimlicContractsContext.sol";
 import "./BaseStorage.sol";
+import "./WithKimlicContext.sol";
 
-contract AccountStorage is BaseStorage {
+contract AccountStorage is BaseStorage, WithKimlicContext {
     
-    KimlicContractsContext private _context;
-
     /// constructors ///
-    constructor (KimlicContractsContext context) public {
-        _context = context;
+    constructor (address contextStorage) public WithKimlicContext(contextStorage) {
     }
 
     /// modifiers ///
     modifier accessRestriction() {
-        require(msg.sender == address(_context.accountStorageAdapter()) || msg.sender == _context.owner());
+        KimlicContractsContext context = getContext();
+        require(msg.sender == address(context.getAccountStorageAdapter()) || msg.sender == context.owner());
         _;
     }
 
