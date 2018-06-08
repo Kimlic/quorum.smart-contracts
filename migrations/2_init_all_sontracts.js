@@ -75,16 +75,16 @@ module.exports = function(deployer, network, accounts) {
     })
     .then(()=>{
         setupKimlicContractsContextInstance();
-        /*setupProvisioningContractFactoryInstance();
+        setupProvisioningContractFactoryInstance();
         setupRewardingContractInstance();
-        setupProvisioningPriceInstance();*/
+        setupProvisioningPriceInstance();
     });
 
     var setupKimlicContextStorageInstance = function() {
 
         console.log(getFormatedConsoleLable("Setup kimlic context storage instance:"));
         console.log("Context = " + kimlicContractsContextInstance.address);
-        kimlicContextStorageInstance.setContext(kimlicContractsContextInstance.address, deployConfig);
+        return kimlicContextStorageInstance.setContext(kimlicContractsContextInstance.address, deployConfig);
     }
     
     var setupKimlicContractsContextInstance = function() {
@@ -94,7 +94,7 @@ module.exports = function(deployer, network, accounts) {
         
         console.log("AccountStorageAddress = ", AccountStorage.address);
         kimlicContractsContextInstance.setAccountStorage(AccountStorage.address, deployConfig);
-        /*
+        
         console.log("AccountStorageAdapter = ", AccountStorageAdapter.address);
         kimlicContractsContextInstance.setAccountStorageAdapter(AccountStorageAdapter.address, deployConfig);
         
@@ -114,7 +114,7 @@ module.exports = function(deployer, network, accounts) {
         kimlicContractsContextInstance.setCommunityTokenWalletAddress(communityTokenWalletAddress, deployConfig);
         
         console.log("RewardingContract = ", RewardingContract.address);
-        kimlicContractsContextInstance.setRewardingContract(RewardingContract.address, deployConfig);*/
+        kimlicContractsContextInstance.setRewardingContract(RewardingContract.address, deployConfig);
     };
     
     var setupProvisioningContractFactoryInstance = function() {
