@@ -1,8 +1,6 @@
 pragma solidity ^0.4.23;
 
 
-import "./KimlicContractsContext.sol";
-
 contract BaseStorage {
     /// private attributes ///
     mapping(bytes32 => uint256)    private uIntStorage;
@@ -12,16 +10,8 @@ contract BaseStorage {
     mapping(bytes32 => bool)       private boolStorage;
     mapping(bytes32 => int256)     private intStorage;
 
-    KimlicContractsContext private _context;
-
-    /// constructors ///
-    constructor (KimlicContractsContext context) public {
-        _context = context;
-    }
-
     /// modifiers ///
-    modifier accountStorageAdapterOnly() {
-        require(msg.sender == address(_context.accountStorageAdapter()) || msg.sender == _context.owner());
+    modifier accessRestriction() {
         _;
     }
 
@@ -30,32 +20,32 @@ contract BaseStorage {
     /**** Get Methods ***********/
     
     /// @param _key The key for the record
-    function getAddress(bytes32 _key) external view accountStorageAdapterOnly() returns (address) {
+    function getAddress(bytes32 _key) external view accessRestriction() returns (address) {
         return addressStorage[_key];
     }
 
     /// @param _key The key for the record
-    function getUint(bytes32 _key) external view accountStorageAdapterOnly() returns (uint) {
+    function getUint(bytes32 _key) external view accessRestriction() returns (uint) {
         return uIntStorage[_key];
     }
 
     /// @param _key The key for the record
-    function getString(bytes32 _key) external view accountStorageAdapterOnly() returns (string) {
+    function getString(bytes32 _key) external view accessRestriction() returns (string) {
         return stringStorage[_key];
     } 
 
     /// @param _key The key for the record
-    function getBytes32(bytes32 _key) external view accountStorageAdapterOnly() returns (bytes32) {
+    function getBytes32(bytes32 _key) external view accessRestriction() returns (bytes32) {
         return bytes32Storage[_key];
     }
 
     /// @param _key The key for the record
-    function getBool(bytes32 _key) external view accountStorageAdapterOnly() returns (bool) {
+    function getBool(bytes32 _key) external view accessRestriction() returns (bool) {
         return boolStorage[_key];
     }
 
     /// @param _key The key for the record
-    function getInt(bytes32 _key) external view accountStorageAdapterOnly() returns (int) {
+    function getInt(bytes32 _key) external view accessRestriction() returns (int) {
         return intStorage[_key];
     }
 
@@ -64,32 +54,32 @@ contract BaseStorage {
 
 
     /// @param _key The key for the record
-    function setAddress(bytes32 _key, address _value) external accountStorageAdapterOnly() {
+    function setAddress(bytes32 _key, address _value) external accessRestriction() {
         addressStorage[_key] = _value;
     }
 
     /// @param _key The key for the record
-    function setUint(bytes32 _key, uint _value) external accountStorageAdapterOnly() {
+    function setUint(bytes32 _key, uint _value) external accessRestriction() {
         uIntStorage[_key] = _value;
     }
 
     /// @param _key The key for the record
-    function setString(bytes32 _key, string _value) external accountStorageAdapterOnly() {
+    function setString(bytes32 _key, string _value) external accessRestriction() {
         stringStorage[_key] = _value;
     }
 
     /// @param _key The key for the record
-    function setBytes32(bytes32 _key, bytes32 _value) external accountStorageAdapterOnly() {
+    function setBytes32(bytes32 _key, bytes32 _value) external accessRestriction() {
         bytes32Storage[_key] = _value;
     }
     
     /// @param _key The key for the record
-    function setBool(bytes32 _key, bool _value) external accountStorageAdapterOnly() {
+    function setBool(bytes32 _key, bool _value) external accessRestriction() {
         boolStorage[_key] = _value;
     }
     
     /// @param _key The key for the record
-    function setInt(bytes32 _key, int _value) external accountStorageAdapterOnly() {
+    function setInt(bytes32 _key, int _value) external accessRestriction() {
         intStorage[_key] = _value;
     }
 
@@ -97,32 +87,32 @@ contract BaseStorage {
     /**** Delete Methods ***********/
     
     /// @param _key The key for the record
-    function deleteAddress(bytes32 _key) external accountStorageAdapterOnly() {
+    function deleteAddress(bytes32 _key) external accessRestriction() {
         delete addressStorage[_key];
     }
 
     /// @param _key The key for the record
-    function deleteUint(bytes32 _key) external accountStorageAdapterOnly() {
+    function deleteUint(bytes32 _key) external accessRestriction() {
         delete uIntStorage[_key];
     }
 
     /// @param _key The key for the record
-    function deleteString(bytes32 _key) external accountStorageAdapterOnly() {
+    function deleteString(bytes32 _key) external accessRestriction() {
         delete stringStorage[_key];
     }
 
     /// @param _key The key for the record
-    function deleteBytes32(bytes32 _key) external accountStorageAdapterOnly() {
+    function deleteBytes32(bytes32 _key) external accessRestriction() {
         delete bytes32Storage[_key];
     }
     
     /// @param _key The key for the record
-    function deleteBool(bytes32 _key) external accountStorageAdapterOnly() {
+    function deleteBool(bytes32 _key) external accessRestriction() {
         delete boolStorage[_key];
     }
     
     /// @param _key The key for the record
-    function deleteInt(bytes32 _key) external accountStorageAdapterOnly() {
+    function deleteInt(bytes32 _key) external accessRestriction() {
         delete intStorage[_key];
     }
 

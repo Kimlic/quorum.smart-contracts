@@ -2,7 +2,7 @@ pragma solidity ^0.4.23;
 
 
 import "./ProvisioningContractFactory.sol";
-import "./Ownable.sol";
+import "./openzeppelin-solidity/Ownable.sol";
 import "./KimlicContractsContext.sol";
 import "./AccountStorageAdapter.sol";
 import "./KimlicToken.sol";
@@ -84,7 +84,7 @@ contract ProvisioningContract is Ownable {
     
 
     /// private methods ///
-    
+
     //TODO check gas consumption. Even with gas price 0 we still have gas limits
     function sendRewards() private {            
         ProvisioningContractFactory factory = _context.provisioningContractFactory();

@@ -1,16 +1,15 @@
 pragma solidity ^0.4.23;
 
 
-import "./Ownable.sol";
-import "./StandardToken.sol";
+import "./openzeppelin-solidity/StandardToken.sol";
 
-contract KimlicToken is StandardToken, Ownable {
+contract KimlicToken is StandardToken {
 
     /// constructors ///
-    constructor () public Ownable() {
+    constructor () public {
         
         totalSupply_ = 150000000;
-        balances[owner] = totalSupply_;
+        balances[msg.sender] = totalSupply_;
     }
 
 }

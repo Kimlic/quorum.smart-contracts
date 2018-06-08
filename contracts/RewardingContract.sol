@@ -1,7 +1,7 @@
 pragma solidity ^0.4.23;
 
 
-import "./Ownable.sol";
+import "./openzeppelin-solidity/Ownable.sol";
 import "./AccountStorageAdapter.sol";
 import "./KimlicContractsContext.sol";
 import "./BaseVerification.sol";
@@ -33,15 +33,15 @@ contract RewardingContract is Ownable {
         if (accountFieldName == AccountStorageAdapter.AccountFieldName.Email ||
             accountFieldName == AccountStorageAdapter.AccountFieldName.Phone) {
             
-            checkMilestone1(accountAddress, accountFieldName);
+            checkMilestone1(accountAddress);
         } 
         else if (accountFieldName == AccountStorageAdapter.AccountFieldName.Identity) {
-            checkMilestone1(accountAddress, accountFieldName);
+            checkMilestone1(accountAddress);
         }
     }
 
     /// private methods ///
-    function checkMilestone1(address accountAddress, AccountStorageAdapter.AccountFieldName accountFieldName) private {
+    function checkMilestone1(address accountAddress) private {
         if (getIsDataVerified(accountAddress, AccountStorageAdapter.AccountFieldName.Email) &&
             getIsDataVerified(accountAddress, AccountStorageAdapter.AccountFieldName.Phone)) {
             
@@ -50,8 +50,8 @@ contract RewardingContract is Ownable {
         
     }
 
-    function checkMilestone2(address accountAddress, AccountStorageAdapter.AccountFieldName accountFieldName) private {
-        if (getIsDataVerified(accountAddress, accountFieldName)) {
+    function checkMilestone2(address accountAddress) private {
+        if (getIsDataVerified(accountAddress, AccountStorageAdapter.AccountFieldName.Identity)) {
             _context.kimlicToken().transfer(accountAddress, mielstone2Reward);
         }
     }

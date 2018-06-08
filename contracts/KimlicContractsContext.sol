@@ -1,8 +1,8 @@
 pragma solidity ^0.4.23;
 
 
-import "./Ownable.sol";
-import "./BaseStorage.sol";
+import "./openzeppelin-solidity/Ownable.sol";
+import "./AccountStorage.sol";
 import "./AccountStorageAdapter.sol";
 import "./KimlicToken.sol";
 import "./ProvisioningPrice.sol";
@@ -14,7 +14,7 @@ import "./RewardingContract.sol";
 contract KimlicContractsContext is Ownable {
     
     /// public attributes ///
-    BaseStorage public accountStorage;
+    AccountStorage public accountStorage;
 
     AccountStorageAdapter public accountStorageAdapter;
 
@@ -32,7 +32,7 @@ contract KimlicContractsContext is Ownable {
 
     /// public methods ///
     function setAccountStorage(address accountStorageAddress) public onlyOwner() {
-        accountStorage = BaseStorage(accountStorageAddress);
+        accountStorage = AccountStorage(accountStorageAddress);
     }
 
     function setAccountStorageAdapter(address accountStorageAdapterAddress) public onlyOwner() {

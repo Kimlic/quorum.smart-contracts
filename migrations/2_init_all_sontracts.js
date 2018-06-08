@@ -1,6 +1,6 @@
 var { getMainAccount } = require("../configReader");
 
-var BaseStorage = artifacts.require("./BaseStorage.sol");
+var AccountStorage = artifacts.require("./AccountStorage.sol");
 var KimlicContractsContext = artifacts.require("./KimlicContractsContext.sol");
 var AccountStorageAdapter = artifacts.require("./AccountStorageAdapter.sol");
 var VerificationContractFactory = artifacts.require("./VerificationContractFactory.sol");
@@ -40,7 +40,7 @@ module.exports = function(deployer, network, accounts) {
     
     deployer.deploy(KimlicContractsContext, deployConfig).then((instance)=>{
         kimlicContractsContextInstance = instance;
-        return deployer.deploy(BaseStorage, KimlicContractsContext.address, deployConfig);
+        return deployer.deploy(AccountStorage, KimlicContractsContext.address, deployConfig);
     })
     .then(()=>{
         return deployer.deploy(AccountStorageAdapter, KimlicContractsContext.address, deployConfig);
@@ -77,8 +77,8 @@ module.exports = function(deployer, network, accounts) {
         
         console.log(getFormatedConsoleLable("Setup kimlic contracts context instance:"));
         
-        console.log("AccountStorageAddress = ", BaseStorage.address);
-        kimlicContractsContextInstance.setAccountStorage(BaseStorage.address, deployConfig);
+        console.log("AccountStorageAddress = ", AccountStorage.address);
+        kimlicContractsContextInstance.setAccountStorage(AccountStorage.address, deployConfig);
         
         console.log("AccountStorageAdapter = ", AccountStorageAdapter.address);
         kimlicContractsContextInstance.setAccountStorageAdapter(AccountStorageAdapter.address, deployConfig);
