@@ -11,7 +11,7 @@ var ProvisioningPrice = artifacts.require("./ProvisioningPrice.sol");
 var RewardingContract = artifacts.require("./RewardingContract.sol");
 
 module.exports = function(deployer, network, accounts) {
-    var mainAccount = getMainAccount();
+    var mainAccount = getMainAccount(network);
 
     if (mainAccount.address) {
         console.log('Account: ' + mainAccount.address);
@@ -104,7 +104,7 @@ module.exports = function(deployer, network, accounts) {
         console.log("VerificationContractFactory = ", VerificationContractFactory.address);
         kimlicContractsContextInstance.setVerificationContractFactory(VerificationContractFactory.address, deployConfig);
         
-        console.log("VerificationContractFactory = ", VerificationContractFactory.address);
+        console.log("ProvisioningPrice = ", ProvisioningPrice.address);
         kimlicContractsContextInstance.setProvisioningPrice(ProvisioningPrice.address, deployConfig);
         
         console.log("ProvisioningContractFactory = ", ProvisioningContractFactory.address);

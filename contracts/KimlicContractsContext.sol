@@ -11,20 +11,28 @@ import "./ProvisioningContractFactory.sol";
 import "./VerificationContractFactory.sol";
 import "./BaseStorage.sol";
 import "./RewardingContract.sol";
+import "./RelyingPartyStorageAdapter.sol";
+import "./RelyingPartyStorage.sol";
+import "./ApplicationPartyStorageAdapter.sol";
+import "./ApplicationPartyStorage.sol";
 
 contract KimlicContractsContext is Ownable {
     
     /// public attributes ///
 
     /// private attributes ///
-    string private accountStorageAdapterKey = "accountStorageAdapter";
-    string private kimlicTokenKey = "kimlicToken";
-    string private verificationContractFactoryKey = "verificationContractFactory";
-    string private provisioningPriceKey = "provisioningPrice";
-    string private provisioningContractFactoryKey = "provisioningContractFactory";
-    string private communityTokenWalletAddressKey = "communityTokenWalletAddress";
-    string private rewardingContractKey = "rewardingContract";
-    string private accountStorageKey = "accountStorage";
+    string private constant accountStorageAdapterKey = "accountStorageAdapter";
+    string private constant kimlicTokenKey = "kimlicToken";
+    string private constant verificationContractFactoryKey = "verificationContractFactory";
+    string private constant provisioningPriceKey = "provisioningPrice";
+    string private constant provisioningContractFactoryKey = "provisioningContractFactory";
+    string private constant communityTokenWalletAddressKey = "communityTokenWalletAddress";
+    string private constant rewardingContractKey = "rewardingContract";
+    string private constant accountStorageKey = "accountStorage";
+    string private constant relyingPartyStorageAdapterKey = "relyingPartyStorageAdapter";
+    string private constant relyingPartyStorageKey = "relyingPartyStorage";
+    string private constant applicationPartyStorageAdapterKey = "applicationPartyStorageAdapter";
+    string private constant applicationPartyStorageKey = "applicationPartyStorage";
     KimlicContextStorage internal _storage;
 
     /// constructors ///
@@ -66,38 +74,70 @@ contract KimlicContractsContext is Ownable {
     function getAccountStorage() public view returns(AccountStorage accountStorage) {
         accountStorage = AccountStorage(_storage.getAddress(keccak256(accountStorageKey)));
     }
-    
+
+    function getRelyingPartyStorageAdapter() public view returns(RelyingPartyStorageAdapter relyingPartyStorageAdapter) {
+        relyingPartyStorageAdapter = RelyingPartyStorageAdapter(_storage.getAddress(keccak256(relyingPartyStorageAdapterKey)));
+    }
+
+    function getRelyingPartyStorage() public view returns(RelyingPartyStorage relyingPartyStorage) {
+        relyingPartyStorage = RelyingPartyStorage(_storage.getAddress(keccak256(relyingPartyStorageKey)));
+    }
+
+    function getApplicationPartyStorageAdapter() public view returns(ApplicationPartyStorageAdapter applicationPartyStorageAdapter) {
+        applicationPartyStorageAdapter = ApplicationPartyStorageAdapter(_storage.getAddress(keccak256(applicationPartyStorageAdapterKey)));
+    }
+
+    function getApplicationPartyStorage() public view returns(ApplicationPartyStorage applicationPartyStorage) {
+        applicationPartyStorage = ApplicationPartyStorage(_storage.getAddress(keccak256(applicationPartyStorageKey)));
+    }
+
 
     /* Setters */
     function setAccountStorageAdapter(address accountStorageAdapterAddress) public onlyOwner() {
-        _storage.setAddress(keccak256("accountStorageAdapter"), accountStorageAdapterAddress);
+        _storage.setAddress(keccak256(accountStorageAdapterKey), accountStorageAdapterAddress);
     }
 
     function setKimlicToken(address kimlicTokenAddress) public onlyOwner() {
-        _storage.setAddress(keccak256("kimlicToken"), kimlicTokenAddress);
+        _storage.setAddress(keccak256(kimlicTokenKey), kimlicTokenAddress);
     }
 
     function setVerificationContractFactory(address verificationContractFactoryAddress) public onlyOwner() {
-        _storage.setAddress(keccak256("verificationContractFactory"), verificationContractFactoryAddress);
+        _storage.setAddress(keccak256(verificationContractFactoryKey), verificationContractFactoryAddress);
     }
 
     function setProvisioningPrice(address provisioningPriceAddress) public onlyOwner() {
-        _storage.setAddress(keccak256("provisioningPrice"), provisioningPriceAddress);
+        _storage.setAddress(keccak256(provisioningPriceKey), provisioningPriceAddress);
     }
 
     function setProvisioningContractFactory(address provisioningContractFactoryAddress) public onlyOwner() {
-        _storage.setAddress(keccak256("provisioningContractFactory"), provisioningContractFactoryAddress);
+        _storage.setAddress(keccak256(provisioningContractFactoryKey), provisioningContractFactoryAddress);
     }
 
     function setCommunityTokenWalletAddress(address communityTokenWalletAddressAddress) public onlyOwner() {
-        _storage.setAddress(keccak256("communityTokenWalletAddress"), communityTokenWalletAddressAddress);
+        _storage.setAddress(keccak256(communityTokenWalletAddressKey), communityTokenWalletAddressAddress);
     }
 
     function setRewardingContract(address rewardingContractAddress) public onlyOwner() {
-        _storage.setAddress(keccak256("rewardingContract"), rewardingContractAddress);
+        _storage.setAddress(keccak256(rewardingContractKey), rewardingContractAddress);
     }
 
     function setAccountStorage(address accountStorageAddress) public onlyOwner() {
-        _storage.setAddress(keccak256("accountStorage"), accountStorageAddress);
+        _storage.setAddress(keccak256(accountStorageKey), accountStorageAddress);
+    }
+    
+    function setRelyingPartyStorageAdapterStorage(address relyingPartyStorageAdapterAddress) public {
+        _storage.setAddress(keccak256(relyingPartyStorageAdapterKey), relyingPartyStorageAdapterAddress);
+    }
+
+    function setRelyingPartyStorage(address relyingPartyStorageAddress) public {
+        _storage.setAddress(keccak256(relyingPartyStorageKey), relyingPartyStorageAddress);
+    }
+
+    function setApplicationPartyStorageAdapter(address applicationPartyStorageAdapterAddress) public {
+        _storage.setAddress(keccak256(applicationPartyStorageAdapterKey), applicationPartyStorageAdapterAddress);
+    }
+
+    function setApplicationPartyStorage(address applicationPartyStorageAddress) public {
+        _storage.setAddress(keccak256(applicationPartyStorageKey), applicationPartyStorageAddress);
     }
 }

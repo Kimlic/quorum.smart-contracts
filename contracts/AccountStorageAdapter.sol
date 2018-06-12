@@ -74,24 +74,24 @@ contract AccountStorageAdapter is Ownable, WithKimlicContext {
         checkReadingDataRestrictions(accountAddress)
         returns(string data, string objectType, bool isVerified, address verifiedBy, uint256 verifiedAt) {
 
+        //AccountStorage accountStorage = getContext().getAccountStorage();// TODO find reason of error "Stack too deep, try removing local variables"
+
         string memory fieldName = convertAccountFieldNameToString(accountFieldName);
-        
-        AccountStorage accountStorage = getContext().getAccountStorage();
 
         bytes memory dataKey = abi.encode(accountAddress, fieldName, index, convertMetaFieldNameToString(MetaFieldName.Data));
-        data = accountStorage.getString(keccak256(dataKey));
+        data = getContext().getAccountStorage().getString(keccak256(dataKey));
 
         bytes memory objectTypeKey = abi.encode(accountAddress, fieldName, index, convertMetaFieldNameToString(MetaFieldName.ObjectType));
-        objectType = accountStorage.getString(keccak256(objectTypeKey));
+        objectType = getContext().getAccountStorage().getString(keccak256(objectTypeKey));
 
         bytes memory isVerifiedKey = abi.encode(accountAddress, fieldName, index, convertMetaFieldNameToString(MetaFieldName.IsVerified));
-        isVerified = accountStorage.getBool(keccak256(isVerifiedKey));
+        isVerified = getContext().getAccountStorage().getBool(keccak256(isVerifiedKey));
 
         bytes memory verifiedByKey = abi.encode(accountAddress, fieldName, index, convertMetaFieldNameToString(MetaFieldName.VerifiedBy));
-        verifiedBy = accountStorage.getAddress(keccak256(verifiedByKey));
+        verifiedBy = getContext().getAccountStorage().getAddress(keccak256(verifiedByKey));
 
         bytes memory verifiedAtKey = abi.encode(accountAddress, fieldName, index, convertMetaFieldNameToString(MetaFieldName.VerifiedAt));
-        verifiedAt = accountStorage.getUint(keccak256(verifiedAtKey));
+        verifiedAt = getContext().getAccountStorage().getUint(keccak256(verifiedAtKey));
     }
 
     function setVerificationResult(
@@ -106,9 +106,11 @@ contract AccountStorageAdapter is Ownable, WithKimlicContext {
         address accountAddress, AccountFieldName accountFieldName, uint index,
         bool isVerified, address verifiedBy, uint verifiedAt) public verificationContractOrOwnerOnly() {
 
+        KimlicContractsContext context = getContext();
+
         string memory fieldName = convertAccountFieldNameToString(accountFieldName);
         
-        AccountStorage accountStorage = getContext().getAccountStorage();
+        AccountStorage accountStorage = context.getAccountStorage();
 
         bytes memory isVerifiedKey = abi.encode(accountAddress, fieldName, index, convertMetaFieldNameToString(MetaFieldName.IsVerified));
         accountStorage.setBool(keccak256(isVerifiedKey), isVerified);
@@ -119,7 +121,7 @@ contract AccountStorageAdapter is Ownable, WithKimlicContext {
         bytes memory verifiedAtKey = abi.encode(accountAddress, fieldName, index, convertMetaFieldNameToString(MetaFieldName.VerifiedAt));
         accountStorage.setUint(keccak256(verifiedAtKey), verifiedAt);
 
-        getContext().getRewardingContract().checkMilestones(accountAddress, accountFieldName);
+        context.getRewardingContract().checkMilestones(accountAddress, accountFieldName);
     }
 
     function getFieldHistoryLength(address accountAddress, AccountFieldName accountFieldName) public view returns(uint length){
@@ -212,17 +214,19 @@ contract AccountStorageAdapter is Ownable, WithKimlicContext {
     }
 
     modifier verificationContractOrOwnerOnly() {
+        KimlicContractsContext context = getContext();
         require(
-            getContext().getVerificationContractFactory().createdContracts(msg.sender) ||
-            msg.sender == getContext().owner());
+            context.getVerificationContractFactory().createdContracts(msg.sender) ||
+            msg.sender == context.owner());
         _;
     }
 
     modifier checkReadingDataRestrictions(address account) {
+        KimlicContractsContext context = getContext();
         require(
-            getContext().getVerificationContractFactory().createdContracts(msg.sender) ||
-            getContext().getProvisioningContractFactory().createdContracts(msg.sender) ||
-            msg.sender == getContext().owner() ||
+            context.getVerificationContractFactory().createdContracts(msg.sender) ||
+            context.getProvisioningContractFactory().createdContracts(msg.sender) ||
+            msg.sender == context.owner() ||
             msg.sender == account);
         _;
     }

@@ -17,7 +17,7 @@ contract BaseVerification is Ownable, WithKimlicContext {
 
     constructor(
         address contextStorage, address account, uint rewardAmount, address coOwnerAddress,
-        AccountStorageAdapter.AccountFieldName fieldName) public WithKimlicContext(contextStorage) {
+        AccountStorageAdapter.AccountFieldName fieldName) public WithKimlicContext(contextStorage) Ownable() {
 
         coOwner = coOwnerAddress;
         _accountAddress = account;
@@ -25,7 +25,7 @@ contract BaseVerification is Ownable, WithKimlicContext {
         accountFieldName = fieldName;
     }
 
-    function setVerificationResult(bool verificationResult) public {
+    function setVerificationResult(bool verificationResult) public onlyOwner() {
         KimlicContractsContext context = getContext();
         KimlicToken token = context.getKimlicToken();
         require(token.balanceOf(address(this)) == _rewardAmount);

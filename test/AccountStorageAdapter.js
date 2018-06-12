@@ -1,13 +1,7 @@
-var { getMainAccount } = require("../configReader");
-
 var AccountStorageAdapter = artifacts.require("./AccountStorageAdapter.sol");
 
 
 contract("AccountStorageAdapter", function(accounts){
-    var mainAccount = getMainAccount();
-
-    web3.personal.unlockAccount(mainAccount.address, mainAccount.password, 1000);
-
     var adapter;
     const emailHash = "emailHash";
     const phoneHash = "phoneHash";
