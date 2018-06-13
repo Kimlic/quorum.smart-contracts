@@ -11,8 +11,8 @@ var ProvisioningPrice = artifacts.require("./ProvisioningPrice.sol");
 var RewardingContract = artifacts.require("./RewardingContract.sol");
 var RelyingPartyStorageAdapter = artifacts.require("./RelyingPartyStorageAdapter.sol")
 var RelyingPartyStorage = artifacts.require("./RelyingPartyStorage.sol")
-var ApplicationPartyStorageAdapter = artifacts.require("./ApplicationPartyStorageAdapter.sol")
-var ApplicationPartyStorage = artifacts.require("./ApplicationPartyStorage.sol")
+var AttestationPartyStorageAdapter = artifacts.require("./AttestationPartyStorageAdapter.sol")
+var AttestationPartyStorage = artifacts.require("./AttestationPartyStorage.sol")
 
 module.exports = function(deployer, network, accounts) {
     var mainAccount = getMainAccount(network);
@@ -61,10 +61,10 @@ module.exports = function(deployer, network, accounts) {
         return deployer.deploy(RelyingPartyStorage, KimlicContextStorage.address, deployConfig);
     })
     .then(()=>{
-        return deployer.deploy(ApplicationPartyStorageAdapter, KimlicContextStorage.address, deployConfig);
+        return deployer.deploy(AttestationPartyStorageAdapter, KimlicContextStorage.address, deployConfig);
     })
     .then(()=>{
-        return deployer.deploy(ApplicationPartyStorage, KimlicContextStorage.address, deployConfig);
+        return deployer.deploy(AttestationPartyStorage, KimlicContextStorage.address, deployConfig);
     })
     .then(()=>{
         
@@ -120,11 +120,11 @@ module.exports = function(deployer, network, accounts) {
         console.log("\nRelyingPartyStorage = ", RelyingPartyStorage.address);
         kimlicContractsContextInstance.setAccountStorageAdapter(RelyingPartyStorage.address, deployConfig);
         
-        console.log("\nApplicationPartyStorageAdapter = ", ApplicationPartyStorageAdapter.address);
-        kimlicContractsContextInstance.setAccountStorageAdapter(ApplicationPartyStorageAdapter.address, deployConfig);
+        console.log("\nAttestationPartyStorageAdapter = ", AttestationPartyStorageAdapter.address);
+        kimlicContractsContextInstance.setAccountStorageAdapter(AttestationPartyStorageAdapter.address, deployConfig);
         
-        console.log("\nApplicationPartyStorage = ", ApplicationPartyStorage.address);
-        kimlicContractsContextInstance.setAccountStorageAdapter(ApplicationPartyStorage.address, deployConfig);
+        console.log("\nAttestationPartyStorage = ", AttestationPartyStorage.address);
+        kimlicContractsContextInstance.setAccountStorageAdapter(AttestationPartyStorage.address, deployConfig);
         
         console.log("\nKimlicToken = ", KimlicToken.address);
         kimlicContractsContextInstance.setKimlicToken(KimlicToken.address, deployConfig);

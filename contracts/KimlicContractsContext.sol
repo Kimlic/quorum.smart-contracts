@@ -13,8 +13,8 @@ import "./BaseStorage.sol";
 import "./RewardingContract.sol";
 import "./RelyingPartyStorageAdapter.sol";
 import "./RelyingPartyStorage.sol";
-import "./ApplicationPartyStorageAdapter.sol";
-import "./ApplicationPartyStorage.sol";
+import "./AttestationPartyStorageAdapter.sol";
+import "./AttestationPartyStorage.sol";
 
 contract KimlicContractsContext is Ownable {
     
@@ -31,8 +31,8 @@ contract KimlicContractsContext is Ownable {
     string private constant accountStorageKey = "accountStorage";
     string private constant relyingPartyStorageAdapterKey = "relyingPartyStorageAdapter";
     string private constant relyingPartyStorageKey = "relyingPartyStorage";
-    string private constant applicationPartyStorageAdapterKey = "applicationPartyStorageAdapter";
-    string private constant applicationPartyStorageKey = "applicationPartyStorage";
+    string private constant attestationPartyStorageAdapterKey = "attestationPartyStorageAdapter";
+    string private constant attestationPartyStorageKey = "attestationPartyStorage";
     KimlicContextStorage internal _storage;
 
     /// constructors ///
@@ -83,12 +83,12 @@ contract KimlicContractsContext is Ownable {
         relyingPartyStorage = RelyingPartyStorage(_storage.getAddress(keccak256(relyingPartyStorageKey)));
     }
 
-    function getApplicationPartyStorageAdapter() public view returns(ApplicationPartyStorageAdapter applicationPartyStorageAdapter) {
-        applicationPartyStorageAdapter = ApplicationPartyStorageAdapter(_storage.getAddress(keccak256(applicationPartyStorageAdapterKey)));
+    function getAttestationPartyStorageAdapter() public view returns(AttestationPartyStorageAdapter attestationPartyStorageAdapter) {
+        attestationPartyStorageAdapter = AttestationPartyStorageAdapter(_storage.getAddress(keccak256(attestationPartyStorageAdapterKey)));
     }
 
-    function getApplicationPartyStorage() public view returns(ApplicationPartyStorage applicationPartyStorage) {
-        applicationPartyStorage = ApplicationPartyStorage(_storage.getAddress(keccak256(applicationPartyStorageKey)));
+    function getAttestationPartyStorage() public view returns(AttestationPartyStorage attestationPartyStorage) {
+        attestationPartyStorage = AttestationPartyStorage(_storage.getAddress(keccak256(attestationPartyStorageKey)));
     }
 
 
@@ -133,11 +133,11 @@ contract KimlicContractsContext is Ownable {
         _storage.setAddress(keccak256(relyingPartyStorageKey), relyingPartyStorageAddress);
     }
 
-    function setApplicationPartyStorageAdapter(address applicationPartyStorageAdapterAddress) public {
-        _storage.setAddress(keccak256(applicationPartyStorageAdapterKey), applicationPartyStorageAdapterAddress);
+    function setAttestationPartyStorageAdapter(address attestationPartyStorageAdapterAddress) public {
+        _storage.setAddress(keccak256(attestationPartyStorageAdapterKey), attestationPartyStorageAdapterAddress);
     }
 
-    function setApplicationPartyStorage(address applicationPartyStorageAddress) public {
-        _storage.setAddress(keccak256(applicationPartyStorageKey), applicationPartyStorageAddress);
+    function setAttestationPartyStorage(address attestationPartyStorageAddress) public {
+        _storage.setAddress(keccak256(attestationPartyStorageKey), attestationPartyStorageAddress);
     }
 }

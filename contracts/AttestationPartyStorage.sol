@@ -5,7 +5,7 @@ import "./KimlicContractsContext.sol";
 import "./BaseStorage.sol";
 import "./WithKimlicContext.sol";
 
-contract ApplicationPartyStorage is BaseStorage, WithKimlicContext {
+contract AttestationPartyStorage is BaseStorage, WithKimlicContext {
     
     /// constructors ///
     constructor (address contextStorage) public WithKimlicContext(contextStorage) {
@@ -14,7 +14,7 @@ contract ApplicationPartyStorage is BaseStorage, WithKimlicContext {
     /// modifiers ///
     modifier accessRestriction() {
         KimlicContractsContext context = getContext();
-        require(msg.sender == address(context.getApplicationPartyStorageAdapter()) || msg.sender == context.owner());
+        require(msg.sender == address(context.getAttestationPartyStorageAdapter()) || msg.sender == context.owner());
         _;
     }
 

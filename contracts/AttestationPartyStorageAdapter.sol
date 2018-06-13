@@ -6,7 +6,7 @@ import "./WithKimlicContext.sol";
 import "./BaseStorage.sol";
 import "./BasePartyStorageAdapter.sol";
 
-contract ApplicationPartyStorageAdapter is BasePartyStorageAdapter {
+contract AttestationPartyStorageAdapter is BasePartyStorageAdapter {
 
     /// private attributes ///
     string private constant legalName = "legalName";
@@ -24,7 +24,7 @@ contract ApplicationPartyStorageAdapter is BasePartyStorageAdapter {
 
     /// internal methods ///
     function getStorage() view internal returns (BaseStorage) {
-        getContext().getApplicationPartyStorage();
+        getContext().getAttestationPartyStorage();
     }
     
     /// Modifiers ///
