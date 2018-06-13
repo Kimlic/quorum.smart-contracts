@@ -9,6 +9,10 @@ var ProvisioningContractFactory = artifacts.require("./ProvisioningContractFacto
 var KimlicToken = artifacts.require("./KimlicToken.sol");
 var ProvisioningPrice = artifacts.require("./ProvisioningPrice.sol");
 var RewardingContract = artifacts.require("./RewardingContract.sol");
+var RelyingPartyStorageAdapter = artifacts.require("./RelyingPartyStorageAdapter.sol")
+var RelyingPartyStorage = artifacts.require("./RelyingPartyStorage.sol")
+var ApplicationPartyStorageAdapter = artifacts.require("./ApplicationPartyStorageAdapter.sol")
+var ApplicationPartyStorage = artifacts.require("./ApplicationPartyStorage.sol")
 
 module.exports = function(deployer, network, accounts) {
     var mainAccount = getMainAccount(network);
@@ -39,7 +43,7 @@ module.exports = function(deployer, network, accounts) {
     var deployConfig = {
         "from": mainAccount.address
     };
-    
+
     deployer.deploy(KimlicContextStorage, deployConfig).then((instance)=>{
         kimlicContextStorageInstance = instance;
         return deployer.deploy(KimlicContractsContext, KimlicContextStorage.address, deployConfig);
@@ -49,6 +53,18 @@ module.exports = function(deployer, network, accounts) {
     })
     .then(()=>{
         return deployer.deploy(AccountStorageAdapter, KimlicContextStorage.address, deployConfig);
+    })
+    .then(()=>{
+        return deployer.deploy(RelyingPartyStorageAdapter, KimlicContextStorage.address, deployConfig);
+    })
+    .then(()=>{
+        return deployer.deploy(RelyingPartyStorage, KimlicContextStorage.address, deployConfig);
+    })
+    .then(()=>{
+        return deployer.deploy(ApplicationPartyStorageAdapter, KimlicContextStorage.address, deployConfig);
+    })
+    .then(()=>{
+        return deployer.deploy(ApplicationPartyStorage, KimlicContextStorage.address, deployConfig);
     })
     .then(()=>{
         
@@ -92,28 +108,40 @@ module.exports = function(deployer, network, accounts) {
         
         console.log(getFormatedConsoleLable("Setup kimlic contracts context instance:"));
         
-        console.log("AccountStorageAddress = ", AccountStorage.address);
+        console.log("\nAccountStorageAddress = ", AccountStorage.address);
         kimlicContractsContextInstance.setAccountStorage(AccountStorage.address, deployConfig);
         
-        console.log("AccountStorageAdapter = ", AccountStorageAdapter.address);
+        console.log("\nAccountStorageAdapter = ", AccountStorageAdapter.address);
         kimlicContractsContextInstance.setAccountStorageAdapter(AccountStorageAdapter.address, deployConfig);
         
-        console.log("KimlicToken = ", KimlicToken.address);
+        console.log("\nRelyingPartyStorageAdapter = ", RelyingPartyStorageAdapter.address);
+        kimlicContractsContextInstance.setAccountStorageAdapter(RelyingPartyStorageAdapter.address, deployConfig);
+        
+        console.log("\nRelyingPartyStorage = ", RelyingPartyStorage.address);
+        kimlicContractsContextInstance.setAccountStorageAdapter(RelyingPartyStorage.address, deployConfig);
+        
+        console.log("\nApplicationPartyStorageAdapter = ", ApplicationPartyStorageAdapter.address);
+        kimlicContractsContextInstance.setAccountStorageAdapter(ApplicationPartyStorageAdapter.address, deployConfig);
+        
+        console.log("\nApplicationPartyStorage = ", ApplicationPartyStorage.address);
+        kimlicContractsContextInstance.setAccountStorageAdapter(ApplicationPartyStorage.address, deployConfig);
+        
+        console.log("\nKimlicToken = ", KimlicToken.address);
         kimlicContractsContextInstance.setKimlicToken(KimlicToken.address, deployConfig);
         
-        console.log("VerificationContractFactory = ", VerificationContractFactory.address);
+        console.log("\nVerificationContractFactory = ", VerificationContractFactory.address);
         kimlicContractsContextInstance.setVerificationContractFactory(VerificationContractFactory.address, deployConfig);
         
-        console.log("ProvisioningPrice = ", ProvisioningPrice.address);
+        console.log("\nProvisioningPrice = ", ProvisioningPrice.address);
         kimlicContractsContextInstance.setProvisioningPrice(ProvisioningPrice.address, deployConfig);
         
-        console.log("ProvisioningContractFactory = ", ProvisioningContractFactory.address);
+        console.log("\nProvisioningContractFactory = ", ProvisioningContractFactory.address);
         kimlicContractsContextInstance.setProvisioningContractFactory(ProvisioningContractFactory.address, deployConfig);
         
-        console.log("communityTokenWalletAddress = ", communityTokenWalletAddress);
+        console.log("\nCommunity token wallet address = ", communityTokenWalletAddress);
         kimlicContractsContextInstance.setCommunityTokenWalletAddress(communityTokenWalletAddress, deployConfig);
         
-        console.log("RewardingContract = ", RewardingContract.address);
+        console.log("\nRewardingContract = ", RewardingContract.address);
         kimlicContractsContextInstance.setRewardingContract(RewardingContract.address, deployConfig);
     };
     
