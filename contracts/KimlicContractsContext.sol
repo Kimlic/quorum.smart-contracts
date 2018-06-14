@@ -125,7 +125,7 @@ contract KimlicContractsContext is Ownable {
         _storage.setAddress(keccak256(accountStorageKey), accountStorageAddress);
     }
     
-    function setRelyingPartyStorageAdapterStorage(address relyingPartyStorageAdapterAddress) public {
+    function setRelyingPartyStorageAdapter(address relyingPartyStorageAdapterAddress) public {
         _storage.setAddress(keccak256(relyingPartyStorageAdapterKey), relyingPartyStorageAdapterAddress);
     }
 

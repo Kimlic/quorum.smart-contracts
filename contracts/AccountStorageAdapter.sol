@@ -26,27 +26,8 @@ contract AccountStorageAdapter is Ownable, WithKimlicContext {
 
     /// public methods ///
 
-    function setAccountData(string identityHash, string phoneHash, string emailHash, bytes32 deviceHash) public {
-
-        updateAccountField(msg.sender, emailHash, AccountFieldName.Email);
-        updateAccountField(msg.sender, phoneHash, AccountFieldName.Phone);
-        updateAccountField(msg.sender, identityHash, AccountFieldName.Identity);
-        
-        AccountStorage accountStorage = getContext().getAccountStorage();
-
-        bytes memory deviceHashKey = abi.encode(msg.sender, convertAccountFieldNameToString(AccountFieldName.Device));
-        bytes32 storedDeviceHash = accountStorage.getBytes32(keccak256(deviceHashKey));
-        if(storedDeviceHash != deviceHash) {
-            accountStorage.setBytes32(keccak256(deviceHashKey), deviceHash);
-        }
-    }
-
-    function addAddress(string data, string objectType) public {
-        addNewFieldItem(msg.sender, AccountFieldName.Addresses, data, objectType);
-    }
-
-    function addDocument(string data, string objectType) public {
-        addNewFieldItem(msg.sender, AccountFieldName.Documents, data, objectType);
+    function setAccountData(string data, AccountFieldName accountFieldName) public {
+        updateAccountField(msg.sender, data, accountFieldName);
     }
 
     function getLastAccountDataVerifiedBy(address accountAddress, AccountFieldName accountFieldName) public view returns(address verifiedBy) {
@@ -62,7 +43,7 @@ contract AccountStorageAdapter is Ownable, WithKimlicContext {
     }
 
     function getLastAccountData(address accountAddress, AccountFieldName accountFieldName)
-        public view returns(string data, string objectType, bool isVerified, address verifiedBy, uint256 verifiedAt) {
+        public view returns(string data, bool isVerified, address verifiedBy, uint256 verifiedAt) {/*, string objectType*/
 
         uint index = getFieldHistoryLength(accountAddress, accountFieldName);
         return getAccountData(accountAddress, accountFieldName, index);
@@ -72,26 +53,27 @@ contract AccountStorageAdapter is Ownable, WithKimlicContext {
         public
         view
         checkReadingDataRestrictions(accountAddress)
-        returns(string data, string objectType, bool isVerified, address verifiedBy, uint256 verifiedAt) {
+        returns(string data, bool isVerified, address verifiedBy, uint256 verifiedAt) {/*, string objectType*/
 
-        //AccountStorage accountStorage = getContext().getAccountStorage();// TODO find reason of error "Stack too deep, try removing local variables"
+        AccountStorage accountStorage = getContext().getAccountStorage();
+        // TODO find reason of error "Stack too deep, try removing local variables"
 
         string memory fieldName = convertAccountFieldNameToString(accountFieldName);
 
         bytes memory dataKey = abi.encode(accountAddress, fieldName, index, convertMetaFieldNameToString(MetaFieldName.Data));
-        data = getContext().getAccountStorage().getString(keccak256(dataKey));
-
+        data = accountStorage.getString(keccak256(dataKey));
+        /*
         bytes memory objectTypeKey = abi.encode(accountAddress, fieldName, index, convertMetaFieldNameToString(MetaFieldName.ObjectType));
-        objectType = getContext().getAccountStorage().getString(keccak256(objectTypeKey));
+        objectType = getContext().getAccountStorage().getString(keccak256(objectTypeKey));*/
 
         bytes memory isVerifiedKey = abi.encode(accountAddress, fieldName, index, convertMetaFieldNameToString(MetaFieldName.IsVerified));
-        isVerified = getContext().getAccountStorage().getBool(keccak256(isVerifiedKey));
+        isVerified = accountStorage.getBool(keccak256(isVerifiedKey));
 
         bytes memory verifiedByKey = abi.encode(accountAddress, fieldName, index, convertMetaFieldNameToString(MetaFieldName.VerifiedBy));
-        verifiedBy = getContext().getAccountStorage().getAddress(keccak256(verifiedByKey));
+        verifiedBy = accountStorage.getAddress(keccak256(verifiedByKey));
 
         bytes memory verifiedAtKey = abi.encode(accountAddress, fieldName, index, convertMetaFieldNameToString(MetaFieldName.VerifiedAt));
-        verifiedAt = getContext().getAccountStorage().getUint(keccak256(verifiedAtKey));
+        verifiedAt = accountStorage.getUint(keccak256(verifiedAtKey));
     }
 
     function setVerificationResult(
@@ -132,21 +114,29 @@ contract AccountStorageAdapter is Ownable, WithKimlicContext {
     /// private methods ///
 
     function updateAccountField(address accountAddress, string data, AccountFieldName accountFieldName) private {
+        require(!isEqualStrings(data, ""));
         string memory fieldName = convertAccountFieldNameToString(accountFieldName);
 
         uint index = getFieldHistoryLength(accountAddress, accountFieldName);
 
-        bytes memory dataKey = abi.encode(accountAddress, fieldName, index, convertMetaFieldNameToString(MetaFieldName.Data));
-        string memory storedData = getContext().getAccountStorage().getString(keccak256(dataKey));
+        string memory storedData = "";
+
+        if (index > 0) {
+            bytes memory dataKey = abi.encode(accountAddress, fieldName, index, convertMetaFieldNameToString(MetaFieldName.Data));
+            storedData = getContext().getAccountStorage().getString(keccak256(dataKey));
+        }
+
         if (!isEqualStrings(storedData, data)) {
-            addNewFieldItem(accountAddress, accountFieldName, data, "");
+            if (accountFieldName == AccountFieldName.Device) {
+                require(index == 0);
+            }
+            addNewFieldItem(accountAddress, accountFieldName, data);
         }
     }
 
 
-    function addNewFieldItem(
-        address accountAddress, AccountFieldName accountFieldName,
-        string data, string objectType) private {
+    function addNewFieldItem(address accountAddress, AccountFieldName accountFieldName, string data) private {/*, string objectType*/
+            //TODO do we nedd object type?
 
         uint index = getFieldHistoryLength(accountAddress, accountFieldName) + 1;
 
@@ -154,12 +144,12 @@ contract AccountStorageAdapter is Ownable, WithKimlicContext {
         
         AccountStorage accountStorage = getContext().getAccountStorage();
 
-        bytes memory newDataKey = abi.encode(accountAddress, fieldName, index, convertMetaFieldNameToString(MetaFieldName.Data));
-        accountStorage.setString(keccak256(newDataKey), data);
+        bytes memory dataKey = abi.encode(accountAddress, fieldName, index, convertMetaFieldNameToString(MetaFieldName.Data));
+        accountStorage.setString(keccak256(dataKey), data);
 
-        bytes memory objectTypeKey = abi.encode(accountAddress, fieldName, index, convertMetaFieldNameToString(MetaFieldName.ObjectType));
+        /*bytes memory objectTypeKey = abi.encode(accountAddress, fieldName, index, convertMetaFieldNameToString(MetaFieldName.ObjectType));
         accountStorage.setString(keccak256(objectTypeKey), objectType);
-
+        */
         bytes memory fieldHistoryLengthKey = abi.encode(accountAddress, accountFieldName, lengthCaption);
         accountStorage.setUint(keccak256(fieldHistoryLengthKey), index);
     }

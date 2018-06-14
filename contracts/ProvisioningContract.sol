@@ -77,7 +77,7 @@ contract ProvisioningContract is Ownable, WithKimlicContext {
         }
     }
 
-    function getData(uint requiredDataArrayIndex) view public onlyOwner() returns(string data, string objectType,
+    function getData(uint requiredDataArrayIndex) view public onlyOwner() returns(string data, /*string objectType,*/
             bool isVerified, address verifiedBy, uint256 verifiedAt) {
 
         RequiredData storage requiredData = requiredDataArray[requiredDataArrayIndex];

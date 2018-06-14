@@ -5,7 +5,15 @@ module.exports = {
       runs: 200
     }
   },
+  mocha: {
+    useColors: false
+  },
   networks: {
+    testRpc: {
+      host: "localhost:8545",
+      network_id: "10",
+      gas: 4612388
+    },
     KIM1: {
       host: "127.0.0.1",
       port: 22000,
