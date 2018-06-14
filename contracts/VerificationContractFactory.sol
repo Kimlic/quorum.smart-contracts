@@ -13,6 +13,7 @@ contract VerificationContractFactory is WithKimlicContext {
 
     /// private attributes ///
     uint private _rewardAmount;
+    mapping(string=>address) private contracts;
 
     /// Constructors ///
     constructor(address contextStorage) public WithKimlicContext(contextStorage) {
@@ -20,21 +21,24 @@ contract VerificationContractFactory is WithKimlicContext {
     }
 
     /// public methods ///
-    function createEmailVerification(address account, address coOwnerAddress)
-            public returns(BaseVerification createdContract) {
+    function getVerificationContract(string key) view public returns (address) {
+        return contracts[key];
+    }
 
-        createdContract = new BaseVerification(_storage, account,
+    function createEmailVerification(address account, address coOwnerAddress, string key) public {
+
+        BaseVerification createdContract = new BaseVerification(_storage, account,
             _rewardAmount, coOwnerAddress, AccountStorageAdapter.AccountFieldName.Email);
         createdContract.transferOwnership(msg.sender);
         createdContracts[address(createdContract)] = true;
+        contracts[key] = address(createdContract);
     }
 
-    function createPhoneVerification(address account, address coOwnerAddress)
-            public returns(BaseVerification createdContract) {
-
-        createdContract = new BaseVerification(_storage, account,
+    function createPhoneVerification(address account, address coOwnerAddress, string key) public {
+        BaseVerification createdContract = new BaseVerification(_storage, account,
             _rewardAmount, coOwnerAddress, AccountStorageAdapter.AccountFieldName.Phone);
         createdContract.transferOwnership(msg.sender);
         createdContracts[address(createdContract)] = true;
+        contracts[key] = address(createdContract);
     }
 }
