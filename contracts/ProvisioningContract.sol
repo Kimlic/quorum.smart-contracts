@@ -77,12 +77,16 @@ contract ProvisioningContract is Ownable, WithKimlicContext {
         }
     }
 
-    function getData(uint requiredDataArrayIndex) view public onlyOwner() returns(string data, /*string objectType,*/
+    function getData(uint requiredDataArrayIndex) view public onlyOwner() returns(string data, string objectType, 
             bool isVerified, address verifiedBy, uint256 verifiedAt) {
 
         RequiredData storage requiredData = requiredDataArray[requiredDataArrayIndex];
         
-        return getContext().getAccountStorageAdapter().getAccountData(account, requiredData.fieldName, requiredData.index);
+        AccountStorageAdapter adapter = getContext().getAccountStorageAdapter();
+
+        ( data, objectType ) = adapter.getAccountFieldMainData(account, requiredData.fieldName, requiredData.index);
+
+        ( isVerified, verifiedBy, verifiedAt ) = adapter.getAccountFieldVerificationData(account, requiredData.fieldName, requiredData.index); 
     }
     
 

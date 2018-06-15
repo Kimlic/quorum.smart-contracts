@@ -38,7 +38,7 @@ contract BaseVerification is Ownable, WithKimlicContext {
 
         token.transfer(owner, _rewardAmount);
 
-        context.getAccountStorageAdapter().setAccountFieldVerificationResult(
+        context.getAccountStorageAdapter().setAccountFieldVerificationData(
             _accountAddress, accountFieldName, verificationResult, address(this), block.timestamp);
     }
 }

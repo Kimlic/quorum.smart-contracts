@@ -10,15 +10,13 @@ let { accountConsts, addAccount, getAccountLastData, getAccountLastDataIndex } =
 contract("Verification", function(accounts) {
     
     let accountAddress = accounts[0];
-    
     it("init account", async () => {
         let adapter = await AccountStorageAdapter.deployed();
-        console.log(`phoneValue: ${accountConsts.phoneValue} , phoneColumnIndex: ${accountConsts.phoneColumnIndex}`);
-        await addAccount(adapter, accountConsts.phoneValue, accountConsts.phoneColumnIndex);
-        await addAccount(adapter, accountConsts.emailValue, accountConsts.emailColumnIndex);
-        //await addAccount(adapter, accountConsts.identityValue, accountConsts.identityColumnIndex);
-        await addAccount(adapter, accountConsts.documentValue, accountConsts.documentsColumnIndex);
-        //await addAccount(adapter, accountConsts.addressValue, accountConsts.addressesColumnIndex);
+        await addAccount(adapter, accountConsts.phoneValue, accountConsts.phoneObjectType, accountConsts.phoneColumnIndex);
+        await addAccount(adapter, accountConsts.emailValue, accountConsts.emailObjectType, accountConsts.emailColumnIndex);
+        //await addAccount(adapter, accountConsts.identityValue, accountConsts.identityObjectType, accountConsts.identityColumnIndex);
+        await addAccount(adapter, accountConsts.documentValue, accountConsts.documentObjectType, accountConsts.documentsColumnIndex);
+        //await addAccount(adapter, accountConsts.addressValue, accountConsts.addressObjectType, accountConsts.addressesColumnIndex);
     });
 
     it("allow verification contract factory to spend coOwner`s tokens", async () => {
