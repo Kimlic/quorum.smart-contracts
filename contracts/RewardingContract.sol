@@ -44,15 +44,23 @@ contract RewardingContract is Ownable, WithKimlicContext {
         if (getIsDataVerified(accountAddress, AccountStorageAdapter.AccountFieldName.Email) &&
             getIsDataVerified(accountAddress, AccountStorageAdapter.AccountFieldName.Phone)) {
             
-            getContext().getKimlicToken().transfer(accountAddress, mielstone2Reward);
+            sendReward(accountAddress, mielstone2Reward);
         }
         
     }
 
     function checkMilestone2(address accountAddress) private {
         if (getIsDataVerified(accountAddress, AccountStorageAdapter.AccountFieldName.Identity)) {
-            getContext().getKimlicToken().transfer(accountAddress, mielstone2Reward);
+            sendReward(accountAddress, mielstone2Reward);
         }
+    }
+
+    function sendReward(address accountAddress, uint rewardAmont) private {
+        KimlicContractsContext context = getContext();
+
+        address communityTokenWalletAddress = context.getCommunityTokenWalletAddress();
+
+        context.getKimlicToken().transferFrom(communityTokenWalletAddress, accountAddress, mielstone2Reward);
     }
 
     function getIsDataVerified(address accountAddress, AccountStorageAdapter.AccountFieldName accountFieldName) 

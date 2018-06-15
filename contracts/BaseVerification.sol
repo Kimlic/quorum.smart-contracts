@@ -11,16 +11,20 @@ contract BaseVerification is Ownable, WithKimlicContext {
     AccountStorageAdapter.AccountFieldName public accountFieldName;
     address public coOwner;
     bool public isVerified;
+    uint public dataIndex;
+    address public verificator;
 
     address internal _accountAddress;
     uint internal _rewardAmount;
 
     constructor(
-        address contextStorage, address account, uint rewardAmount, address coOwnerAddress,
+        address contextStorage, uint rewardAmount, address account, address coOwnerAddress, uint index, address verificatorAddress,
         AccountStorageAdapter.AccountFieldName fieldName) public WithKimlicContext(contextStorage) Ownable() {
 
         coOwner = coOwnerAddress;
         _accountAddress = account;
+        dataIndex = index;
+        verificator = verificatorAddress;
         _rewardAmount = rewardAmount;
         accountFieldName = fieldName;
     }
@@ -29,11 +33,12 @@ contract BaseVerification is Ownable, WithKimlicContext {
         KimlicContractsContext context = getContext();
         KimlicToken token = context.getKimlicToken();
         require(token.balanceOf(address(this)) == _rewardAmount);
+        
         isVerified = verificationResult;
 
         token.transfer(owner, _rewardAmount);
 
-        context.getAccountStorageAdapter().setVerificationResult(
+        context.getAccountStorageAdapter().setAccountFieldVerificationResult(
             _accountAddress, accountFieldName, verificationResult, address(this), block.timestamp);
     }
 }

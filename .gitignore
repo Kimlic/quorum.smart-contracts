@@ -19,3 +19,4 @@ dist
 .soliumignore
 .soliumrc.json
 
+.jshintrc

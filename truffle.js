@@ -6,7 +6,7 @@ module.exports = {
     }
   },
   mocha: {
-    useColors: false
+    useColors: true
   },
   networks: {
     testRpc: {

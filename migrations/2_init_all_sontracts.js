@@ -18,6 +18,8 @@ var AttestationPartyStorage = artifacts.require("./AttestationPartyStorage.sol")
 module.exports = function(deployer, network, accounts) {
     var mainAccount = getMainAccount(network);
 
+    var communityTokenWalletAddress = accounts[0];//TODO move to config
+
     if (mainAccount.address) {
         console.log('Account: ' + mainAccount.address);
         var unlockAccountRequest = {
@@ -48,64 +50,62 @@ module.exports = function(deployer, network, accounts) {
     deployer.deploy(KimlicContextStorage, deployConfig).then((instance) => {
         kimlicContextStorageInstance = instance;
         return deployer.deploy(KimlicContractsContext, KimlicContextStorage.address, deployConfig);
-    }).then((instance)=>{
+    }).then((instance) => {
         kimlicContractsContextInstance = instance;
         return deployer.deploy(AccountStorage, KimlicContextStorage.address, deployConfig);
     })
-    .then(()=>{
+    .then(() => {
         return deployer.deploy(AccountStorageAdapter, KimlicContextStorage.address, deployConfig);
     })
-    .then(()=>{
+    .then(() => {
         return deployer.deploy(RelyingPartyStorageAdapter, KimlicContextStorage.address, deployConfig);
     })
-    .then(()=>{
+    .then(() => {
         return deployer.deploy(RelyingPartyStorage, KimlicContextStorage.address, deployConfig);
     })
-    .then(()=>{
+    .then(() => {
         return deployer.deploy(AttestationPartyStorageAdapter, KimlicContextStorage.address, deployConfig);
     })
-    .then(()=>{
+    .then(() => {
         return deployer.deploy(AttestationPartyStorage, KimlicContextStorage.address, deployConfig);
     })
-    .then(()=>{
+    .then(() => {
         
         return deployer.deploy(VerificationContractFactory, KimlicContextStorage.address, deployConfig);
     })
-    .then(()=>{
+    .then(() => {
         return deployer.deploy(ProvisioningContractFactory, KimlicContextStorage.address, deployConfig);
     })
-    .then((instance)=>{
+    .then((instance) => {
         provisioningContractFactoryInstance = instance;
         return deployer.deploy(KimlicToken, deployConfig);
     })
-    .then(()=>{
+    .then(() => {
         return deployer.deploy(ProvisioningPrice, deployConfig);
     })
-    .then((instance)=>{
+    .then((instance) => {
         provisioningPriceInstance = instance;
         return deployer.deploy(RewardingContract, KimlicContextStorage.address, deployConfig);
     })
-    .then((instance)=>{
+    .then(async (instance) => {
         rewardingContractInstance = instance;
 
-        return setupKimlicContextStorageInstance();
-    })
-    .then(async () => {
+        await setupKimlicContextStorageInstance();
         await setupKimlicContractsContextInstance();
         await setupProvisioningContractFactoryInstance();
         await setupRewardingContractInstance();
         await setupProvisioningPriceInstance();
+        await setupCommunityTokenWalletAddress()
     });
 
-    var setupKimlicContextStorageInstance = function() {
+    var setupKimlicContextStorageInstance = async () => {
 
         console.log(getFormatedConsoleLable("Setup kimlic context storage instance:"));
         console.log("Context = " + kimlicContractsContextInstance.address);
-        return kimlicContextStorageInstance.setContext(kimlicContractsContextInstance.address, deployConfig);
+        await kimlicContextStorageInstance.setContext(kimlicContractsContextInstance.address, deployConfig);
     };
     
-    var setupKimlicContractsContextInstance = async function() {
-        var communityTokenWalletAddress = "0x56e19818ba7e4c0335a4cbf82ee6530c89a30735";//replace this address by your!
+    var setupKimlicContractsContextInstance = async () => {
         
         console.log(getFormatedConsoleLable("Setup kimlic contracts context instance:"));
         
@@ -146,7 +146,7 @@ module.exports = function(deployer, network, accounts) {
         await kimlicContractsContextInstance.setRewardingContract(RewardingContract.address, deployConfig);
     };
     
-    var setupProvisioningContractFactoryInstance = async function() {
+    var setupProvisioningContractFactoryInstance = async () => {
         
         var interests = {
             communityTokenWallet: 25,
@@ -161,7 +161,7 @@ module.exports = function(deployer, network, accounts) {
             interests.coOwner, interests.attestationParty, interests.account, deployConfig);
     };
     
-    var setupRewardingContractInstance = async function() {
+    var setupRewardingContractInstance = async () => {
         var rewards = {
             mielstone1: 15,
             mielstone2: 25
@@ -174,7 +174,7 @@ module.exports = function(deployer, network, accounts) {
         await rewardingContractInstance.setMilestone2Reward(rewards.mielstone2, deployConfig);
     };
     
-    var setupProvisioningPriceInstance = async function() {
+    var setupProvisioningPriceInstance = async () => {
         
         console.log(getFormatedConsoleLable("setupProvisioningPriceInstance"));
         var prices = {
@@ -199,6 +199,11 @@ module.exports = function(deployer, network, accounts) {
         
         console.log("Addresses = " + prices.addresses);
         await provisioningPriceInstance.setPrice(5, prices.addresses, deployConfig);
+    };
+
+    let setupCommunityTokenWalletAddress = async () => {
+        let kimlicToken = await KimlicToken.deployed();
+        await kimlicToken.approve(RewardingContract.address, 1000000000, { form: communityTokenWalletAddress });//TODO unlock address
     };
     
     var getFormatedConsoleLable = function(unformatedLable){

@@ -6,6 +6,7 @@ import "./BaseVerification.sol";
 import "./AccountStorageAdapter.sol";
 import "./KimlicContractsContext.sol";
 import "./WithKimlicContext.sol";
+import "./KimlicToken.sol";
 
 contract VerificationContractFactory is WithKimlicContext {
     /// public attributes ///
@@ -25,20 +26,36 @@ contract VerificationContractFactory is WithKimlicContext {
         return contracts[key];
     }
 
-    function createEmailVerification(address account, address coOwnerAddress, string key) public {
-
-        BaseVerification createdContract = new BaseVerification(_storage, account,
-            _rewardAmount, coOwnerAddress, AccountStorageAdapter.AccountFieldName.Email);
-        createdContract.transferOwnership(msg.sender);
-        createdContracts[address(createdContract)] = true;
-        contracts[key] = address(createdContract);
+    function createEmailVerification(address account, address coOwnerAddress, uint dataIndex, address verificatorAddress, string key) public {
+        createBaseVerificationContract(
+            account, coOwnerAddress, dataIndex, verificatorAddress,
+            key, AccountStorageAdapter.AccountFieldName.Email);
     }
 
-    function createPhoneVerification(address account, address coOwnerAddress, string key) public {
-        BaseVerification createdContract = new BaseVerification(_storage, account,
-            _rewardAmount, coOwnerAddress, AccountStorageAdapter.AccountFieldName.Phone);
+    function createPhoneVerification(address account, address coOwnerAddress, uint dataIndex, address verificatorAddress, string key) public {
+        createBaseVerificationContract(
+            account, coOwnerAddress, dataIndex, verificatorAddress,
+            key, AccountStorageAdapter.AccountFieldName.Phone);
+    }
+
+    function createDocumentVerification(address account, address coOwnerAddress, uint dataIndex, address verificatorAddress, string key) public {
+        createBaseVerificationContract(
+            account, coOwnerAddress, dataIndex, verificatorAddress,
+            key, AccountStorageAdapter.AccountFieldName.Documents);
+    }
+    
+    /// private methods ///
+    function createBaseVerificationContract(
+        address account, address coOwnerAddress, uint dataIndex, address verificatorAddress, string key,
+        AccountStorageAdapter.AccountFieldName accountFieldName) private {
+        
+        BaseVerification createdContract = new BaseVerification(
+            _storage, _rewardAmount, account, coOwnerAddress, dataIndex, verificatorAddress, accountFieldName);
         createdContract.transferOwnership(msg.sender);
-        createdContracts[address(createdContract)] = true;
-        contracts[key] = address(createdContract);
+
+        address createdContractAddress = address(createdContract);
+        createdContracts[createdContractAddress] = true;
+        contracts[key] = createdContractAddress;
+        getContext().getKimlicToken().transferFrom(coOwnerAddress, createdContractAddress, _rewardAmount);
     }
 }

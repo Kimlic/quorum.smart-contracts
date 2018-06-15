@@ -26,7 +26,7 @@ contract AccountStorageAdapter is Ownable, WithKimlicContext {
 
     /// public methods ///
 
-    function setAccountData(string data, AccountFieldName accountFieldName) public {
+    function setAccountFieldMainData(string data, AccountFieldName accountFieldName) public {
         updateAccountField(msg.sender, data, accountFieldName);
     }
 
@@ -76,15 +76,15 @@ contract AccountStorageAdapter is Ownable, WithKimlicContext {
         verifiedAt = accountStorage.getUint(keccak256(verifiedAtKey));
     }
 
-    function setVerificationResult(
+    function setAccountFieldVerificationResult(
         address accountAddress, AccountFieldName accountFieldName,
         bool isVerified, address verifiedBy, uint verifiedAt) public {
 
         uint index = getFieldHistoryLength(accountAddress, accountFieldName);
-        setVerificationResult(accountAddress, accountFieldName, index, isVerified, verifiedBy, verifiedAt);
+        setAccountFieldVerificationResult(accountAddress, accountFieldName, index, isVerified, verifiedBy, verifiedAt);
     }
 
-    function setVerificationResult(
+    function setAccountFieldVerificationResult(
         address accountAddress, AccountFieldName accountFieldName, uint index,
         bool isVerified, address verifiedBy, uint verifiedAt) public verificationContractOrOwnerOnly() {
 
@@ -216,6 +216,7 @@ contract AccountStorageAdapter is Ownable, WithKimlicContext {
         require(
             context.getVerificationContractFactory().createdContracts(msg.sender) ||
             context.getProvisioningContractFactory().createdContracts(msg.sender) ||
+            msg.sender == address(context.getRewardingContract()) ||
             msg.sender == context.owner() ||
             msg.sender == account);
         _;
