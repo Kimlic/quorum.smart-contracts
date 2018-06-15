@@ -1,0 +1,19 @@
+
+dist: trusty
+sudo: required
+group: beta
+language: node_js
+node_js:
+  - "8"
+cache:
+  directories:
+    - node_modules
+matrix:
+  fast_finish: true
+before_script:
+  - truffle version
+script:
+  - ganache-cli -p 7545 > /dev/null &
+  - sleep 5
+  - npm run lint
+  - npm run test:ganache

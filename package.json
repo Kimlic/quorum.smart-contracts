@@ -1,0 +1,29 @@
+{
+  "name": "quorum.smart-contracts",
+  "version": "0.1.0",
+  "description": "Kimlic smart contracts",
+  "main": "truffle.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "truffle test",
+    "test:ganache": "truffle test --network ganache",
+    "lint": "solium -d contracts/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Kimlic/quorum.smart-contracts.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Kimlic/quorum.smart-contracts/issues"
+  },
+  "homepage": "https://github.com/Kimlic/quorum.smart-contracts#readme",
+  "devDependencies": {
+    "ganache-cli": "^6.1.3",
+    "solium": "^1.1.7",
+    "truffle": "^4.1.11"
+  }
+}
