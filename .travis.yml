@@ -16,4 +16,4 @@ script:
   - ganache-cli -p 7545 > /dev/null &
   - sleep 5
   - npm run lint
-  - npm run test
+  - npm run test:ganache
