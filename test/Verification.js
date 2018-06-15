@@ -29,7 +29,7 @@ contract("Verification", function(accounts) {
     })
 
     let verificationTests = (factoryMethodName, columnName, columnIndex, coOwnerAddress, verificatorAddress, verificationContractkey) => {
-        it(`Shold create ${columnName} verification contract`, async () => {
+        it(`Should create ${columnName} verification contract`, async () => {
             let adapter = await AccountStorageAdapter.deployed();
             let verificationContractFactory = await VerificationContractFactory.deployed();
             let lastDataIndex = await getAccountLastDataIndex(adapter, accountAddress, columnIndex);
@@ -38,13 +38,13 @@ contract("Verification", function(accounts) {
         });
         
         var verificationContractAddress;
-        it(`Shold return created ${columnName} verification contract by key`, async () => {
+        it(`Should return created ${columnName} verification contract by key`, async () => {
             let verificationContractFactory = await VerificationContractFactory.deployed();
             verificationContractAddress =  await verificationContractFactory.getVerificationContract.call(verificationContractkey);
             assert.notEqual(verificationContractAddress, "0x0000000000000000000000000000000000000000");
         });
         
-        it(`Shold set verification ${columnName} result`, async () => {
+        it(`Should set verification ${columnName} result`, async () => {
             let verificationContractFactory = await BaseVerification.at(verificationContractAddress);
             await verificationContractFactory.setVerificationResult(true);
         });

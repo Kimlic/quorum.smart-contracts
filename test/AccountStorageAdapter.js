@@ -10,11 +10,11 @@ contract("AccountStorageAdapter", function(accounts) {
 
     
     let checkSetAccountData = (fieldData, columnIndex, columnName, expectedFieldIndex) => {
-        let addDataCaption = `Shold add account data. Set account ${columnName} = "${fieldData}".`;
+        let addDataCaption = `Should add account data. Set account ${columnName} = "${fieldData}".`;
         
-        let readDataCaption = `Shold read account ${columnName} data. Must be equal to "${fieldData}".`;
+        let readDataCaption = `Should read account ${columnName} data. Must be equal to "${fieldData}".`;
         
-        let dataIndexCaption = `Shold read account ${columnName} data index. Expected field index: ${expectedFieldIndex}`;
+        let dataIndexCaption = `Should read account ${columnName} data index. Expected field index: ${expectedFieldIndex}`;
         
         it(addDataCaption, async () => {
             let adapter = await AccountStorageAdapter.deployed();
