@@ -14,6 +14,13 @@ module.exports = {
       network_id: "10",
       gas: 4612388
     },
+    ganache: {
+      host: "127.0.0.1",
+      port: 7545,
+      network_id: "*",
+      gasPrice: 0,
+      gas: 4612388
+    },
     KIM1: {
       host: "127.0.0.1",
       port: 22000,
@@ -27,7 +34,8 @@ module.exports = {
       network_id: "10",
       gasPrice: 0,
       gas: 4612388,
-      mnemonic: "chapter run clever race sure shoot solution aisle possible ridge flock august"
+      mnemonic:
+        "chapter run clever race sure shoot solution aisle possible ridge flock august"
     },
     KIM3: {
       host: "127.0.0.1",
@@ -37,4 +45,4 @@ module.exports = {
       gas: 4612388
     }
   }
-}
+};
