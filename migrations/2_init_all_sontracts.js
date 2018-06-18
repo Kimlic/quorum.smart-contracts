@@ -1,4 +1,5 @@
 /*jshint esversion: 6 */
+var fs = require("fs");
 var { getMainAccount } = require("../configReader");
 
 var AccountStorage = artifacts.require("./AccountStorage.sol");
@@ -16,6 +17,7 @@ var AttestationPartyStorageAdapter = artifacts.require("./AttestationPartyStorag
 var AttestationPartyStorage = artifacts.require("./AttestationPartyStorage.sol");
 
 module.exports = function(deployer, network, accounts) {
+    let partiesConfigFileName = "PartiesConfig.json";
     var mainAccount = getMainAccount(network);
 
     var communityTokenWalletAddress = accounts[0];//TODO move to config
@@ -95,7 +97,18 @@ module.exports = function(deployer, network, accounts) {
         await setupProvisioningContractFactoryInstance();
         await setupRewardingContractInstance();
         await setupProvisioningPriceInstance();
-        await setupCommunityTokenWalletAddress()
+        await setupCommunityTokenWalletAddress();
+
+
+        let partiesConfig = {};
+
+        let veriffName = "Veriff";
+        await setupAttestationParty(partiesConfig, veriffName, veriffName + "p@ssw0rd");
+        
+        let kimlicName = "Kimlic";
+        await setupAttestationParty(partiesConfig, kimlicName, kimlicName + "p@ssw0rd");
+
+        savePartiesConfig(partiesConfig);
     });
 
     var setupKimlicContextStorageInstance = async () => {
@@ -205,8 +218,40 @@ module.exports = function(deployer, network, accounts) {
         let kimlicToken = await KimlicToken.deployed();
         await kimlicToken.approve(RewardingContract.address, 1000000000, { form: communityTokenWalletAddress });//TODO unlock address
     };
+
+    let savePartiesConfig = (config) => {
+        console.log(`Saving parties config into file "${partiesConfigFileName}"`);
+        fs.writeFileSync(partiesConfigFileName, JSON.stringify(config));
+    }
     
-    var getFormatedConsoleLable = function(unformatedLable){
+
+    let setupAttestationParty = async (partiesConfig, name, password) => {
+        let address = web3.personal.newAccount(password);
+        console.log(`Created new "${name}" party address: "${address}", password: "${password}"`);
+        web3.personal.unlockAccount(address, password);
+
+        //TODO probably we dont need this step in newer version of Quourum
+        console.log(`Sending eth to created address`);
+        web3.eth.sendTransaction({from: accounts[0], to: address, value: "0xDE0B6B3A7640000"});
+
+
+        let kimlicToken = await KimlicToken.deployed();
+        console.log(`Send tokens to "${name}" account`);
+        await kimlicToken.transfer(address, 10000);
+        
+        var balance = await kimlicToken.balanceOf.call(address);
+        console.log(`Balance of created account - "${balance}"`);
+
+        console.log(`Approve to VerificationContractFactory spend "${name}" tokens`);
+        await kimlicToken.approve(VerificationContractFactory.address, 10000, { from: address });
+
+        let allowance = await kimlicToken.allowance.call(address, VerificationContractFactory.address, { from: address });
+        console.log(`Allowance from "${address}" to verification contract factory at address "${VerificationContractFactory.address}" - ${allowance}`);
+
+        partiesConfig[name] = { address: address, password: password };
+    };
+    
+    let getFormatedConsoleLable = function(unformatedLable){
         var separationString = "=".repeat(10);
         return "\n" + separationString + " " + unformatedLable + " " + separationString + "\n";
     };
