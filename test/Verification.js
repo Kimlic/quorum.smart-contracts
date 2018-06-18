@@ -72,7 +72,6 @@ contract("Verification", function(accounts) {
         return partiesConfig;
     };
 
-    let coOwnerAddress = accounts[0];//TODO replace by real co owner address;
     let verificatorAddress = accounts[0];//TODO replace by real co verificator address;
 
     let config = getPartiesConfig();

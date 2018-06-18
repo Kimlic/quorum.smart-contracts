@@ -17,7 +17,7 @@ contract AttestationPartyStorageAdapter is BasePartyStorageAdapter {
 
     /// internal methods ///
     function getStorage() view internal returns (BaseStorage) {
-        getContext().getAttestationPartyStorage();
+        return getContext().getAttestationPartyStorage();
     }
     
     /// Modifiers ///

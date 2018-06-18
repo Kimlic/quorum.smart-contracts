@@ -55,62 +55,62 @@ let getDataPrivacyUrl = async (adapter, party) => {
     await adapter.getDataPrivacyUrl(party);
 }
 
-let baseStorageAdapterTest = (storageAdapterGetMethod, address, values) => {
-    it(`Should set LegalName. Value: "${legalNameValue}"`, async () => {
-        var adapter = await storageAdapterGetMethod();
+let baseStorageAdapterTest = (storageAdapterGetMethod, address, values = basePartyConsts) => {
+    it(`Should set LegalName. Value: "${values.legalNameValue}"`, async () => {
+        let adapter = await storageAdapterGetMethod();
         await adapter.setLegalName(address, values.legalNameValue);
-    })
-    it(`Should set ShortName. Value: "${shortNameValue}"`, async () => {
-        var adapter = await storageAdapterGetMethod();
-        await adapter.setShortName(address, values.lhortNameValue);
     });
-    it(`Should set BusinessArea. Value: "${businessAreaValue}"`, async () => {
-        var adapter = await storageAdapterGetMethod();
-        await adapter.setBusinessArea(address, values.lusinessAreaValue);
+    it(`Should set ShortName. Value: "${values.shortNameValue}"`, async () => {
+        let adapter = await storageAdapterGetMethod();
+        await adapter.setShortName(address, values.shortNameValue);
     });
-    it(`Should set LegalResidenceCountry. Value: "${legalResidenceCountryValue}"`, async () => {
-        var adapter = await storageAdapterGetMethod();
+    it(`Should set BusinessArea. Value: "${values.businessAreaValue}"`, async () => {
+        let adapter = await storageAdapterGetMethod();
+        await adapter.setBusinessArea(address, values.businessAreaValue);
+    });
+    it(`Should set LegalResidenceCountry. Value: "${values.legalResidenceCountryValue}"`, async () => {
+        let adapter = await storageAdapterGetMethod();
         await adapter.setLegalResidenceCountry(address, values.legalResidenceCountryValue);
     });
-    it(`Should set Website. Value: "${websiteValue}"`, async () => {
-        var adapter = await storageAdapterGetMethod();
-        await adapter.setWebsite(address, values.lebsiteValue);
+    it(`Should set Website. Value: "${values.websiteValue}"`, async () => {
+        let adapter = await storageAdapterGetMethod();
+        await adapter.setWebsite(address, values.websiteValue);
     });
-    it(`Should set DataPrivacyUrl. Value: "${dataPrivacyUrlValue}"`, async () => {
-        var adapter = await storageAdapterGetMethod();
-        await adapter.setDataPrivacyUrl(address, values.lataPrivacyUrlValue);
+    it(`Should set DataPrivacyUrl. Value: "${values.dataPrivacyUrlValue}"`, async () => {
+        let adapter = await storageAdapterGetMethod();
+        await adapter.setDataPrivacyUrl(address, values.dataPrivacyUrlValue);
     });
 
     
-    it(`Should get LegalName value. it must be equal to "${legalNameValue}"`, async () => {
-        var adapter = await storageAdapterGetMethod();
-        var value = await adapter.values(address);
-        assert.equal(value == basePartyConsts.legalNameValue);
+    it(`Should get LegalName value. it must be equal to "${values.legalNameValue}"`, async () => {
+        let adapter = await storageAdapterGetMethod();
+        let value = await adapter.getLegalName.call(address);
+        assert.equal(value, values.legalNameValue);
     });
-    it(`Should get ShortName value. it must be equal to "${shortNameValue}"`, async () => {
-        var adapter = await storageAdapterGetMethod();
-        var value = await adapter.values(address);
-        assert.equal(value == basePartyConsts.lhortNameValue);
+    it(`Should get ShortName value. it must be equal to "${values.shortNameValue}"`, async () => {
+        let adapter = await storageAdapterGetMethod();
+        let value = await adapter.getShortName.call(address);
+        assert.equal(value, values.shortNameValue);
     });
-    it(`Should get BusinessArea value. it must be equal to "${businessAreaValue}"`, async () => {
-        var adapter = await storageAdapterGetMethod();
-        var value = await adapter.values(address);
-        assert.equal(value == basePartyConsts.lusinessAreaValue);
+    it(`Should get BusinessArea value. it must be equal to "${values.businessAreaValue}"`, async () => {
+        let adapter = await storageAdapterGetMethod();
+        let value = await adapter.getBusinessArea.call(address);
+        assert.equal(value, values.businessAreaValue);
     });
-    it(`Should get LegalResidenceCountry value. it must be equal to "${legalResidenceCountryValue}"`, async () => {
-        var adapter = await storageAdapterGetMethod();
-        var value = await adapter.values(address);
-        assert.equal(value == basePartyConsts.legalResidenceCountryValue);
+    it(`Should get LegalResidenceCountry value. it must be equal to "${values.legalResidenceCountryValue}"`, async () => {
+        let adapter = await storageAdapterGetMethod();
+        let value = await adapter.getLegalResidenceCountry.call(address);
+        assert.equal(value, values.legalResidenceCountryValue);
     });
-    it(`Should get Website value. it must be equal to "${websiteValue}"`, async () => {
-        var adapter = await storageAdapterGetMethod();
-        var value = await adapter.values(address);
-        assert.equal(value == basePartyConsts.lebsiteValue);
+    it(`Should get Website value. it must be equal to "${values.websiteValue}"`, async () => {
+        let adapter = await storageAdapterGetMethod();
+        let value = await adapter.getWebsite.call(address);
+        assert.equal(value, values.websiteValue);
     });
-    it(`Should get DataPrivacyUrl value. it must be equal to "${dataPrivacyUrlValue}"`, async () => {
-        var adapter = await storageAdapterGetMethod();
-        var value = await adapter.values(address);
-        assert.equal(value == basePartyConsts.lataPrivacyUrlValue);
+    it(`Should get DataPrivacyUrl value. it must be equal to "${values.dataPrivacyUrlValue}"`, async () => {
+        let adapter = await storageAdapterGetMethod();
+        let value = await adapter.getDataPrivacyUrl.call(address);
+        assert.equal(value, values.dataPrivacyUrlValue);
     });
 }
 
@@ -127,5 +127,6 @@ module.exports = {
     getBusinessArea,
     getLegalResidenceCountry,
     getWebsite,
-    getDataPrivacyUrl 
+    getDataPrivacyUrl,
+    baseStorageAdapterTest
 };
