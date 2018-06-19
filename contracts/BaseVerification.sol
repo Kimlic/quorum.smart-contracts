@@ -30,6 +30,8 @@ contract BaseVerification is Ownable, WithKimlicContext {
     }
 
     function setVerificationResult(bool verificationResult) public onlyOwner() {
+        require(!isVerified);
+        
         KimlicContractsContext context = getContext();
         KimlicToken token = context.getKimlicToken();
         require(token.balanceOf(address(this)) == _rewardAmount);

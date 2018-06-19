@@ -59,6 +59,12 @@ contract("Verification", function(accounts) {
             let verificationContractFactory = await BaseVerification.at(verificationContractAddress);
             await verificationContractFactory.setVerificationResult(true, sendConfig);
         });
+        
+        it(`Should get isVerified. isVerified must be true`, async () => {
+            let verificationContractFactory = await BaseVerification.at(verificationContractAddress);
+            let isVerified = await verificationContractFactory.isVerified.call();
+            assert.equal(isVerified, true);
+        });
     };
 
 
