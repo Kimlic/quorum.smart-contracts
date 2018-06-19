@@ -36,7 +36,8 @@ contract AccountStorageAdapter is Ownable, WithKimlicContext {
     }
 
     function getAccountDataVerifiedBy(address accountAddress, AccountFieldName accountFieldName, uint index)
-            public view checkReadingDataRestrictions(accountAddress) returns(address verifiedBy) {
+            public view returns(address verifiedBy) {
+        //TODO check do we need this modifier here. If add it, provisioning contract constructor cant access this method. checkReadingDataRestrictions(accountAddress)
         string memory fieldName = convertAccountFieldNameToString(accountFieldName);
         bytes memory verifiedByKey = abi.encode(accountAddress, fieldName, index, convertMetaFieldNameToString(MetaFieldName.VerifiedBy));
         verifiedBy = getContext().getAccountStorage().getAddress(keccak256(verifiedByKey));

@@ -15,107 +15,84 @@ contract ProvisioningContract is Ownable, WithKimlicContext {
     address public relyingParty;
     address public account;
     Status public status;
+    uint public tokensUnlockAt;
 
     /// private attributes ///
-    RequiredData[] private requiredDataArray;
-    uint private expectedReward;
-
-    /// structures ///
-    struct RequiredData {
-        AccountStorageAdapter.AccountFieldName fieldName;
-        uint index;
-        uint reward;
-        address coOwner;
-        address attestationParty;
-    }//TODO move to factory?
+    AccountStorageAdapter.AccountFieldName private _fieldName;
+    uint private _index;
+    uint private _reward;
+    address private _coOwner;
+    address private _attestationParty;
 
     /// enums ///
-    enum Status { DataInitialization, WaitingForTokens, Finished } //TODO move to factory?
+    enum Status { Created, DataProvided, Canceled } //TODO move to factory?
 
     /// constructors ///
-    constructor (address contextStorage, address accountAddress) public WithKimlicContext(contextStorage) {
-        require(msg.sender == address(getContext().getProvisioningContractFactory()));
+    constructor (address contextStorage, address accountAddress, AccountStorageAdapter.AccountFieldName accountFieldName, uint index, uint reward)
+            public WithKimlicContext(contextStorage) {
 
+        KimlicContractsContext context = getContext();
+        ProvisioningContractFactory factory = context.getProvisioningContractFactory();
+        require(msg.sender == address(factory));
+        
+        tokensUnlockAt = block.timestamp + factory.tokensLockPeriod() * 1 hours;
+
+        address verifiedBy = context.getAccountStorageAdapter()
+            .getAccountDataVerifiedBy(account, accountFieldName, index);
+
+        BaseVerification verificationContract = BaseVerification(verifiedBy);
+        
         account = accountAddress;
-        status = Status.DataInitialization;
+        _reward = reward;
+        _fieldName = accountFieldName;
+        _index = index;
+        _coOwner = account;//TODO find reason why we cant get coOwner(revert) verificationContract.coOwner()
+        _attestationParty = account;//TODO find reason why we cant get owner(revert) verificationContract.owner()
     }
 
     /// public methods ///
-    function addRequiredData(AccountStorageAdapter.AccountFieldName accountFieldName, uint index) public {     
-
-        KimlicContractsContext context = getContext();
-
-        address verifiedBy = context.getAccountStorageAdapter()
-            .getLastAccountDataVerifiedBy(account, accountFieldName);
-
-        BaseVerification verificationContract = BaseVerification(verifiedBy);    
-        
-        uint reward = context.getProvisioningPrice().getPrice(accountFieldName);
-
-        RequiredData memory data = RequiredData(
-        {
-            fieldName: accountFieldName,
-            index: index,
-            coOwner: verificationContract.coOwner(),
-            attestationParty: verificationContract.owner(),
-            reward: reward
-        });
-
-        requiredDataArray.push(data);
-        expectedReward += reward;
+    function setDataProvidedStatus() public {
+        status = Status.DataProvided;
+        sendRewards();
     }
     
-    function setNextStatus() public {
-        if (status == Status.DataInitialization) {
-            require(requiredDataArray.length > 0);
-            status = Status.WaitingForTokens;
-        } 
-        else if (status == Status.WaitingForTokens) {
-            require(getContext().getKimlicToken().balanceOf(address(this)) == expectedReward);
-            status = Status.Finished;
-            sendRewards();
-        }
-    }
-
-    function getData(uint requiredDataArrayIndex) view public onlyOwner() returns(string data, string objectType, 
+    function getData() view public onlyOwner() returns(string data, string objectType, 
             bool isVerified, address verifiedBy, uint256 verifiedAt) {
 
-        RequiredData storage requiredData = requiredDataArray[requiredDataArrayIndex];
+        require(status == Status.DataProvided);
         
         AccountStorageAdapter adapter = getContext().getAccountStorageAdapter();
 
-        ( data, objectType ) = adapter.getAccountFieldMainData(account, requiredData.fieldName, requiredData.index);
+        ( data, objectType ) = adapter.getAccountFieldMainData(account, _fieldName, _index);
 
-        ( isVerified, verifiedBy, verifiedAt ) = adapter.getAccountFieldVerificationData(account, requiredData.fieldName, requiredData.index); 
+        ( isVerified, verifiedBy, verifiedAt ) = adapter.getAccountFieldVerificationData(account, _fieldName, _index); 
     }
     
 
     /// private methods ///
 
-    //TODO check gas consumption. Even with gas price 0 we still have gas limits
     function sendRewards() private {
-
         KimlicContractsContext context = getContext();
 
         ProvisioningContractFactory factory = context.getProvisioningContractFactory();
         KimlicToken kimlicToken = context.getKimlicToken();
 
-        uint communityTokenWalletInterestPercent = factory.communityTokenWalletInterestPercent();
-        uint attestationPartyInterestPercent = factory.attestationPartyInterestPercent();
-        uint accountInterestPercent = factory.accountInterestPercent();
-        uint coOwnerInterestPercent = factory.coOwnerInterestPercent();
+        uint accountInterest = _reward * factory.accountInterestPercent() / 100;
+        uint coOwnerInterest = _reward * factory.coOwnerInterestPercent() / 100;
+        uint communityTokenWalletInterest = _reward * factory.communityTokenWalletInterestPercent() / 100;
+        uint attestationPartyInterest = _reward * factory.attestationPartyInterestPercent() / 100;
+        
+        kimlicToken.transfer(account, accountInterest);
+        kimlicToken.transfer(_coOwner, coOwnerInterest);
+        kimlicToken.transfer(context.getCommunityTokenWalletAddress(), communityTokenWalletInterest);
+        kimlicToken.transfer(_attestationParty, attestationPartyInterest);
+    }
 
-        for (uint index = 0; index < requiredDataArray.length; index++) {
-            
-            uint communityTokenWalletInterest = requiredDataArray[index].reward * communityTokenWalletInterestPercent / 100;
-            uint attestationPartyInterest = requiredDataArray[index].reward * attestationPartyInterestPercent / 100;
-            uint accountInterest = requiredDataArray[index].reward * accountInterestPercent / 100;
-            uint coOwnerInterest = requiredDataArray[index].reward * coOwnerInterestPercent / 100;
+    function withdraw() public onlyOwner() {
+        require(block.timestamp >= tokensUnlockAt && status == Status.Created);
 
-            kimlicToken.transfer(account, accountInterest);
-            kimlicToken.transfer(account, coOwnerInterest);
-            kimlicToken.transfer(account, communityTokenWalletInterest);
-            kimlicToken.transfer(owner, attestationPartyInterest);
-        }
+        status = Status.Canceled;
+        KimlicToken kimlicToken = getContext().getKimlicToken();
+        kimlicToken.transfer(owner, kimlicToken.balanceOf(address(this)));
     }
 }

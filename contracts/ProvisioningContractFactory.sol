@@ -11,6 +11,8 @@ contract ProvisioningContractFactory is WithKimlicContext {
     uint8 public attestationPartyInterestPercent;
     uint8 public accountInterestPercent;
     uint8 public coOwnerInterestPercent;
+    uint public tokensLockPeriod;
+    mapping(string=>address) private contracts;
     
     /// private attributes ///
 
@@ -19,10 +21,18 @@ contract ProvisioningContractFactory is WithKimlicContext {
     }
 
     /// public methods ///
-    function createProvisioningContract(address account) public returns(ProvisioningContract createdContract) {
-        createdContract = new ProvisioningContract(_storage, account);
+    function createProvisioningContract(address account, AccountStorageAdapter.AccountFieldName accountFieldName, uint index, string key) 
+            public returns(ProvisioningContract createdContract) {
+        
+        KimlicContractsContext context = getContext();
+        uint reward = context.getProvisioningPrice().getPrice(accountFieldName);
+        createdContract = new ProvisioningContract(_storage, account, accountFieldName, index, reward);
         createdContract.transferOwnership(msg.sender);
-        createdContracts[address(createdContract)] = true;
+        address createdContractAddress = address(createdContract);
+        createdContracts[createdContractAddress] = true;
+        contracts[key] = createdContractAddress;
+
+        context.getKimlicToken().transferFrom(msg.sender, createdContractAddress, reward);
     }
 
     function setInterestsPercent(uint8 communityTokenWallet, uint8 coOwner, uint8 attestationParty, uint8 account) public {
@@ -32,5 +42,13 @@ contract ProvisioningContractFactory is WithKimlicContext {
         attestationPartyInterestPercent = attestationParty;
         accountInterestPercent = account;
         coOwnerInterestPercent = coOwner;
+    }
+
+    function setTokensLockPeriod(uint lockPeriod) public {
+        tokensLockPeriod = lockPeriod;
+    }
+
+    function getProvisioningContract(string key) view public returns (address) {
+        return contracts[key];
     }
 }

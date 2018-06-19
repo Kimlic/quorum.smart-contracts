@@ -248,6 +248,12 @@ module.exports = function(deployer, network, accounts) {
         let allowance = await kimlicToken.allowance.call(address, VerificationContractFactory.address, { from: address });
         console.log(`Allowance from "${address}" to verification contract factory at address "${VerificationContractFactory.address}" - ${allowance}`);
 
+        console.log(`Approve to ProvisioningContractFactory spend "${name}" tokens`);//TODO Move to relying party setup
+        await kimlicToken.approve(ProvisioningContractFactory.address, 10000, { from: address });
+
+        let provisioningAllowance = await kimlicToken.allowance.call(address, ProvisioningContractFactory.address, { from: address });
+        console.log(`Allowance from "${address}" to provisioning contract factory at address "${ProvisioningContractFactory.address}" - ${provisioningAllowance}`);
+
         partiesConfig[name] = { address: address, password: password };
     };
     

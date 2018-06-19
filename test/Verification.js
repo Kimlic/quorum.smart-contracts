@@ -4,7 +4,6 @@ var fs = require("fs");
 let VerificationContractFactory = artifacts.require("./VerificationContractFactory.sol");
 let BaseVerification = artifacts.require("./BaseVerification.sol");
 let AccountStorageAdapter = artifacts.require("./AccountStorageAdapter.sol");
-let KimlicToken = artifacts.require("./KimlicToken.sol");
 
 let { accountConsts, addAccount, getAccountFieldLastMainData, getAccountLastDataIndex } = require("./Helpers/AccountHelper.js")
 
@@ -21,13 +20,6 @@ contract("Verification", function(accounts) {
         await addAccount(adapter, accountConsts.documentValue, accountConsts.documentObjectType, accountConsts.documentsColumnIndex);
         //await addAccount(adapter, accountConsts.addressValue, accountConsts.addressObjectType, accountConsts.addressesColumnIndex);
     });
-
-    it("allow verification contract factory to spend coOwner`s tokens", async () => {
-        let adapter = await AccountStorageAdapter.deployed();
-        let verificationContractFactory = await VerificationContractFactory.deployed();
-        let kimlicToken = await KimlicToken.deployed();
-        await kimlicToken.approve(verificationContractFactory.address, 1000000);
-    })
 
     let verificationTests = (factoryMethodName, columnName, columnIndex, coOwnerAddress, verificatorAddress,
             verificationContractkey, sendConfig) => {
@@ -47,8 +39,8 @@ contract("Verification", function(accounts) {
         });
 
         it(`Should return column data and object type to owner.`, async () => {
-            let verificationContractFactory = await BaseVerification.at(verificationContractAddress);
-            let data = await verificationContractFactory.getData.call(sendConfig);
+            let verificationContract = await BaseVerification.at(verificationContractAddress);
+            let data = await verificationContract.getData.call(sendConfig);
             
             let adapter = await AccountStorageAdapter.deployed();
             let accountData = await getAccountFieldLastMainData(adapter, accountAddress, columnIndex);
@@ -56,13 +48,13 @@ contract("Verification", function(accounts) {
         });
         
         it(`Should set verification ${columnName} result`, async () => {
-            let verificationContractFactory = await BaseVerification.at(verificationContractAddress);
-            await verificationContractFactory.setVerificationResult(true, sendConfig);
+            let verificationContract = await BaseVerification.at(verificationContractAddress);
+            await verificationContract.setVerificationResult(true, sendConfig);
         });
         
         it(`Should get isVerified. isVerified must be true`, async () => {
-            let verificationContractFactory = await BaseVerification.at(verificationContractAddress);
-            let isVerified = await verificationContractFactory.isVerified.call();
+            let verificationContract = await BaseVerification.at(verificationContractAddress);
+            let isVerified = await verificationContract.isVerified.call();
             assert.equal(isVerified, true);
         });
     };

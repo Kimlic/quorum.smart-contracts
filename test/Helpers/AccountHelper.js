@@ -34,8 +34,12 @@ let getAccountFieldLastMainData = async function(adapter, address, columnNameInd
     return adapter.getAccountFieldLastMainData.call(address, columnNameIndex);
 };
 
+let getAccountFieldLastVerificationData = async function(adapter, address, columnNameIndex) {
+    return adapter.getAccountFieldLastVerificationData.call(address, columnNameIndex);
+};
+
 let getAccountLastDataIndex = async function(adapter, address, columnNameIndex) {
     return adapter.getFieldHistoryLength.call(address, columnNameIndex);
 };
 
-module.exports = { accountConsts, addAccount, getAccountFieldLastMainData, getAccountLastDataIndex };
+module.exports = { accountConsts, addAccount, getAccountFieldLastMainData, getAccountFieldLastVerificationData, getAccountLastDataIndex };
