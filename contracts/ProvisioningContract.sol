@@ -40,7 +40,7 @@ contract ProvisioningContract is Ownable, WithKimlicContext {
         address verifiedBy = context.getAccountStorageAdapter()
             .getAccountDataVerifiedBy(account, accountFieldName, index);
 
-        BaseVerification verificationContract = BaseVerification(verifiedBy);
+        //BaseVerification verificationContract = BaseVerification(verifiedBy);
         
         account = accountAddress;
         _reward = reward;
