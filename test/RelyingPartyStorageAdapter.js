@@ -1,12 +1,12 @@
-let AttestationPartyStorageAdapter = artifacts.require("./AttestationPartyStorageAdapter.sol");
+let RelyingPartyStorageAdapter = artifacts.require("./RelyingPartyStorageAdapter.sol");
 
 let basePartyStorageAdapterHelper = require("./Helpers/BasePartyStorageAdapterHelper.js")
 
 
 
-contract("AttestationPartyStorageAdapter", function(accounts) {
+contract("RelyingPartyStorageAdapter", function(accounts) {
     let getAdapter = async () => {
-        return await AttestationPartyStorageAdapter.deployed();
+        return await RelyingPartyStorageAdapter.deployed();
     };
     
     let values = basePartyStorageAdapterHelper.basePartyConsts;
