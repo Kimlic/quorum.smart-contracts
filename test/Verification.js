@@ -6,7 +6,7 @@ let BaseVerification = artifacts.require("./BaseVerification.sol");
 let AccountStorageAdapter = artifacts.require("./AccountStorageAdapter.sol");
 let KimlicToken = artifacts.require("./KimlicToken.sol");
 
-let { accountConsts, addAccount, getAccountLastData, getAccountLastDataIndex } = require("./Helpers/AccountHelper.js")
+let { accountConsts, addAccount, getAccountFieldLastMainData, getAccountLastDataIndex } = require("./Helpers/AccountHelper.js")
 
 
 contract("Verification", function(accounts) {
@@ -44,6 +44,15 @@ contract("Verification", function(accounts) {
             let verificationContractFactory = await VerificationContractFactory.deployed();
             verificationContractAddress =  await verificationContractFactory.getVerificationContract.call(verificationContractkey, sendConfig);
             assert.notEqual(verificationContractAddress, "0x0000000000000000000000000000000000000000");
+        });
+
+        it(`Should return column data and object type to owner.`, async () => {
+            let verificationContractFactory = await BaseVerification.at(verificationContractAddress);
+            let data = await verificationContractFactory.getData.call(sendConfig);
+            
+            let adapter = await AccountStorageAdapter.deployed();
+            let accountData = await getAccountFieldLastMainData(adapter, accountAddress, columnIndex);
+            assert.deepEqual(data, accountData);
         });
         
         it(`Should set verification ${columnName} result`, async () => {

@@ -13,8 +13,8 @@ contract BaseVerification is Ownable, WithKimlicContext {
     bool public isVerified;
     uint public dataIndex;
     address public verificator;
+    address public accountAddress;
 
-    address internal _accountAddress;
     uint internal _rewardAmount;
 
     constructor(
@@ -22,7 +22,7 @@ contract BaseVerification is Ownable, WithKimlicContext {
         AccountStorageAdapter.AccountFieldName fieldName) public WithKimlicContext(contextStorage) Ownable() {
 
         coOwner = coOwnerAddress;
-        _accountAddress = account;
+        accountAddress = account;
         dataIndex = index;
         verificator = verificatorAddress;
         _rewardAmount = rewardAmount;
@@ -39,6 +39,10 @@ contract BaseVerification is Ownable, WithKimlicContext {
         token.transfer(owner, _rewardAmount);
 
         context.getAccountStorageAdapter().setAccountFieldVerificationData(
-            _accountAddress, accountFieldName, verificationResult, address(this), block.timestamp);
+            accountAddress, accountFieldName, verificationResult, address(this), block.timestamp);
+    }
+
+    function getData() view public onlyOwner() returns (string data, string objectType) {
+        return getContext().getAccountStorageAdapter().getAccountFieldMainData(accountAddress, accountFieldName, dataIndex);
     }
 }

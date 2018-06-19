@@ -240,6 +240,7 @@ contract AccountStorageAdapter is Ownable, WithKimlicContext {
             context.getVerificationContractFactory().createdContracts(msg.sender) ||
             context.getProvisioningContractFactory().createdContracts(msg.sender) ||
             msg.sender == address(context.getRewardingContract()) ||
+            msg.sender == owner ||
             msg.sender == context.owner() ||
             msg.sender == account);
         _;
