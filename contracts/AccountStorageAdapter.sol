@@ -136,14 +136,12 @@ contract AccountStorageAdapter is Ownable, WithKimlicContext {
         require(!isEqualStrings(data, "") && !isEqualStrings(objectType, ""));
 
         string memory fieldName = convertAccountFieldNameToString(accountFieldName);
-
         uint index = getFieldHistoryLength(accountAddress, accountFieldName);
+        
         if (accountFieldName == AccountFieldName.Device) {
             require(index == 0);
         }
-
         string memory storedData = "";
-
         AccountStorage accountStorage = getContext().getAccountStorage();
 
         if (index > 0) {

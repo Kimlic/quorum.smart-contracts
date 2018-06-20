@@ -47,7 +47,7 @@ contract("Provisioning", function(accounts) {
     var lastDataIndex;
     it("init account with verified data", async () => {
         let adapter = await AccountStorageAdapter.deployed();
-        await addAccount(adapter, accountConsts.emailValue, accountConsts.emailObjectType, accountConsts.emailColumnIndex);
+        await addAccount(adapter, accountConsts.emailValue, accountConsts.emailObjectType, columnIndex);
 
         let verificationContractFactory = await VerificationContractFactory.deployed();
         lastDataIndex = await getAccountLastDataIndex(adapter, accountAddress, columnIndex);
@@ -56,6 +56,7 @@ contract("Provisioning", function(accounts) {
         let verificationContractAddress =  await verificationContractFactory.getVerificationContract.call(verificationContractkey, kimlicSendConfig);
         let verificationContract = await BaseVerification.at(verificationContractAddress);
         await verificationContract.setVerificationResult(true, kimlicSendConfig);
+        let verifiedBy = await adapter.getAccountDataVerifiedBy.call(accountAddress, columnIndex, lastDataIndex, kimlicSendConfig);
     });
 
 
@@ -86,6 +87,4 @@ contract("Provisioning", function(accounts) {
         let accountData = accountMainData.concat(accountVerificationData);
         assert.deepEqual(data, accountData);
     });
-
-    
 });
