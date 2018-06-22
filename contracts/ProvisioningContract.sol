@@ -22,10 +22,12 @@ contract ProvisioningContract is Ownable, WithKimlicContext {
     uint private _index;
     uint private _reward;
     /// enums ///
-    enum Status { Created, DataProvided, Canceled } //TODO move to factory?
+    enum Status { Created, DataProvided, Canceled }
 
     /// constructors ///
-    constructor (address contextStorage, address accountAddress, AccountStorageAdapter.AccountFieldName accountFieldName, uint index, uint reward)
+    constructor (
+        address contextStorage, address accountAddress, AccountStorageAdapter.AccountFieldName accountFieldName,
+        uint index, uint reward)
             public WithKimlicContext(contextStorage) {
 
         KimlicContractsContext context = getContext();

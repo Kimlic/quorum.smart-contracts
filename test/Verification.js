@@ -79,7 +79,7 @@ contract("Verification", function(accounts) {
         return partiesConfig;
     };
 
-    let verificatorAddress = accounts[0];//TODO replace by real co verificator address;
+    let verificatorAddress = accounts[0];//TODO replace by real verificator address;
 
     let config = getPartiesConfig();
     let kimlicConfig = config["Kimlic"];

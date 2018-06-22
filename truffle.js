@@ -10,8 +10,16 @@ module.exports = {
   },
   networks: {
     testRpc: {
-      host: "localhost:8545",
+      host: "127.0.0.1",
+      port: 8545,
       network_id: "10",
+      gas: 4612388
+    },
+    kubernetisNode: {
+      host: "127.0.0.1",
+      port: 22100,
+      network_id: "10",
+      gasPrice: 0,
       gas: 4612388
     },
     ganache: {
@@ -19,7 +27,9 @@ module.exports = {
       port: 7545,
       network_id: "*",
       gasPrice: 0,
-      gas: 4612388
+      gas: 4612388,
+      mnemonic:
+        "chapter run clever race sure shoot solution aisle possible ridge flock august"
     },
     KIM1: {
       host: "127.0.0.1",
@@ -33,9 +43,7 @@ module.exports = {
       port: 22001,
       network_id: "10",
       gasPrice: 0,
-      gas: 4612388,
-      mnemonic:
-        "chapter run clever race sure shoot solution aisle possible ridge flock august"
+      gas: 4612388
     },
     KIM3: {
       host: "127.0.0.1",

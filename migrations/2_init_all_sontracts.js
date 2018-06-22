@@ -103,10 +103,13 @@ module.exports = function(deployer, network, accounts) {
         let partiesConfig = {};
 
         let veriffName = "Veriff";
-        await setupAttestationParty(partiesConfig, veriffName, veriffName + "p@ssw0rd");
+        await setupParty(partiesConfig, veriffName, veriffName + "p@ssw0rd");
         
         let kimlicName = "Kimlic";
-        await setupAttestationParty(partiesConfig, kimlicName, kimlicName + "p@ssw0rd");
+        await setupParty(partiesConfig, kimlicName, kimlicName + "p@ssw0rd");
+
+        let relyingPartyNme = "FirstRelyingParty";
+        await setupParty(partiesConfig, relyingPartyNme, relyingPartyNme + "p@ssw0rd");
 
         savePartiesConfig(partiesConfig);
     });
@@ -225,7 +228,7 @@ module.exports = function(deployer, network, accounts) {
     }
     
 
-    let setupAttestationParty = async (partiesConfig, name, password) => {
+    let setupParty = async (partiesConfig, name, password) => {
         let address = web3.personal.newAccount(password);
         console.log(`Created new "${name}" party address: "${address}", password: "${password}"`);
         web3.personal.unlockAccount(address, password);
@@ -248,13 +251,15 @@ module.exports = function(deployer, network, accounts) {
         let allowance = await kimlicToken.allowance.call(address, VerificationContractFactory.address, { from: address });
         console.log(`Allowance from "${address}" to verification contract factory at address "${VerificationContractFactory.address}" - ${allowance}`);
 
-        console.log(`Approve to ProvisioningContractFactory spend "${name}" tokens`);//TODO Move to relying party setup
+        console.log(`Approve to ProvisioningContractFactory spend "${name}" tokens`);
         await kimlicToken.approve(ProvisioningContractFactory.address, 10000, { from: address });
 
         let provisioningAllowance = await kimlicToken.allowance.call(address, ProvisioningContractFactory.address, { from: address });
         console.log(`Allowance from "${address}" to provisioning contract factory at address "${ProvisioningContractFactory.address}" - ${provisioningAllowance}`);
 
         partiesConfig[name] = { address: address, password: password };
+
+        return address;
     };
     
     let getFormatedConsoleLable = function(unformatedLable){

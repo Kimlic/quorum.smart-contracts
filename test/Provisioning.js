@@ -32,7 +32,7 @@ contract("Provisioning", function(accounts) {
 
     let config = getPartiesConfig();
     let kimlicConfig = config["Kimlic"];
-    let relyingPartyConfig = config["Kimlic"];//TODO create relying party in migrations. config["RelyingParty"]
+    let relyingPartyConfig = config["FirstRelyingParty"];//TODO create relying party in migrations. config["RelyingParty"]
     let relyingPartySendConfig = { from: relyingPartyConfig.address };
     let kimlicSendConfig = { from: kimlicConfig.address };
     
@@ -56,7 +56,6 @@ contract("Provisioning", function(accounts) {
         let verificationContractAddress =  await verificationContractFactory.getVerificationContract.call(verificationContractkey, kimlicSendConfig);
         let verificationContract = await BaseVerification.at(verificationContractAddress);
         await verificationContract.setVerificationResult(true, kimlicSendConfig);
-        let verifiedBy = await adapter.getAccountDataVerifiedBy.call(accountAddress, columnIndex, lastDataIndex, kimlicSendConfig);
     });
 
 

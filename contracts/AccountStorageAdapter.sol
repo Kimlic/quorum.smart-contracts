@@ -17,7 +17,7 @@ contract AccountStorageAdapter is Ownable, WithKimlicContext {
 
     enum AccountFieldName { Email, Phone, Identity, Device, Documents, Addresses }
 
-    enum MetaFieldName { Data, ObjectType, IsVerified, VerifiedBy, VerifiedAt } //TODO do we still need IsVerified?
+    enum MetaFieldName { Data, ObjectType, IsVerified, VerifiedBy, VerifiedAt }
 
     /// constructors ///
 
@@ -36,8 +36,7 @@ contract AccountStorageAdapter is Ownable, WithKimlicContext {
     }
 
     function getAccountDataVerifiedBy(address accountAddress, AccountFieldName accountFieldName, uint index)
-            public view returns(address verifiedBy) {
-        //TODO check do we need this modifier here. If add it, provisioning contract constructor cant access this method. checkReadingDataRestrictions(accountAddress)
+            public view checkReadingDataRestrictions(accountAddress) returns(address verifiedBy) {
         string memory fieldName = convertAccountFieldNameToString(accountFieldName);
         bytes memory verifiedByKey = abi.encode(accountAddress, fieldName, index, convertMetaFieldNameToString(MetaFieldName.VerifiedBy));
         verifiedBy = getContext().getAccountStorage().getAddress(keccak256(verifiedByKey));
@@ -137,7 +136,7 @@ contract AccountStorageAdapter is Ownable, WithKimlicContext {
 
         string memory fieldName = convertAccountFieldNameToString(accountFieldName);
         uint index = getFieldHistoryLength(accountAddress, accountFieldName);
-        
+
         if (accountFieldName == AccountFieldName.Device) {
             require(index == 0);
         }
