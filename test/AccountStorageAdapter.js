@@ -1,7 +1,7 @@
 /*jshint esversion: 6 */
 let AccountStorageAdapter = artifacts.require("./AccountStorageAdapter.sol");
 
-let { accountConsts, addAccount, getAccountFieldLastMainData, getAccountLastDataIndex } = require("./Helpers/AccountHelper.js")
+let { accountConsts, addAccountData, getAccountFieldLastMainData, getAccountLastDataIndex } = require("./Helpers/AccountHelper.js")
 
 
 contract("AccountStorageAdapter", function(accounts) {
@@ -18,7 +18,7 @@ contract("AccountStorageAdapter", function(accounts) {
         
         it(addDataCaption, async () => {
             let adapter = await AccountStorageAdapter.deployed();
-            await addAccount(adapter, fieldData, fieldObjectType, columnName);
+            await addAccountData(adapter, accounts[0], fieldData, fieldObjectType, columnName);
         });
 
         it(readDataCaption, async () => {

@@ -19,8 +19,8 @@ let accountConsts = {
     addressObjectType: "living address",
 }
 
-let addAccount = async function(adapter, fieldData, objectType, columnName) {
-    return adapter.setAccountFieldMainData(fieldData, objectType, columnName);
+let addAccountData = async function(adapter, address, fieldData, objectType, columnName) {
+    return adapter.setAccountFieldMainData(fieldData, objectType, columnName, { from: address });
 };
 
 let getAccountFieldLastMainData = async function(adapter, address, columnName) {
@@ -35,4 +35,4 @@ let getAccountLastDataIndex = async function(adapter, address, columnName) {
     return adapter.getFieldHistoryLength.call(address, columnName);
 };
 
-module.exports = { accountConsts, addAccount, getAccountFieldLastMainData, getAccountFieldLastVerificationData, getAccountLastDataIndex };
+module.exports = { accountConsts, addAccountData, getAccountFieldLastMainData, getAccountFieldLastVerificationData, getAccountLastDataIndex };

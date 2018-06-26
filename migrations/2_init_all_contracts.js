@@ -17,6 +17,12 @@ var AttestationPartyStorageAdapter = artifacts.require("./AttestationPartyStorag
 var AttestationPartyStorage = artifacts.require("./AttestationPartyStorage.sol");
 
 module.exports = function(deployer, network, accounts) {
+    let createdUsersFileName = "CreatedUsers.json";
+
+    if(fs.existsSync(createdUsersFileName)) {
+        fs.unlink(createdUsersFileName);
+    }
+    
     let partiesConfigFileName = "PartiesConfig.json";
     var mainAccount = getMainAccount(network);
 

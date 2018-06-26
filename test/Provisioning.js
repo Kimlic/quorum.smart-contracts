@@ -7,7 +7,7 @@ let AccountStorageAdapter = artifacts.require("./AccountStorageAdapter.sol");
 let ProvisioningContractFactory = artifacts.require("./ProvisioningContractFactory.sol");
 let ProvisioningContract = artifacts.require("./ProvisioningContract.sol");
 
-let { accountConsts, addAccount, getAccountFieldLastMainData, getAccountFieldLastVerificationData, getAccountLastDataIndex } = require("./Helpers/AccountHelper.js")
+let { accountConsts, addAccountData, getAccountFieldLastMainData, getAccountFieldLastVerificationData, getAccountLastDataIndex } = require("./Helpers/AccountHelper.js")
 
 
 contract("Provisioning", function(accounts) {
@@ -47,7 +47,7 @@ contract("Provisioning", function(accounts) {
     var lastDataIndex;
     it("init account with verified data", async () => {
         let adapter = await AccountStorageAdapter.deployed();
-        await addAccount(adapter, accountConsts.emailValue, accountConsts.emailObjectType, columnIndex);
+        await addAccountData(adapter, accountAddress, accountConsts.emailValue, accountConsts.emailObjectType, columnIndex);
 
         let verificationContractFactory = await VerificationContractFactory.deployed();
         lastDataIndex = await getAccountLastDataIndex(adapter, accountAddress, columnIndex);
