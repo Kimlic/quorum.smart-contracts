@@ -21,12 +21,14 @@ contract ProvisioningContractFactory is WithKimlicContext {
     }
 
     /// public methods ///
-    function createProvisioningContract(address account, string accountFieldName, uint index, string key) 
+    function createProvisioningContract(address account, string accountFieldName, string key) 
             public returns(ProvisioningContract createdContract) {
         
         KimlicContractsContext context = getContext();
         uint reward = context.getProvisioningPrice().getPrice(accountFieldName);
-        createdContract = new ProvisioningContract(_storage, account, accountFieldName, index, reward);
+        uint dataIndex = context.getAccountStorageAdapter().getFieldHistoryLength(account, accountFieldName);
+
+        createdContract = new ProvisioningContract(_storage, account, accountFieldName, dataIndex, reward);
         createdContract.transferOwnership(msg.sender);
         address createdContractAddress = address(createdContract);
         createdContracts[createdContractAddress] = true;

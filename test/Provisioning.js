@@ -45,13 +45,11 @@ contract("Provisioning", function(accounts) {
     let provisioningContractkey = uuidv4();
     let verificationContractkey = uuidv4();
     let columnName = accountConsts.emailColumnName;
-    var lastDataIndex;
     it("init account with verified data", async () => {
         let adapter = await AccountStorageAdapter.deployed();
         await addAccountData(adapter, accountAddress, accountConsts.emailValue, columnName);
 
         let verificationContractFactory = await VerificationContractFactory.deployed();
-        lastDataIndex = await getAccountLastDataIndex(adapter, accountAddress, columnName);
         await verificationContractFactory.createEmailVerification(accountAddress, kimlicConfig.address,
             verificatorAddress, verificationContractkey, kimlicSendConfig);
         let verificationContractAddress =  await verificationContractFactory.getVerificationContract.call(verificationContractkey, kimlicSendConfig);
@@ -62,7 +60,7 @@ contract("Provisioning", function(accounts) {
 
     it(`Should create provisioning contract`, async () => {
         let provisioningContractFactory = await ProvisioningContractFactory.deployed();
-        await provisioningContractFactory.createProvisioningContract(accountAddress, columnName, lastDataIndex, provisioningContractkey, relyingPartySendConfig);
+        await provisioningContractFactory.createProvisioningContract(accountAddress, columnName, provisioningContractkey, relyingPartySendConfig);
     });
     
     var provisioningContractAddress;
