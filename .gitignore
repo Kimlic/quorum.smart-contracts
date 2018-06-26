@@ -16,6 +16,7 @@ config/test/contracts.json
 bin
 dist
 
+build
 .jshintrc
 PartiesConfig.json
 output.txt
