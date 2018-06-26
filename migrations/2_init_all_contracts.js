@@ -131,40 +131,40 @@ module.exports = function(deployer, network, accounts) {
         
         console.log(getFormatedConsoleLable("Setup kimlic contracts context instance:"));
         
-        console.log("\nAccountStorageAddress = ", AccountStorage.address);
+        console.log(`\nAccountStorageAddress = ${AccountStorage.address}`);
         await kimlicContractsContextInstance.setAccountStorage(AccountStorage.address, deployConfig);
         
-        console.log("\nAccountStorageAdapter = ", AccountStorageAdapter.address);
+        console.log(`\nAccountStorageAdapter = ${AccountStorageAdapter.address}`);
         await kimlicContractsContextInstance.setAccountStorageAdapter(AccountStorageAdapter.address, deployConfig);
         
-        console.log("\nRelyingPartyStorageAdapter = ", RelyingPartyStorageAdapter.address);
+        console.log(`\nRelyingPartyStorageAdapter = ${RelyingPartyStorageAdapter.address}`);
         await kimlicContractsContextInstance.setRelyingPartyStorageAdapter(RelyingPartyStorageAdapter.address, deployConfig);
         
-        console.log("\nRelyingPartyStorage = ", RelyingPartyStorage.address);
+        console.log(`\nRelyingPartyStorage = ${RelyingPartyStorage.address}`);
         await kimlicContractsContextInstance.setRelyingPartyStorage(RelyingPartyStorage.address, deployConfig);
         
-        console.log("\nAttestationPartyStorageAdapter = ", AttestationPartyStorageAdapter.address);
+        console.log(`\nAttestationPartyStorageAdapter = ${AttestationPartyStorageAdapter.address}`);
         await kimlicContractsContextInstance.setAttestationPartyStorageAdapter(AttestationPartyStorageAdapter.address, deployConfig);
         
-        console.log("\nAttestationPartyStorage = ", AttestationPartyStorage.address);
+        console.log(`\nAttestationPartyStorage = ${AttestationPartyStorage.address}`);
         await kimlicContractsContextInstance.setAttestationPartyStorage(AttestationPartyStorage.address, deployConfig);
         
-        console.log("\nKimlicToken = ", KimlicToken.address);
+        console.log(`\nKimlicToken = ${KimlicToken.address}`);
         await kimlicContractsContextInstance.setKimlicToken(KimlicToken.address, deployConfig);
         
-        console.log("\nVerificationContractFactory = ", VerificationContractFactory.address);
+        console.log(`\nVerificationContractFactory = ${VerificationContractFactory.address}`);
         await kimlicContractsContextInstance.setVerificationContractFactory(VerificationContractFactory.address, deployConfig);
         
-        console.log("\nProvisioningPrice = ", ProvisioningPrice.address);
+        console.log(`\nProvisioningPrice = ${ProvisioningPrice.address}`);
         await kimlicContractsContextInstance.setProvisioningPrice(ProvisioningPrice.address, deployConfig);
         
-        console.log("\nProvisioningContractFactory = ", ProvisioningContractFactory.address);
+        console.log(`\nProvisioningContractFactory = ${ProvisioningContractFactory.address}`);
         await kimlicContractsContextInstance.setProvisioningContractFactory(ProvisioningContractFactory.address, deployConfig);
         
-        console.log("\nCommunity token wallet address = ", communityTokenWalletAddress);
+        console.log(`\nCommunity token wallet address = ${communityTokenWalletAddress}`);
         await kimlicContractsContextInstance.setCommunityTokenWalletAddress(communityTokenWalletAddress, deployConfig);
         
-        console.log("\nRewardingContract = ", RewardingContract.address);
+        console.log(`\nRewardingContract = ${RewardingContract.address}`);
         await kimlicContractsContextInstance.setRewardingContract(RewardingContract.address, deployConfig);
     };
     
@@ -189,10 +189,10 @@ module.exports = function(deployer, network, accounts) {
             mielstone2: 25
         };
         console.log(getFormatedConsoleLable("Setup rewarding contract instance:"));
-        console.log("set milestone 1 reward = " + rewards.mielstone1);
+        console.log(`set milestone 1 reward = ${rewards.mielstone1}`);
         await rewardingContractInstance.setMilestone1Reward(rewards.mielstone1, deployConfig);
         
-        console.log("set milestone 2 reward = " + rewards.mielstone2);
+        console.log(`set milestone 2 reward = ${rewards.mielstone2}`);
         await rewardingContractInstance.setMilestone2Reward(rewards.mielstone2, deployConfig);
     };
     
@@ -207,24 +207,25 @@ module.exports = function(deployer, network, accounts) {
             addresses: 16
         };
         
-        console.log("Email = " + prices.email);
+        console.log(`Email = ${prices.email}`); 
         await provisioningPriceInstance.setPrice(0, prices.email, deployConfig);
         
-        console.log("Phone = " + prices.phone);
+        console.log(`Phone = ${prices.phone}`); 
         await provisioningPriceInstance.setPrice(1, prices.phone, deployConfig);
         
-        console.log("Identity = " + prices.identity);
+        console.log(`Identity = ${prices.identity}`); 
         await provisioningPriceInstance.setPrice(2, prices.identity, deployConfig);
         
-        console.log("Documents = " + prices.documents);
+        console.log(`Documents = ${prices.documents}`); 
         await provisioningPriceInstance.setPrice(4, prices.documents, deployConfig);
         
-        console.log("Addresses = " + prices.addresses);
+        console.log(`Addresses = ${prices.addresses}`); 
         await provisioningPriceInstance.setPrice(5, prices.addresses, deployConfig);
     };
 
     let setupCommunityTokenWalletAddress = async () => {
         let kimlicToken = await KimlicToken.deployed();
+        console.log("Approve rewarding contract to spend tokens from community token wallet");
         await kimlicToken.approve(RewardingContract.address, 1000000000, { form: communityTokenWalletAddress });//TODO unlock address
     };
 
@@ -240,7 +241,7 @@ module.exports = function(deployer, network, accounts) {
         web3.personal.unlockAccount(address, password);
 
         //TODO probably we dont need this step in newer version of Quourum
-        console.log(`Sending eth to created address`);
+        console.log("Sending eth to created address");
         web3.eth.sendTransaction({from: accounts[0], to: address, value: "0xDE0B6B3A7640000"});
 
 

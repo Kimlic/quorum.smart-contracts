@@ -11,12 +11,6 @@ let accountConsts = {
     deviceValue: "device",
     documentValue: "documents",
     addressValue: "addresses",
-    emailObjectType: "Main email",
-    phoneObjectType: "Main phone",
-    identityObjectType: "identity",
-    deviceObjectType: "deviceId",
-    documentObjectType: "id",
-    addressObjectType: "living address",
 }
 
 let addAccountData = async function(adapter, address, fieldData, columnName) {

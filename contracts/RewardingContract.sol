@@ -13,7 +13,9 @@ contract RewardingContract is Ownable, WithKimlicContext {
     uint public mielstone2Reward;
     
     /// private attributes ///
-    
+    string private constant email = "email";
+    string private constant phone = "phone";
+    string private constant identity = "identity";
     /// Constructors ///
     constructor (address contextStorage) public WithKimlicContext(contextStorage) {
     }
@@ -29,23 +31,20 @@ contract RewardingContract is Ownable, WithKimlicContext {
 
 
     function checkMilestones(address accountAddress, string accountFieldName) public {
-        string memory emailColumnName = "email";
-        string memory phoneColumnName = "phone";
-        string memory identityColumnName = "identity";
-        if (isEqualStrings(accountFieldName, emailColumnName) ||
-            isEqualStrings(accountFieldName, phoneColumnName)) {
+        if (isEqualStrings(accountFieldName, email) ||
+            isEqualStrings(accountFieldName, phone)) {
             
             checkMilestone1(accountAddress);
         } 
-        else if (isEqualStrings(accountFieldName, identityColumnName)) {
+        else if (isEqualStrings(accountFieldName, identity)) {
             checkMilestone1(accountAddress);
         }
     }
 
     /// private methods ///
     function checkMilestone1(address accountAddress) private {
-        if (getIsDataVerified(accountAddress, "email") &&
-            getIsDataVerified(accountAddress, "phone")) {
+        if (getIsDataVerified(accountAddress, email) &&
+            getIsDataVerified(accountAddress, phone)) {
             
             sendReward(accountAddress, mielstone2Reward);
         }
@@ -53,7 +52,7 @@ contract RewardingContract is Ownable, WithKimlicContext {
     }
 
     function checkMilestone2(address accountAddress) private {
-        if (getIsDataVerified(accountAddress, "identity")) {
+        if (getIsDataVerified(accountAddress, identity)) {
             sendReward(accountAddress, mielstone2Reward);
         }
     }
