@@ -1,0 +1,1240 @@
+{
+  "contractName": "ProvisioningPrice",
+  "abi": [
+    {
+      "constant": false,
+      "inputs": [],
+      "name": "renounceOwnership",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "owner",
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "transferOwnership",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "name": "previousOwner",
+          "type": "address"
+        }
+      ],
+      "name": "OwnershipRenounced",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "name": "previousOwner",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "OwnershipTransferred",
+      "type": "event"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "accountFieldName",
+          "type": "uint8"
+        },
+        {
+          "name": "price",
+          "type": "uint256"
+        }
+      ],
+      "name": "setPrice",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "name": "accountFieldName",
+          "type": "uint8"
+        }
+      ],
+      "name": "getPrice",
+      "outputs": [
+        {
+          "name": "price",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x608060405260008054600160a060020a033316600160a060020a03199091161790556102d1806100306000396000f30060806040526004361061006c5763ffffffff7c010000000000000000000000000000000000000000000000000000000060003504166337f1e7f281146100715780636a00670b1461009e578063715018a6146100be5780638da5cb5b146100d3578063f2fde38b14610104575b600080fd5b34801561007d57600080fd5b5061008c60ff60043516610125565b60408051918252519081900360200190f35b3480156100aa57600080fd5b506100bc60ff6004351660243561014d565b005b3480156100ca57600080fd5b506100bc61018e565b3480156100df57600080fd5b506100e86101fe565b60408051600160a060020a039092168252519081900360200190f35b34801561011057600080fd5b506100bc600160a060020a036004351661020d565b60006001600083600581111561013757fe5b8152602001908152602001600020549050919050565b60005433600160a060020a0390811691161461016857600080fd5b806001600084600581111561017957fe5b81526020810191909152604001600020555050565b60005433600160a060020a039081169116146101a957600080fd5b60008054604051600160a060020a03909116917ff8df31144d9c2f0f6b59d69b8b98abd5459d07f2742c4df920b25aae33c6482091a26000805473ffffffffffffffffffffffffffffffffffffffff19169055565b600054600160a060020a031681565b60005433600160a060020a0390811691161461022857600080fd5b600160a060020a038116151561023d57600080fd5b60008054604051600160a060020a03808516939216917f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e091a36000805473ffffffffffffffffffffffffffffffffffffffff1916600160a060020a03929092169190911790555600a165627a7a72305820b773282d83993793394534a97569961d35135966d1064edff02874b38e161ec10029",
+  "deployedBytecode": "0x60806040526004361061006c5763ffffffff7c010000000000000000000000000000000000000000000000000000000060003504166337f1e7f281146100715780636a00670b1461009e578063715018a6146100be5780638da5cb5b146100d3578063f2fde38b14610104575b600080fd5b34801561007d57600080fd5b5061008c60ff60043516610125565b60408051918252519081900360200190f35b3480156100aa57600080fd5b506100bc60ff6004351660243561014d565b005b3480156100ca57600080fd5b506100bc61018e565b3480156100df57600080fd5b506100e86101fe565b60408051600160a060020a039092168252519081900360200190f35b34801561011057600080fd5b506100bc600160a060020a036004351661020d565b60006001600083600581111561013757fe5b8152602001908152602001600020549050919050565b60005433600160a060020a0390811691161461016857600080fd5b806001600084600581111561017957fe5b81526020810191909152604001600020555050565b60005433600160a060020a039081169116146101a957600080fd5b60008054604051600160a060020a03909116917ff8df31144d9c2f0f6b59d69b8b98abd5459d07f2742c4df920b25aae33c6482091a26000805473ffffffffffffffffffffffffffffffffffffffff19169055565b600054600160a060020a031681565b60005433600160a060020a0390811691161461022857600080fd5b600160a060020a038116151561023d57600080fd5b60008054604051600160a060020a03808516939216917f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e091a36000805473ffffffffffffffffffffffffffffffffffffffff1916600160a060020a03929092169190911790555600a165627a7a72305820b773282d83993793394534a97569961d35135966d1064edff02874b38e161ec10029",
+  "sourceMap": "116:499:12:-;;;613:5:21;:18;;-1:-1:-1;;;;;621:10:21;613:18;-1:-1:-1;;;;;;613:18:21;;;;;;116:499:12;;;;;;",
+  "deployedSourceMap": "116:499:12:-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;444:168;;8:9:-1;5:2;;;30:1;27;20:12;5:2;-1:-1;444:168:12;;;;;;;;;;;;;;;;;;;;;;;270:166;;8:9:-1;5:2;;;30:1;27;20:12;5:2;-1:-1;270:166:12;;;;;;;;;;;1277:124:21;;8:9:-1;5:2;;;30:1;27;20:12;5:2;1277:124:21;;;;249:20;;8:9:-1;5:2;;;30:1;27;20:12;5:2;249:20:21;;;;;;;;-1:-1:-1;;;;;249:20:21;;;;;;;;;;;;;;984:192;;8:9:-1;5:2;;;30:1;27;20:12;5:2;-1:-1;984:192:21;-1:-1:-1;;;;;984:192:21;;;;;444:168:12;540:10;571:9;:33;586:16;581:22;;;;;;;;571:33;;;;;;;;;;;;563:41;;444:168;;;:::o;270:166::-;784:5:21;;770:10;-1:-1:-1;;;;;770:19:21;;;784:5;;770:19;762:28;;;;;;423:5:12;387:9;:33;402:16;397:22;;;;;;;;387:33;;;;;;;;;;;-1:-1:-1;387:33:12;:41;-1:-1:-1;;270:166:12:o;1277:124:21:-;784:5;;770:10;-1:-1:-1;;;;;770:19:21;;;784:5;;770:19;762:28;;;;;;1358:5;;;1339:25;;-1:-1:-1;;;;;1358:5:21;;;;1339:25;;;1391:1;1375:18;;-1:-1:-1;;1375:18:21;;;1277:124::o;249:20::-;;;-1:-1:-1;;;;;249:20:21;;:::o;984:192::-;784:5;;770:10;-1:-1:-1;;;;;770:19:21;;;784:5;;770:19;762:28;;;;;;-1:-1:-1;;;;;1065:22:21;;;;1057:31;;;;;;1125:5;;;1104:37;;-1:-1:-1;;;;;1104:37:21;;;;1125:5;;;1104:37;;;1152:5;:16;;-1:-1:-1;;1152:16:21;-1:-1:-1;;;;;1152:16:21;;;;;;;;;;984:192::o",
+  "source": "pragma solidity ^0.4.23;\r\n\r\nimport \"./openzeppelin-solidity/Ownable.sol\";\r\nimport \"./AccountStorageAdapter.sol\";\r\n\r\ncontract ProvisioningPrice is Ownable {\r\n\r\n    /// private attributes ///\r\n    mapping (uint=>uint) private _priceMap;\r\n\r\n    /// public methods ///\r\n    function setPrice(AccountStorageAdapter.AccountFieldName accountFieldName, uint price) public onlyOwner() {\r\n        _priceMap[uint(accountFieldName)] = price;\r\n    }\r\n\r\n    function getPrice(AccountStorageAdapter.AccountFieldName accountFieldName) public view returns (uint price) {\r\n        price = _priceMap[uint(accountFieldName)];\r\n    }\r\n}",
+  "sourcePath": "C:\\work\\quorum.smart-contracts\\contracts\\ProvisioningPrice.sol",
+  "ast": {
+    "absolutePath": "/C/work/quorum.smart-contracts/contracts/ProvisioningPrice.sol",
+    "exportedSymbols": {
+      "ProvisioningPrice": [
+        2989
+      ]
+    },
+    "id": 2990,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 2946,
+        "literals": [
+          "solidity",
+          "^",
+          "0.4",
+          ".23"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:24:12"
+      },
+      {
+        "absolutePath": "/C/work/quorum.smart-contracts/contracts/openzeppelin-solidity/Ownable.sol",
+        "file": "./openzeppelin-solidity/Ownable.sol",
+        "id": 2947,
+        "nodeType": "ImportDirective",
+        "scope": 2990,
+        "sourceUnit": 3731,
+        "src": "28:45:12",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "absolutePath": "/C/work/quorum.smart-contracts/contracts/AccountStorageAdapter.sol",
+        "file": "./AccountStorageAdapter.sol",
+        "id": 2948,
+        "nodeType": "ImportDirective",
+        "scope": 2990,
+        "sourceUnit": 1035,
+        "src": "75:37:12",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "baseContracts": [
+          {
+            "arguments": null,
+            "baseName": {
+              "contractScope": null,
+              "id": 2949,
+              "name": "Ownable",
+              "nodeType": "UserDefinedTypeName",
+              "referencedDeclaration": 3730,
+              "src": "146:7:12",
+              "typeDescriptions": {
+                "typeIdentifier": "t_contract$_Ownable_$3730",
+                "typeString": "contract Ownable"
+              }
+            },
+            "id": 2950,
+            "nodeType": "InheritanceSpecifier",
+            "src": "146:7:12"
+          }
+        ],
+        "contractDependencies": [
+          3730
+        ],
+        "contractKind": "contract",
+        "documentation": null,
+        "fullyImplemented": true,
+        "id": 2989,
+        "linearizedBaseContracts": [
+          2989,
+          3730
+        ],
+        "name": "ProvisioningPrice",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "constant": false,
+            "id": 2954,
+            "name": "_priceMap",
+            "nodeType": "VariableDeclaration",
+            "scope": 2989,
+            "src": "195:38:12",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_mapping$_t_uint256_$_t_uint256_$",
+              "typeString": "mapping(uint256 => uint256)"
+            },
+            "typeName": {
+              "id": 2953,
+              "keyType": {
+                "id": 2951,
+                "name": "uint",
+                "nodeType": "ElementaryTypeName",
+                "src": "204:4:12",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                }
+              },
+              "nodeType": "Mapping",
+              "src": "195:20:12",
+              "typeDescriptions": {
+                "typeIdentifier": "t_mapping$_t_uint256_$_t_uint256_$",
+                "typeString": "mapping(uint256 => uint256)"
+              },
+              "valueType": {
+                "id": 2952,
+                "name": "uint",
+                "nodeType": "ElementaryTypeName",
+                "src": "210:4:12",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                }
+              }
+            },
+            "value": null,
+            "visibility": "private"
+          },
+          {
+            "body": {
+              "id": 2971,
+              "nodeType": "Block",
+              "src": "376:60:12",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 2969,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "argumentTypes": null,
+                      "baseExpression": {
+                        "argumentTypes": null,
+                        "id": 2963,
+                        "name": "_priceMap",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 2954,
+                        "src": "387:9:12",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_mapping$_t_uint256_$_t_uint256_$",
+                          "typeString": "mapping(uint256 => uint256)"
+                        }
+                      },
+                      "id": 2967,
+                      "indexExpression": {
+                        "argumentTypes": null,
+                        "arguments": [
+                          {
+                            "argumentTypes": null,
+                            "id": 2965,
+                            "name": "accountFieldName",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 2956,
+                            "src": "402:16:12",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_enum$_AccountFieldName_$65",
+                              "typeString": "enum AccountStorageAdapter.AccountFieldName"
+                            }
+                          }
+                        ],
+                        "expression": {
+                          "argumentTypes": [
+                            {
+                              "typeIdentifier": "t_enum$_AccountFieldName_$65",
+                              "typeString": "enum AccountStorageAdapter.AccountFieldName"
+                            }
+                          ],
+                          "id": 2964,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": true,
+                          "lValueRequested": false,
+                          "nodeType": "ElementaryTypeNameExpression",
+                          "src": "397:4:12",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_type$_t_uint256_$",
+                            "typeString": "type(uint256)"
+                          },
+                          "typeName": "uint"
+                        },
+                        "id": 2966,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "kind": "typeConversion",
+                        "lValueRequested": false,
+                        "names": [],
+                        "nodeType": "FunctionCall",
+                        "src": "397:22:12",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      },
+                      "isConstant": false,
+                      "isLValue": true,
+                      "isPure": false,
+                      "lValueRequested": true,
+                      "nodeType": "IndexAccess",
+                      "src": "387:33:12",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "argumentTypes": null,
+                      "id": 2968,
+                      "name": "price",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 2958,
+                      "src": "423:5:12",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "src": "387:41:12",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "id": 2970,
+                  "nodeType": "ExpressionStatement",
+                  "src": "387:41:12"
+                }
+              ]
+            },
+            "documentation": "public methods ///\r",
+            "id": 2972,
+            "implemented": true,
+            "isConstructor": false,
+            "isDeclaredConst": false,
+            "modifiers": [
+              {
+                "arguments": [],
+                "id": 2961,
+                "modifierName": {
+                  "argumentTypes": null,
+                  "id": 2960,
+                  "name": "onlyOwner",
+                  "nodeType": "Identifier",
+                  "overloadedDeclarations": [],
+                  "referencedDeclaration": 3688,
+                  "src": "364:9:12",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_modifier$__$",
+                    "typeString": "modifier ()"
+                  }
+                },
+                "nodeType": "ModifierInvocation",
+                "src": "364:11:12"
+              }
+            ],
+            "name": "setPrice",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 2959,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 2956,
+                  "name": "accountFieldName",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2972,
+                  "src": "288:55:12",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_enum$_AccountFieldName_$65",
+                    "typeString": "enum AccountStorageAdapter.AccountFieldName"
+                  },
+                  "typeName": {
+                    "contractScope": null,
+                    "id": 2955,
+                    "name": "AccountStorageAdapter.AccountFieldName",
+                    "nodeType": "UserDefinedTypeName",
+                    "referencedDeclaration": 65,
+                    "src": "288:38:12",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_enum$_AccountFieldName_$65",
+                      "typeString": "enum AccountStorageAdapter.AccountFieldName"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 2958,
+                  "name": "price",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2972,
+                  "src": "345:10:12",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 2957,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "345:4:12",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "287:69:12"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 2962,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "376:0:12"
+            },
+            "scope": 2989,
+            "src": "270:166:12",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 2987,
+              "nodeType": "Block",
+              "src": "552:60:12",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 2985,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "argumentTypes": null,
+                      "id": 2979,
+                      "name": "price",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 2977,
+                      "src": "563:5:12",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "argumentTypes": null,
+                      "baseExpression": {
+                        "argumentTypes": null,
+                        "id": 2980,
+                        "name": "_priceMap",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 2954,
+                        "src": "571:9:12",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_mapping$_t_uint256_$_t_uint256_$",
+                          "typeString": "mapping(uint256 => uint256)"
+                        }
+                      },
+                      "id": 2984,
+                      "indexExpression": {
+                        "argumentTypes": null,
+                        "arguments": [
+                          {
+                            "argumentTypes": null,
+                            "id": 2982,
+                            "name": "accountFieldName",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 2974,
+                            "src": "586:16:12",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_enum$_AccountFieldName_$65",
+                              "typeString": "enum AccountStorageAdapter.AccountFieldName"
+                            }
+                          }
+                        ],
+                        "expression": {
+                          "argumentTypes": [
+                            {
+                              "typeIdentifier": "t_enum$_AccountFieldName_$65",
+                              "typeString": "enum AccountStorageAdapter.AccountFieldName"
+                            }
+                          ],
+                          "id": 2981,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": true,
+                          "lValueRequested": false,
+                          "nodeType": "ElementaryTypeNameExpression",
+                          "src": "581:4:12",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_type$_t_uint256_$",
+                            "typeString": "type(uint256)"
+                          },
+                          "typeName": "uint"
+                        },
+                        "id": 2983,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "kind": "typeConversion",
+                        "lValueRequested": false,
+                        "names": [],
+                        "nodeType": "FunctionCall",
+                        "src": "581:22:12",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      },
+                      "isConstant": false,
+                      "isLValue": true,
+                      "isPure": false,
+                      "lValueRequested": false,
+                      "nodeType": "IndexAccess",
+                      "src": "571:33:12",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "src": "563:41:12",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "id": 2986,
+                  "nodeType": "ExpressionStatement",
+                  "src": "563:41:12"
+                }
+              ]
+            },
+            "documentation": null,
+            "id": 2988,
+            "implemented": true,
+            "isConstructor": false,
+            "isDeclaredConst": true,
+            "modifiers": [],
+            "name": "getPrice",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 2975,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 2974,
+                  "name": "accountFieldName",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2988,
+                  "src": "462:55:12",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_enum$_AccountFieldName_$65",
+                    "typeString": "enum AccountStorageAdapter.AccountFieldName"
+                  },
+                  "typeName": {
+                    "contractScope": null,
+                    "id": 2973,
+                    "name": "AccountStorageAdapter.AccountFieldName",
+                    "nodeType": "UserDefinedTypeName",
+                    "referencedDeclaration": 65,
+                    "src": "462:38:12",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_enum$_AccountFieldName_$65",
+                      "typeString": "enum AccountStorageAdapter.AccountFieldName"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "461:57:12"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 2978,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 2977,
+                  "name": "price",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2988,
+                  "src": "540:10:12",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 2976,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "540:4:12",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "539:12:12"
+            },
+            "scope": 2989,
+            "src": "444:168:12",
+            "stateMutability": "view",
+            "superFunction": null,
+            "visibility": "public"
+          }
+        ],
+        "scope": 2990,
+        "src": "116:499:12"
+      }
+    ],
+    "src": "0:615:12"
+  },
+  "legacyAST": {
+    "absolutePath": "/C/work/quorum.smart-contracts/contracts/ProvisioningPrice.sol",
+    "exportedSymbols": {
+      "ProvisioningPrice": [
+        2989
+      ]
+    },
+    "id": 2990,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 2946,
+        "literals": [
+          "solidity",
+          "^",
+          "0.4",
+          ".23"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:24:12"
+      },
+      {
+        "absolutePath": "/C/work/quorum.smart-contracts/contracts/openzeppelin-solidity/Ownable.sol",
+        "file": "./openzeppelin-solidity/Ownable.sol",
+        "id": 2947,
+        "nodeType": "ImportDirective",
+        "scope": 2990,
+        "sourceUnit": 3731,
+        "src": "28:45:12",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "absolutePath": "/C/work/quorum.smart-contracts/contracts/AccountStorageAdapter.sol",
+        "file": "./AccountStorageAdapter.sol",
+        "id": 2948,
+        "nodeType": "ImportDirective",
+        "scope": 2990,
+        "sourceUnit": 1035,
+        "src": "75:37:12",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "baseContracts": [
+          {
+            "arguments": null,
+            "baseName": {
+              "contractScope": null,
+              "id": 2949,
+              "name": "Ownable",
+              "nodeType": "UserDefinedTypeName",
+              "referencedDeclaration": 3730,
+              "src": "146:7:12",
+              "typeDescriptions": {
+                "typeIdentifier": "t_contract$_Ownable_$3730",
+                "typeString": "contract Ownable"
+              }
+            },
+            "id": 2950,
+            "nodeType": "InheritanceSpecifier",
+            "src": "146:7:12"
+          }
+        ],
+        "contractDependencies": [
+          3730
+        ],
+        "contractKind": "contract",
+        "documentation": null,
+        "fullyImplemented": true,
+        "id": 2989,
+        "linearizedBaseContracts": [
+          2989,
+          3730
+        ],
+        "name": "ProvisioningPrice",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "constant": false,
+            "id": 2954,
+            "name": "_priceMap",
+            "nodeType": "VariableDeclaration",
+            "scope": 2989,
+            "src": "195:38:12",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_mapping$_t_uint256_$_t_uint256_$",
+              "typeString": "mapping(uint256 => uint256)"
+            },
+            "typeName": {
+              "id": 2953,
+              "keyType": {
+                "id": 2951,
+                "name": "uint",
+                "nodeType": "ElementaryTypeName",
+                "src": "204:4:12",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                }
+              },
+              "nodeType": "Mapping",
+              "src": "195:20:12",
+              "typeDescriptions": {
+                "typeIdentifier": "t_mapping$_t_uint256_$_t_uint256_$",
+                "typeString": "mapping(uint256 => uint256)"
+              },
+              "valueType": {
+                "id": 2952,
+                "name": "uint",
+                "nodeType": "ElementaryTypeName",
+                "src": "210:4:12",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                }
+              }
+            },
+            "value": null,
+            "visibility": "private"
+          },
+          {
+            "body": {
+              "id": 2971,
+              "nodeType": "Block",
+              "src": "376:60:12",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 2969,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "argumentTypes": null,
+                      "baseExpression": {
+                        "argumentTypes": null,
+                        "id": 2963,
+                        "name": "_priceMap",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 2954,
+                        "src": "387:9:12",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_mapping$_t_uint256_$_t_uint256_$",
+                          "typeString": "mapping(uint256 => uint256)"
+                        }
+                      },
+                      "id": 2967,
+                      "indexExpression": {
+                        "argumentTypes": null,
+                        "arguments": [
+                          {
+                            "argumentTypes": null,
+                            "id": 2965,
+                            "name": "accountFieldName",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 2956,
+                            "src": "402:16:12",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_enum$_AccountFieldName_$65",
+                              "typeString": "enum AccountStorageAdapter.AccountFieldName"
+                            }
+                          }
+                        ],
+                        "expression": {
+                          "argumentTypes": [
+                            {
+                              "typeIdentifier": "t_enum$_AccountFieldName_$65",
+                              "typeString": "enum AccountStorageAdapter.AccountFieldName"
+                            }
+                          ],
+                          "id": 2964,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": true,
+                          "lValueRequested": false,
+                          "nodeType": "ElementaryTypeNameExpression",
+                          "src": "397:4:12",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_type$_t_uint256_$",
+                            "typeString": "type(uint256)"
+                          },
+                          "typeName": "uint"
+                        },
+                        "id": 2966,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "kind": "typeConversion",
+                        "lValueRequested": false,
+                        "names": [],
+                        "nodeType": "FunctionCall",
+                        "src": "397:22:12",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      },
+                      "isConstant": false,
+                      "isLValue": true,
+                      "isPure": false,
+                      "lValueRequested": true,
+                      "nodeType": "IndexAccess",
+                      "src": "387:33:12",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "argumentTypes": null,
+                      "id": 2968,
+                      "name": "price",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 2958,
+                      "src": "423:5:12",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "src": "387:41:12",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "id": 2970,
+                  "nodeType": "ExpressionStatement",
+                  "src": "387:41:12"
+                }
+              ]
+            },
+            "documentation": "public methods ///\r",
+            "id": 2972,
+            "implemented": true,
+            "isConstructor": false,
+            "isDeclaredConst": false,
+            "modifiers": [
+              {
+                "arguments": [],
+                "id": 2961,
+                "modifierName": {
+                  "argumentTypes": null,
+                  "id": 2960,
+                  "name": "onlyOwner",
+                  "nodeType": "Identifier",
+                  "overloadedDeclarations": [],
+                  "referencedDeclaration": 3688,
+                  "src": "364:9:12",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_modifier$__$",
+                    "typeString": "modifier ()"
+                  }
+                },
+                "nodeType": "ModifierInvocation",
+                "src": "364:11:12"
+              }
+            ],
+            "name": "setPrice",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 2959,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 2956,
+                  "name": "accountFieldName",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2972,
+                  "src": "288:55:12",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_enum$_AccountFieldName_$65",
+                    "typeString": "enum AccountStorageAdapter.AccountFieldName"
+                  },
+                  "typeName": {
+                    "contractScope": null,
+                    "id": 2955,
+                    "name": "AccountStorageAdapter.AccountFieldName",
+                    "nodeType": "UserDefinedTypeName",
+                    "referencedDeclaration": 65,
+                    "src": "288:38:12",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_enum$_AccountFieldName_$65",
+                      "typeString": "enum AccountStorageAdapter.AccountFieldName"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 2958,
+                  "name": "price",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2972,
+                  "src": "345:10:12",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 2957,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "345:4:12",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "287:69:12"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 2962,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "376:0:12"
+            },
+            "scope": 2989,
+            "src": "270:166:12",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 2987,
+              "nodeType": "Block",
+              "src": "552:60:12",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 2985,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "argumentTypes": null,
+                      "id": 2979,
+                      "name": "price",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 2977,
+                      "src": "563:5:12",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "argumentTypes": null,
+                      "baseExpression": {
+                        "argumentTypes": null,
+                        "id": 2980,
+                        "name": "_priceMap",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 2954,
+                        "src": "571:9:12",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_mapping$_t_uint256_$_t_uint256_$",
+                          "typeString": "mapping(uint256 => uint256)"
+                        }
+                      },
+                      "id": 2984,
+                      "indexExpression": {
+                        "argumentTypes": null,
+                        "arguments": [
+                          {
+                            "argumentTypes": null,
+                            "id": 2982,
+                            "name": "accountFieldName",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 2974,
+                            "src": "586:16:12",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_enum$_AccountFieldName_$65",
+                              "typeString": "enum AccountStorageAdapter.AccountFieldName"
+                            }
+                          }
+                        ],
+                        "expression": {
+                          "argumentTypes": [
+                            {
+                              "typeIdentifier": "t_enum$_AccountFieldName_$65",
+                              "typeString": "enum AccountStorageAdapter.AccountFieldName"
+                            }
+                          ],
+                          "id": 2981,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": true,
+                          "lValueRequested": false,
+                          "nodeType": "ElementaryTypeNameExpression",
+                          "src": "581:4:12",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_type$_t_uint256_$",
+                            "typeString": "type(uint256)"
+                          },
+                          "typeName": "uint"
+                        },
+                        "id": 2983,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "kind": "typeConversion",
+                        "lValueRequested": false,
+                        "names": [],
+                        "nodeType": "FunctionCall",
+                        "src": "581:22:12",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      },
+                      "isConstant": false,
+                      "isLValue": true,
+                      "isPure": false,
+                      "lValueRequested": false,
+                      "nodeType": "IndexAccess",
+                      "src": "571:33:12",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "src": "563:41:12",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "id": 2986,
+                  "nodeType": "ExpressionStatement",
+                  "src": "563:41:12"
+                }
+              ]
+            },
+            "documentation": null,
+            "id": 2988,
+            "implemented": true,
+            "isConstructor": false,
+            "isDeclaredConst": true,
+            "modifiers": [],
+            "name": "getPrice",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 2975,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 2974,
+                  "name": "accountFieldName",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2988,
+                  "src": "462:55:12",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_enum$_AccountFieldName_$65",
+                    "typeString": "enum AccountStorageAdapter.AccountFieldName"
+                  },
+                  "typeName": {
+                    "contractScope": null,
+                    "id": 2973,
+                    "name": "AccountStorageAdapter.AccountFieldName",
+                    "nodeType": "UserDefinedTypeName",
+                    "referencedDeclaration": 65,
+                    "src": "462:38:12",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_enum$_AccountFieldName_$65",
+                      "typeString": "enum AccountStorageAdapter.AccountFieldName"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "461:57:12"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 2978,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 2977,
+                  "name": "price",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2988,
+                  "src": "540:10:12",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 2976,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "540:4:12",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "539:12:12"
+            },
+            "scope": 2989,
+            "src": "444:168:12",
+            "stateMutability": "view",
+            "superFunction": null,
+            "visibility": "public"
+          }
+        ],
+        "scope": 2990,
+        "src": "116:499:12"
+      }
+    ],
+    "src": "0:615:12"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.4.23+commit.124ca40d.Emscripten.clang"
+  },
+  "networks": {
+    "10": {
+      "events": {},
+      "links": {},
+      "address": "0x0f2b849c34441e1bbc25714b1549da825f97be35",
+      "transactionHash": "0x0cfd43f64b368f0ed0eae505766efbd3dbda318909dbad2e5e5e5cc59fddab01"
+    },
+    "20": {
+      "events": {},
+      "links": {},
+      "address": "0xcda7451aba73d0d914141d0db18f789000d59484",
+      "transactionHash": "0x552874ae2a7190ef9acf2cc751120c8ed0ffb71739f8fa77f17f5b8fd40f3ec9"
+    }
+  },
+  "schemaVersion": "2.0.0",
+  "updatedAt": "2018-06-26T09:55:44.943Z"
+}

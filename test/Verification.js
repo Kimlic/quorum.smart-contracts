@@ -5,7 +5,7 @@ let VerificationContractFactory = artifacts.require("./VerificationContractFacto
 let BaseVerification = artifacts.require("./BaseVerification.sol");
 let AccountStorageAdapter = artifacts.require("./AccountStorageAdapter.sol");
 
-let { accountConsts, addAccount, getAccountFieldLastMainData, getAccountLastDataIndex } = require("./Helpers/AccountHelper.js")
+let { accountConsts, addAccountData, getAccountFieldLastMainData, getAccountLastDataIndex } = require("./Helpers/AccountHelper.js")
 
 
 contract("Verification", function(accounts) {
@@ -14,11 +14,11 @@ contract("Verification", function(accounts) {
 
     it("init account", async () => {
         let adapter = await AccountStorageAdapter.deployed();
-        await addAccount(adapter, accountConsts.phoneValue, accountConsts.phoneObjectType, accountConsts.phoneColumnIndex);
-        await addAccount(adapter, accountConsts.emailValue, accountConsts.emailObjectType, accountConsts.emailColumnIndex);
-        //await addAccount(adapter, accountConsts.identityValue, accountConsts.identityObjectType, accountConsts.identityColumnIndex);
-        await addAccount(adapter, accountConsts.documentValue, accountConsts.documentObjectType, accountConsts.documentsColumnIndex);
-        //await addAccount(adapter, accountConsts.addressValue, accountConsts.addressObjectType, accountConsts.addressesColumnIndex);
+        await addAccountData(adapter, accountAddress, accountConsts.phoneValue, accountConsts.phoneObjectType, accountConsts.phoneColumnIndex);
+        await addAccountData(adapter, accountAddress, accountConsts.emailValue, accountConsts.emailObjectType, accountConsts.emailColumnIndex);
+        //await addAccountData(adapter, accountAddress, accountConsts.identityValue, accountConsts.identityObjectType, accountConsts.identityColumnIndex);
+        await addAccountData(adapter, accountAddress, accountConsts.documentValue, accountConsts.documentObjectType, accountConsts.documentsColumnIndex);
+        //await addAccountData(adapter, accountAddress, accountConsts.addressValue, accountConsts.addressObjectType, accountConsts.addressesColumnIndex);
     });
 
     let verificationTests = (factoryMethodName, columnName, columnIndex, coOwnerAddress, verificatorAddress,

@@ -1,0 +1,785 @@
+{
+  "contractName": "WithKimlicContext",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "name": "contextStorage",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    }
+  ],
+  "bytecode": "0x6080604052348015600f57600080fd5b506040516020806083833981016040525160008054600160a060020a03909216600160a060020a0319909216919091179055603580604e6000396000f3006080604052600080fd00a165627a7a72305820dd74aef03877ecff3a57f2f7e66a28afdda10815981cc32a6714754880f77e9f0029",
+  "deployedBytecode": "0x6080604052600080fd00a165627a7a72305820dd74aef03877ecff3a57f2f7e66a28afdda10815981cc32a6714754880f77e9f0029",
+  "sourceMap": "110:416:17:-;;;250:109;8:9:-1;5:2;;;30:1;27;20:12;5:2;250:109:17;;;;;;;;;;;;;304:8;:47;;-1:-1:-1;;;;;304:47:17;;;-1:-1:-1;;;;;;304:47:17;;;;;;;;;110:416;;;;;;",
+  "deployedSourceMap": "110:416:17:-;;;;;",
+  "source": "pragma solidity ^0.4.23;\r\n\r\n\r\nimport \"./KimlicContractsContext.sol\";\r\nimport \"./KimlicContextStorage.sol\";\r\n\r\ncontract WithKimlicContext {\r\n    /// internal attributes ///\r\n    KimlicContextStorage internal _storage;\r\n\r\n    /// constructors ///\r\n    constructor(address contextStorage) public {\r\n        _storage = KimlicContextStorage(contextStorage);\r\n    }\r\n\r\n    /// internal methods ///\r\n    function getContext() internal view returns(KimlicContractsContext context) {\r\n        context = _storage.getContext();\r\n    }\r\n}",
+  "sourcePath": "C:\\work\\quorum.smart-contracts\\contracts\\WithKimlicContext.sol",
+  "ast": {
+    "absolutePath": "/C/work/quorum.smart-contracts/contracts/WithKimlicContext.sol",
+    "exportedSymbols": {
+      "WithKimlicContext": [
+        3483
+      ]
+    },
+    "id": 3484,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 3454,
+        "literals": [
+          "solidity",
+          "^",
+          "0.4",
+          ".23"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:24:17"
+      },
+      {
+        "absolutePath": "/C/work/quorum.smart-contracts/contracts/KimlicContractsContext.sol",
+        "file": "./KimlicContractsContext.sol",
+        "id": 3455,
+        "nodeType": "ImportDirective",
+        "scope": 3484,
+        "sourceUnit": 2428,
+        "src": "30:38:17",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "absolutePath": "/C/work/quorum.smart-contracts/contracts/KimlicContextStorage.sol",
+        "file": "./KimlicContextStorage.sol",
+        "id": 3456,
+        "nodeType": "ImportDirective",
+        "scope": 3484,
+        "sourceUnit": 1911,
+        "src": "70:36:17",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "documentation": null,
+        "fullyImplemented": true,
+        "id": 3483,
+        "linearizedBaseContracts": [
+          3483
+        ],
+        "name": "WithKimlicContext",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "constant": false,
+            "id": 3458,
+            "name": "_storage",
+            "nodeType": "VariableDeclaration",
+            "scope": 3483,
+            "src": "177:38:17",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_contract$_KimlicContextStorage_$1910",
+              "typeString": "contract KimlicContextStorage"
+            },
+            "typeName": {
+              "contractScope": null,
+              "id": 3457,
+              "name": "KimlicContextStorage",
+              "nodeType": "UserDefinedTypeName",
+              "referencedDeclaration": 1910,
+              "src": "177:20:17",
+              "typeDescriptions": {
+                "typeIdentifier": "t_contract$_KimlicContextStorage_$1910",
+                "typeString": "contract KimlicContextStorage"
+              }
+            },
+            "value": null,
+            "visibility": "internal"
+          },
+          {
+            "body": {
+              "id": 3469,
+              "nodeType": "Block",
+              "src": "293:66:17",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 3467,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "argumentTypes": null,
+                      "id": 3463,
+                      "name": "_storage",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 3458,
+                      "src": "304:8:17",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_contract$_KimlicContextStorage_$1910",
+                        "typeString": "contract KimlicContextStorage"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "argumentTypes": null,
+                      "arguments": [
+                        {
+                          "argumentTypes": null,
+                          "id": 3465,
+                          "name": "contextStorage",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 3460,
+                          "src": "336:14:17",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_address",
+                            "typeString": "address"
+                          }
+                        }
+                      ],
+                      "expression": {
+                        "argumentTypes": [
+                          {
+                            "typeIdentifier": "t_address",
+                            "typeString": "address"
+                          }
+                        ],
+                        "id": 3464,
+                        "name": "KimlicContextStorage",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 1910,
+                        "src": "315:20:17",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_type$_t_contract$_KimlicContextStorage_$1910_$",
+                          "typeString": "type(contract KimlicContextStorage)"
+                        }
+                      },
+                      "id": 3466,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "kind": "typeConversion",
+                      "lValueRequested": false,
+                      "names": [],
+                      "nodeType": "FunctionCall",
+                      "src": "315:36:17",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_contract$_KimlicContextStorage_$1910",
+                        "typeString": "contract KimlicContextStorage"
+                      }
+                    },
+                    "src": "304:47:17",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_KimlicContextStorage_$1910",
+                      "typeString": "contract KimlicContextStorage"
+                    }
+                  },
+                  "id": 3468,
+                  "nodeType": "ExpressionStatement",
+                  "src": "304:47:17"
+                }
+              ]
+            },
+            "documentation": "constructors ///\r",
+            "id": 3470,
+            "implemented": true,
+            "isConstructor": true,
+            "isDeclaredConst": false,
+            "modifiers": [],
+            "name": "",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 3461,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 3460,
+                  "name": "contextStorage",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 3470,
+                  "src": "262:22:17",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 3459,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "262:7:17",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "261:24:17"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 3462,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "293:0:17"
+            },
+            "scope": 3483,
+            "src": "250:109:17",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 3481,
+              "nodeType": "Block",
+              "src": "473:50:17",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 3479,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "argumentTypes": null,
+                      "id": 3475,
+                      "name": "context",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 3473,
+                      "src": "484:7:17",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_contract$_KimlicContractsContext_$2427",
+                        "typeString": "contract KimlicContractsContext"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "argumentTypes": null,
+                      "arguments": [],
+                      "expression": {
+                        "argumentTypes": [],
+                        "expression": {
+                          "argumentTypes": null,
+                          "id": 3476,
+                          "name": "_storage",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 3458,
+                          "src": "494:8:17",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_contract$_KimlicContextStorage_$1910",
+                            "typeString": "contract KimlicContextStorage"
+                          }
+                        },
+                        "id": 3477,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "memberName": "getContext",
+                        "nodeType": "MemberAccess",
+                        "referencedDeclaration": 1878,
+                        "src": "494:19:17",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_function_external_view$__$returns$_t_contract$_KimlicContractsContext_$2427_$",
+                          "typeString": "function () view external returns (contract KimlicContractsContext)"
+                        }
+                      },
+                      "id": 3478,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "kind": "functionCall",
+                      "lValueRequested": false,
+                      "names": [],
+                      "nodeType": "FunctionCall",
+                      "src": "494:21:17",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_contract$_KimlicContractsContext_$2427",
+                        "typeString": "contract KimlicContractsContext"
+                      }
+                    },
+                    "src": "484:31:17",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_KimlicContractsContext_$2427",
+                      "typeString": "contract KimlicContractsContext"
+                    }
+                  },
+                  "id": 3480,
+                  "nodeType": "ExpressionStatement",
+                  "src": "484:31:17"
+                }
+              ]
+            },
+            "documentation": "internal methods ///\r",
+            "id": 3482,
+            "implemented": true,
+            "isConstructor": false,
+            "isDeclaredConst": true,
+            "modifiers": [],
+            "name": "getContext",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 3471,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "416:2:17"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 3474,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 3473,
+                  "name": "context",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 3482,
+                  "src": "441:30:17",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_contract$_KimlicContractsContext_$2427",
+                    "typeString": "contract KimlicContractsContext"
+                  },
+                  "typeName": {
+                    "contractScope": null,
+                    "id": 3472,
+                    "name": "KimlicContractsContext",
+                    "nodeType": "UserDefinedTypeName",
+                    "referencedDeclaration": 2427,
+                    "src": "441:22:17",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_KimlicContractsContext_$2427",
+                      "typeString": "contract KimlicContractsContext"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "440:32:17"
+            },
+            "scope": 3483,
+            "src": "397:126:17",
+            "stateMutability": "view",
+            "superFunction": null,
+            "visibility": "internal"
+          }
+        ],
+        "scope": 3484,
+        "src": "110:416:17"
+      }
+    ],
+    "src": "0:526:17"
+  },
+  "legacyAST": {
+    "absolutePath": "/C/work/quorum.smart-contracts/contracts/WithKimlicContext.sol",
+    "exportedSymbols": {
+      "WithKimlicContext": [
+        3483
+      ]
+    },
+    "id": 3484,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 3454,
+        "literals": [
+          "solidity",
+          "^",
+          "0.4",
+          ".23"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:24:17"
+      },
+      {
+        "absolutePath": "/C/work/quorum.smart-contracts/contracts/KimlicContractsContext.sol",
+        "file": "./KimlicContractsContext.sol",
+        "id": 3455,
+        "nodeType": "ImportDirective",
+        "scope": 3484,
+        "sourceUnit": 2428,
+        "src": "30:38:17",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "absolutePath": "/C/work/quorum.smart-contracts/contracts/KimlicContextStorage.sol",
+        "file": "./KimlicContextStorage.sol",
+        "id": 3456,
+        "nodeType": "ImportDirective",
+        "scope": 3484,
+        "sourceUnit": 1911,
+        "src": "70:36:17",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "documentation": null,
+        "fullyImplemented": true,
+        "id": 3483,
+        "linearizedBaseContracts": [
+          3483
+        ],
+        "name": "WithKimlicContext",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "constant": false,
+            "id": 3458,
+            "name": "_storage",
+            "nodeType": "VariableDeclaration",
+            "scope": 3483,
+            "src": "177:38:17",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_contract$_KimlicContextStorage_$1910",
+              "typeString": "contract KimlicContextStorage"
+            },
+            "typeName": {
+              "contractScope": null,
+              "id": 3457,
+              "name": "KimlicContextStorage",
+              "nodeType": "UserDefinedTypeName",
+              "referencedDeclaration": 1910,
+              "src": "177:20:17",
+              "typeDescriptions": {
+                "typeIdentifier": "t_contract$_KimlicContextStorage_$1910",
+                "typeString": "contract KimlicContextStorage"
+              }
+            },
+            "value": null,
+            "visibility": "internal"
+          },
+          {
+            "body": {
+              "id": 3469,
+              "nodeType": "Block",
+              "src": "293:66:17",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 3467,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "argumentTypes": null,
+                      "id": 3463,
+                      "name": "_storage",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 3458,
+                      "src": "304:8:17",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_contract$_KimlicContextStorage_$1910",
+                        "typeString": "contract KimlicContextStorage"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "argumentTypes": null,
+                      "arguments": [
+                        {
+                          "argumentTypes": null,
+                          "id": 3465,
+                          "name": "contextStorage",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 3460,
+                          "src": "336:14:17",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_address",
+                            "typeString": "address"
+                          }
+                        }
+                      ],
+                      "expression": {
+                        "argumentTypes": [
+                          {
+                            "typeIdentifier": "t_address",
+                            "typeString": "address"
+                          }
+                        ],
+                        "id": 3464,
+                        "name": "KimlicContextStorage",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 1910,
+                        "src": "315:20:17",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_type$_t_contract$_KimlicContextStorage_$1910_$",
+                          "typeString": "type(contract KimlicContextStorage)"
+                        }
+                      },
+                      "id": 3466,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "kind": "typeConversion",
+                      "lValueRequested": false,
+                      "names": [],
+                      "nodeType": "FunctionCall",
+                      "src": "315:36:17",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_contract$_KimlicContextStorage_$1910",
+                        "typeString": "contract KimlicContextStorage"
+                      }
+                    },
+                    "src": "304:47:17",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_KimlicContextStorage_$1910",
+                      "typeString": "contract KimlicContextStorage"
+                    }
+                  },
+                  "id": 3468,
+                  "nodeType": "ExpressionStatement",
+                  "src": "304:47:17"
+                }
+              ]
+            },
+            "documentation": "constructors ///\r",
+            "id": 3470,
+            "implemented": true,
+            "isConstructor": true,
+            "isDeclaredConst": false,
+            "modifiers": [],
+            "name": "",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 3461,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 3460,
+                  "name": "contextStorage",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 3470,
+                  "src": "262:22:17",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 3459,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "262:7:17",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "261:24:17"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 3462,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "293:0:17"
+            },
+            "scope": 3483,
+            "src": "250:109:17",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 3481,
+              "nodeType": "Block",
+              "src": "473:50:17",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 3479,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "argumentTypes": null,
+                      "id": 3475,
+                      "name": "context",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 3473,
+                      "src": "484:7:17",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_contract$_KimlicContractsContext_$2427",
+                        "typeString": "contract KimlicContractsContext"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "argumentTypes": null,
+                      "arguments": [],
+                      "expression": {
+                        "argumentTypes": [],
+                        "expression": {
+                          "argumentTypes": null,
+                          "id": 3476,
+                          "name": "_storage",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 3458,
+                          "src": "494:8:17",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_contract$_KimlicContextStorage_$1910",
+                            "typeString": "contract KimlicContextStorage"
+                          }
+                        },
+                        "id": 3477,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "memberName": "getContext",
+                        "nodeType": "MemberAccess",
+                        "referencedDeclaration": 1878,
+                        "src": "494:19:17",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_function_external_view$__$returns$_t_contract$_KimlicContractsContext_$2427_$",
+                          "typeString": "function () view external returns (contract KimlicContractsContext)"
+                        }
+                      },
+                      "id": 3478,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "kind": "functionCall",
+                      "lValueRequested": false,
+                      "names": [],
+                      "nodeType": "FunctionCall",
+                      "src": "494:21:17",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_contract$_KimlicContractsContext_$2427",
+                        "typeString": "contract KimlicContractsContext"
+                      }
+                    },
+                    "src": "484:31:17",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_KimlicContractsContext_$2427",
+                      "typeString": "contract KimlicContractsContext"
+                    }
+                  },
+                  "id": 3480,
+                  "nodeType": "ExpressionStatement",
+                  "src": "484:31:17"
+                }
+              ]
+            },
+            "documentation": "internal methods ///\r",
+            "id": 3482,
+            "implemented": true,
+            "isConstructor": false,
+            "isDeclaredConst": true,
+            "modifiers": [],
+            "name": "getContext",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 3471,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "416:2:17"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 3474,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 3473,
+                  "name": "context",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 3482,
+                  "src": "441:30:17",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_contract$_KimlicContractsContext_$2427",
+                    "typeString": "contract KimlicContractsContext"
+                  },
+                  "typeName": {
+                    "contractScope": null,
+                    "id": 3472,
+                    "name": "KimlicContractsContext",
+                    "nodeType": "UserDefinedTypeName",
+                    "referencedDeclaration": 2427,
+                    "src": "441:22:17",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_KimlicContractsContext_$2427",
+                      "typeString": "contract KimlicContractsContext"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "440:32:17"
+            },
+            "scope": 3483,
+            "src": "397:126:17",
+            "stateMutability": "view",
+            "superFunction": null,
+            "visibility": "internal"
+          }
+        ],
+        "scope": 3484,
+        "src": "110:416:17"
+      }
+    ],
+    "src": "0:526:17"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.4.23+commit.124ca40d.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "2.0.0",
+  "updatedAt": "2018-06-22T09:40:37.647Z"
+}

@@ -1,7 +1,9 @@
 {
-	"KIM1": {
+	"kubernetisNode": {
 		"addresses": {
-			"mainAccount1": {
+			"mainAccount": {
+				"address": "0x3a1d3a5c14ced8f33303a9ab4d25245030cc7cd7",
+				"password": "password"
 			}
 		}
 	}
