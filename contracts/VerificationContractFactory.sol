@@ -29,25 +29,25 @@ contract VerificationContractFactory is WithKimlicContext {
     function createEmailVerification(address account, address coOwnerAddress, uint dataIndex, address verificatorAddress, string key) public {
         createBaseVerificationContract(
             account, coOwnerAddress, dataIndex, verificatorAddress,
-            key, AccountStorageAdapter.AccountFieldName.Email);
+            key, "email");
     }
 
     function createPhoneVerification(address account, address coOwnerAddress, uint dataIndex, address verificatorAddress, string key) public {
         createBaseVerificationContract(
             account, coOwnerAddress, dataIndex, verificatorAddress,
-            key, AccountStorageAdapter.AccountFieldName.Phone);
+            key, "phone");
     }
 
     function createDocumentVerification(address account, address coOwnerAddress, uint dataIndex, address verificatorAddress, string key) public {
         createBaseVerificationContract(
             account, coOwnerAddress, dataIndex, verificatorAddress,
-            key, AccountStorageAdapter.AccountFieldName.Documents);
+            key, "documents");
     }
     
     /// private methods ///
     function createBaseVerificationContract(
         address account, address coOwnerAddress, uint dataIndex, address verificatorAddress, string key,
-        AccountStorageAdapter.AccountFieldName accountFieldName) private {
+        string accountFieldName) private {
         
         BaseVerification createdContract = new BaseVerification(
             _storage, _rewardAmount, account, coOwnerAddress, dataIndex, verificatorAddress, accountFieldName);

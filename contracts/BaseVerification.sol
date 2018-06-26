@@ -8,7 +8,7 @@ import "./WithKimlicContext.sol";
 import "./KimlicToken.sol";
 
 contract BaseVerification is Ownable, WithKimlicContext {
-    AccountStorageAdapter.AccountFieldName public accountFieldName;
+    string public accountFieldName;
     address public coOwner;
     bool public isVerified;
     uint public dataIndex;
@@ -19,7 +19,7 @@ contract BaseVerification is Ownable, WithKimlicContext {
 
     constructor(
         address contextStorage, uint rewardAmount, address account, address coOwnerAddress, uint index, address verificatorAddress,
-        AccountStorageAdapter.AccountFieldName fieldName) public WithKimlicContext(contextStorage) Ownable() {
+        string fieldName) public WithKimlicContext(contextStorage) Ownable() {
 
         coOwner = coOwnerAddress;
         accountAddress = account;
@@ -31,7 +31,7 @@ contract BaseVerification is Ownable, WithKimlicContext {
 
     function setVerificationResult(bool verificationResult) public onlyOwner() {
         require(!isVerified);
-        
+
         KimlicContractsContext context = getContext();
         KimlicToken token = context.getKimlicToken();
         require(token.balanceOf(address(this)) == _rewardAmount);

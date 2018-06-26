@@ -21,7 +21,7 @@ contract ProvisioningContractFactory is WithKimlicContext {
     }
 
     /// public methods ///
-    function createProvisioningContract(address account, AccountStorageAdapter.AccountFieldName accountFieldName, uint index, string key) 
+    function createProvisioningContract(address account, string accountFieldName, uint index, string key) 
             public returns(ProvisioningContract createdContract) {
         
         KimlicContractsContext context = getContext();

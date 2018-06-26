@@ -18,7 +18,7 @@ contract ProvisioningContract is Ownable, WithKimlicContext {
     uint public tokensUnlockAt;
 
     /// private attributes ///
-    AccountStorageAdapter.AccountFieldName private _fieldName;
+    string private _fieldName;
     uint private _index;
     uint private _reward;
     /// enums ///
@@ -26,7 +26,7 @@ contract ProvisioningContract is Ownable, WithKimlicContext {
 
     /// constructors ///
     constructor (
-        address contextStorage, address accountAddress, AccountStorageAdapter.AccountFieldName accountFieldName,
+        address contextStorage, address accountAddress, string accountFieldName,
         uint index, uint reward)
             public WithKimlicContext(contextStorage) {
 

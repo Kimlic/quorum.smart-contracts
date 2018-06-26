@@ -28,21 +28,24 @@ contract RewardingContract is Ownable, WithKimlicContext {
     }
 
 
-    function checkMilestones(address accountAddress, AccountStorageAdapter.AccountFieldName accountFieldName) public {
-        if (accountFieldName == AccountStorageAdapter.AccountFieldName.Email ||
-            accountFieldName == AccountStorageAdapter.AccountFieldName.Phone) {
+    function checkMilestones(address accountAddress, string accountFieldName) public {
+        string memory emailColumnName = "email";
+        string memory phoneColumnName = "phone";
+        string memory identityColumnName = "identity";
+        if (isEqualStrings(accountFieldName, emailColumnName) ||
+            isEqualStrings(accountFieldName, phoneColumnName)) {
             
             checkMilestone1(accountAddress);
         } 
-        else if (accountFieldName == AccountStorageAdapter.AccountFieldName.Identity) {
+        else if (isEqualStrings(accountFieldName, identityColumnName)) {
             checkMilestone1(accountAddress);
         }
     }
 
     /// private methods ///
     function checkMilestone1(address accountAddress) private {
-        if (getIsDataVerified(accountAddress, AccountStorageAdapter.AccountFieldName.Email) &&
-            getIsDataVerified(accountAddress, AccountStorageAdapter.AccountFieldName.Phone)) {
+        if (getIsDataVerified(accountAddress, "email") &&
+            getIsDataVerified(accountAddress, "phone")) {
             
             sendReward(accountAddress, mielstone2Reward);
         }
@@ -50,7 +53,7 @@ contract RewardingContract is Ownable, WithKimlicContext {
     }
 
     function checkMilestone2(address accountAddress) private {
-        if (getIsDataVerified(accountAddress, AccountStorageAdapter.AccountFieldName.Identity)) {
+        if (getIsDataVerified(accountAddress, "identity")) {
             sendReward(accountAddress, mielstone2Reward);
         }
     }
@@ -63,7 +66,7 @@ contract RewardingContract is Ownable, WithKimlicContext {
         context.getKimlicToken().transferFrom(communityTokenWalletAddress, accountAddress, rewardAmount);
     }
 
-    function getIsDataVerified(address accountAddress, AccountStorageAdapter.AccountFieldName accountFieldName) 
+    function getIsDataVerified(address accountAddress, string accountFieldName) 
             private view returns(bool isVerified) {
         address verifiedBy = getContext().getAccountStorageAdapter()
             .getLastAccountDataVerifiedBy(accountAddress, accountFieldName);
@@ -72,5 +75,9 @@ contract RewardingContract is Ownable, WithKimlicContext {
             BaseVerification verificationContract = BaseVerification(verifiedBy);   
             isVerified = verificationContract.isVerified();
         }
+    }
+
+    function isEqualStrings(string leftValue, string rightValue) private pure returns(bool isEqual){//TODO move to lib
+        isEqual = keccak256(bytes(leftValue)) == keccak256(bytes(rightValue));
     }
 }

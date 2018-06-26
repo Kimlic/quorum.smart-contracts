@@ -17,29 +17,22 @@ let accountConsts = {
     deviceObjectType: "deviceId",
     documentObjectType: "id",
     addressObjectType: "living address",
-    metaDataColumnIndex: 0,
-    emailColumnIndex: 0,
-    phoneColumnIndex: 1,
-    identityColumnIndex: 2,
-    deviceColumnIndex: 3,
-    documentsColumnIndex: 4,
-    addressesColumnIndex: 5,
 }
 
-let addAccount = async function(adapter, fieldData, objectType, columnNameIndex) {
-    return adapter.setAccountFieldMainData(fieldData, objectType, columnNameIndex);
+let addAccount = async function(adapter, fieldData, objectType, columnName) {
+    return adapter.setAccountFieldMainData(fieldData, objectType, columnName);
 };
 
-let getAccountFieldLastMainData = async function(adapter, address, columnNameIndex) {
-    return adapter.getAccountFieldLastMainData.call(address, columnNameIndex);
+let getAccountFieldLastMainData = async function(adapter, address, columnName) {
+    return adapter.getAccountFieldLastMainData.call(address, columnName);
 };
 
-let getAccountFieldLastVerificationData = async function(adapter, address, columnNameIndex) {
-    return adapter.getAccountFieldLastVerificationData.call(address, columnNameIndex);
+let getAccountFieldLastVerificationData = async function(adapter, address, columnName) {
+    return adapter.getAccountFieldLastVerificationData.call(address, columnName);
 };
 
-let getAccountLastDataIndex = async function(adapter, address, columnNameIndex) {
-    return adapter.getFieldHistoryLength.call(address, columnNameIndex);
+let getAccountLastDataIndex = async function(adapter, address, columnName) {
+    return adapter.getFieldHistoryLength.call(address, columnName);
 };
 
 module.exports = { accountConsts, addAccount, getAccountFieldLastMainData, getAccountFieldLastVerificationData, getAccountLastDataIndex };
