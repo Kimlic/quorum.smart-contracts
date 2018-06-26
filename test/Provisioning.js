@@ -43,14 +43,14 @@ contract("Provisioning", function(accounts) {
     
     let provisioningContractkey = uuidv4();
     let verificationContractkey = uuidv4();
-    let columnIndex = accountConsts.emailColumnIndex;
+    let columnName = accountConsts.emailColumnName;
     var lastDataIndex;
     it("init account with verified data", async () => {
         let adapter = await AccountStorageAdapter.deployed();
-        await addAccountData(adapter, accountAddress, accountConsts.emailValue, accountConsts.emailObjectType, columnIndex);
+        await addAccountData(adapter, accountAddress, accountConsts.emailValue, accountConsts.emailObjectType, columnName);
 
         let verificationContractFactory = await VerificationContractFactory.deployed();
-        lastDataIndex = await getAccountLastDataIndex(adapter, accountAddress, columnIndex);
+        lastDataIndex = await getAccountLastDataIndex(adapter, accountAddress, columnName);
         await verificationContractFactory.createEmailVerification(accountAddress, kimlicConfig.address,
             lastDataIndex, accounts[0], verificationContractkey, kimlicSendConfig);
         let verificationContractAddress =  await verificationContractFactory.getVerificationContract.call(verificationContractkey, kimlicSendConfig);
@@ -61,7 +61,7 @@ contract("Provisioning", function(accounts) {
 
     it(`Should create provisioning contract`, async () => {
         let provisioningContractFactory = await ProvisioningContractFactory.deployed();
-        await provisioningContractFactory.createProvisioningContract(accountAddress, columnIndex, lastDataIndex, provisioningContractkey, relyingPartySendConfig);
+        await provisioningContractFactory.createProvisioningContract(accountAddress, columnName, lastDataIndex, provisioningContractkey, relyingPartySendConfig);
     });
     
     var provisioningContractAddress;
@@ -81,8 +81,8 @@ contract("Provisioning", function(accounts) {
         let data = await provisioningContractFactory.getData.call(relyingPartySendConfig, relyingPartySendConfig);
         
         let adapter = await AccountStorageAdapter.deployed();
-        let accountMainData = await getAccountFieldLastMainData(adapter, accountAddress, columnIndex, kimlicSendConfig);
-        let accountVerificationData = await getAccountFieldLastVerificationData(adapter, accountAddress, columnIndex, kimlicSendConfig);
+        let accountMainData = await getAccountFieldLastMainData(adapter, accountAddress, columnName, kimlicSendConfig);
+        let accountVerificationData = await getAccountFieldLastVerificationData(adapter, accountAddress, columnName, kimlicSendConfig);
         let accountData = accountMainData.concat(accountVerificationData);
         assert.deepEqual(data, accountData);
     });

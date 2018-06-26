@@ -5,8 +5,8 @@ let { accountConsts, addAccountData, getAccountFieldLastMainData, getAccountLast
 
 
 contract("AccountStorageAdapter", function(accounts) {
-    
-    console.log("accountAddress: " + accounts[0]);
+    let accountAddress = accounts[0];
+    console.log(`accountAddress: ${accountAddress}`);
 
     
     let checkSetAccountData = (fieldData, fieldObjectType, columnName, expectedFieldIndex) => {
@@ -18,18 +18,18 @@ contract("AccountStorageAdapter", function(accounts) {
         
         it(addDataCaption, async () => {
             let adapter = await AccountStorageAdapter.deployed();
-            await addAccountData(adapter, accounts[0], fieldData, fieldObjectType, columnName);
+            await addAccountData(adapter, accountAddress, fieldData, fieldObjectType, columnName);
         });
 
         it(readDataCaption, async () => {
             let adapter = await AccountStorageAdapter.deployed();
-            let data = await getAccountFieldLastMainData(adapter, accounts[0], columnName);
-            assert.equal(data[accountConsts.metaDataColumnIndex], fieldData);
+            let data = await getAccountFieldLastMainData(adapter, accountAddress, columnName);
+            assert.equal(data[0], fieldData);
         });
         
         it(dataIndexCaption, async () => {
             let adapter = await AccountStorageAdapter.deployed();
-            let newDataIndex = await getAccountLastDataIndex(adapter, accounts[0], columnName);
+            let newDataIndex = await getAccountLastDataIndex(adapter, accountAddress, columnName);
             assert.equal(newDataIndex, expectedFieldIndex);
         });
     };

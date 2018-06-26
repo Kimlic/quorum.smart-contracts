@@ -24,15 +24,15 @@ let addAccountData = async function(adapter, address, fieldData, objectType, col
 };
 
 let getAccountFieldLastMainData = async function(adapter, address, columnName) {
-    return adapter.getAccountFieldLastMainData.call(address, columnName);
+    return adapter.getAccountFieldLastMainData.call(address, columnName, { from: address });
 };
 
 let getAccountFieldLastVerificationData = async function(adapter, address, columnName) {
-    return adapter.getAccountFieldLastVerificationData.call(address, columnName);
+    return adapter.getAccountFieldLastVerificationData.call(address, columnName, { from: address });
 };
 
 let getAccountLastDataIndex = async function(adapter, address, columnName) {
-    return adapter.getFieldHistoryLength.call(address, columnName);
+    return adapter.getFieldHistoryLength.call(address, columnName, { from: address });
 };
 
 module.exports = { accountConsts, addAccountData, getAccountFieldLastMainData, getAccountFieldLastVerificationData, getAccountLastDataIndex };

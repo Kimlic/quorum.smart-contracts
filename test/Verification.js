@@ -21,12 +21,12 @@ contract("Verification", function(accounts) {
         //await addAccountData(adapter, accountAddress, accountConsts.addressValue, accountConsts.addressObjectType, accountConsts.addressesColumnName);
     });
 
-    let verificationTests = (factoryMethodName, columnName, columnIndex, coOwnerAddress, verificatorAddress,
+    let verificationTests = (factoryMethodName, columnName, coOwnerAddress, verificatorAddress,
             verificationContractkey, sendConfig) => {
         it(`Should create ${columnName} verification contract`, async () => {
             let adapter = await AccountStorageAdapter.deployed();
             let verificationContractFactory = await VerificationContractFactory.deployed();
-            let lastDataIndex = await getAccountLastDataIndex(adapter, accountAddress, columnIndex);
+            let lastDataIndex = await getAccountLastDataIndex(adapter, accountAddress, columnName);
             await verificationContractFactory[factoryMethodName](accountAddress, coOwnerAddress,
                 lastDataIndex, verificatorAddress, verificationContractkey, sendConfig);
         });
@@ -43,7 +43,7 @@ contract("Verification", function(accounts) {
             let data = await verificationContract.getData.call(sendConfig);
             
             let adapter = await AccountStorageAdapter.deployed();
-            let accountData = await getAccountFieldLastMainData(adapter, accountAddress, columnIndex);
+            let accountData = await getAccountFieldLastMainData(adapter, accountAddress, columnName);
             assert.deepEqual(data, accountData);
         });
         
@@ -90,13 +90,13 @@ contract("Verification", function(accounts) {
         web3.personal.unlockAccount(veriffConfig.address, veriffConfig.password);
     });
     
-    verificationTests("createEmailVerification", accountConsts.emailColumnName, accountConsts.emailColumnIndex,
-        kimlicConfig.address, verificatorAddress, uuidv4(), { "from": kimlicConfig.address });
+    verificationTests("createEmailVerification", accountConsts.emailColumnName, kimlicConfig.address,
+        verificatorAddress, uuidv4(), { "from": kimlicConfig.address });
 
-    verificationTests("createPhoneVerification", accountConsts.phoneColumnName, accountConsts.phoneColumnIndex,
-        kimlicConfig.address, verificatorAddress, uuidv4(), { "from": kimlicConfig.address });
+    verificationTests("createPhoneVerification", accountConsts.phoneColumnName, kimlicConfig.address,
+        verificatorAddress, uuidv4(), { "from": kimlicConfig.address });
     
-    verificationTests("createDocumentVerification", accountConsts.documentsColumnName, accountConsts.documentsColumnIndex,
-        kimlicConfig.address, verificatorAddress, uuidv4(), { "from": veriffConfig.address });
+    verificationTests("createDocumentVerification", accountConsts.documentsColumnName, kimlicConfig.address,
+        verificatorAddress, uuidv4(), { "from": veriffConfig.address });
     
 });
