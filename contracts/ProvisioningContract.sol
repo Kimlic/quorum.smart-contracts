@@ -51,14 +51,13 @@ contract ProvisioningContract is Ownable, WithKimlicContext {
         sendRewards();
     }
     
-    function getData() view public onlyOwner() returns(string data, string objectType, 
-            bool isVerified, address verifiedBy, uint256 verifiedAt) {
+    function getData() public view onlyOwner() returns(string data, bool isVerified, address verifiedBy, uint256 verifiedAt) {
 
         require(status == Status.DataProvided);
         
         AccountStorageAdapter adapter = getContext().getAccountStorageAdapter();
 
-        ( data, objectType ) = adapter.getAccountFieldMainData(account, _fieldName, _index);
+        ( data ) = adapter.getAccountFieldMainData(account, _fieldName, _index);
 
         ( isVerified, verifiedBy, verifiedAt ) = adapter.getAccountFieldVerificationData(account, _fieldName, _index); 
     }

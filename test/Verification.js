@@ -14,21 +14,19 @@ contract("Verification", function(accounts) {
 
     it("init account", async () => {
         let adapter = await AccountStorageAdapter.deployed();
-        await addAccountData(adapter, accountAddress, accountConsts.phoneValue, accountConsts.phoneObjectType, accountConsts.phoneColumnName);
-        await addAccountData(adapter, accountAddress, accountConsts.emailValue, accountConsts.emailObjectType, accountConsts.emailColumnName);
-        //await addAccountData(adapter, accountAddress, accountConsts.identityValue, accountConsts.identityObjectType, accountConsts.identityColumnName);
-        await addAccountData(adapter, accountAddress, accountConsts.documentValue, accountConsts.documentObjectType, accountConsts.documentsColumnName);
-        //await addAccountData(adapter, accountAddress, accountConsts.addressValue, accountConsts.addressObjectType, accountConsts.addressesColumnName);
+        await addAccountData(adapter, accountAddress, accountConsts.phoneValue, accountConsts.phoneColumnName);
+        await addAccountData(adapter, accountAddress, accountConsts.emailValue, accountConsts.emailColumnName);
+        //await addAccountData(adapter, accountAddress, accountConsts.identityValue, accountConsts.identityColumnName);
+        await addAccountData(adapter, accountAddress, accountConsts.documentValue, accountConsts.documentsColumnName);
+        //await addAccountData(adapter, accountAddress, accountConsts.addressValue, accountConsts.addressesColumnName);
     });
 
     let verificationTests = (factoryMethodName, columnName, coOwnerAddress, verificatorAddress,
             verificationContractkey, sendConfig) => {
         it(`Should create ${columnName} verification contract`, async () => {
-            let adapter = await AccountStorageAdapter.deployed();
             let verificationContractFactory = await VerificationContractFactory.deployed();
-            let lastDataIndex = await getAccountLastDataIndex(adapter, accountAddress, columnName);
             await verificationContractFactory[factoryMethodName](accountAddress, coOwnerAddress,
-                lastDataIndex, verificatorAddress, verificationContractkey, sendConfig);
+                verificatorAddress, verificationContractkey, sendConfig);
         });
         
         var verificationContractAddress;

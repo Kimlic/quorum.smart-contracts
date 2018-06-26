@@ -32,9 +32,10 @@ contract("Provisioning", function(accounts) {
 
     let config = getPartiesConfig();
     let kimlicConfig = config["Kimlic"];
-    let relyingPartyConfig = config["FirstRelyingParty"];//TODO create relying party in migrations. config["RelyingParty"]
+    let relyingPartyConfig = config["FirstRelyingParty"];
     let relyingPartySendConfig = { from: relyingPartyConfig.address };
     let kimlicSendConfig = { from: kimlicConfig.address };
+    let verificatorAddress = accounts[0];
     
     it("Should unlock relying party account", async () => {
         web3.personal.unlockAccount(kimlicConfig.address, kimlicConfig.password);
@@ -47,12 +48,12 @@ contract("Provisioning", function(accounts) {
     var lastDataIndex;
     it("init account with verified data", async () => {
         let adapter = await AccountStorageAdapter.deployed();
-        await addAccountData(adapter, accountAddress, accountConsts.emailValue, accountConsts.emailObjectType, columnName);
+        await addAccountData(adapter, accountAddress, accountConsts.emailValue, columnName);
 
         let verificationContractFactory = await VerificationContractFactory.deployed();
         lastDataIndex = await getAccountLastDataIndex(adapter, accountAddress, columnName);
         await verificationContractFactory.createEmailVerification(accountAddress, kimlicConfig.address,
-            lastDataIndex, accounts[0], verificationContractkey, kimlicSendConfig);
+            verificatorAddress, verificationContractkey, kimlicSendConfig);
         let verificationContractAddress =  await verificationContractFactory.getVerificationContract.call(verificationContractkey, kimlicSendConfig);
         let verificationContract = await BaseVerification.at(verificationContractAddress);
         await verificationContract.setVerificationResult(true, kimlicSendConfig);
@@ -81,7 +82,7 @@ contract("Provisioning", function(accounts) {
         let data = await provisioningContractFactory.getData.call(relyingPartySendConfig, relyingPartySendConfig);
         
         let adapter = await AccountStorageAdapter.deployed();
-        let accountMainData = await getAccountFieldLastMainData(adapter, accountAddress, columnName, kimlicSendConfig);
+        let accountMainData = [ await getAccountFieldLastMainData(adapter, accountAddress, columnName, kimlicSendConfig) ];
         let accountVerificationData = await getAccountFieldLastVerificationData(adapter, accountAddress, columnName, kimlicSendConfig);
         let accountData = accountMainData.concat(accountVerificationData);
         assert.deepEqual(data, accountData);

@@ -19,8 +19,8 @@ let accountConsts = {
     addressObjectType: "living address",
 }
 
-let addAccountData = async function(adapter, address, fieldData, objectType, columnName) {
-    return adapter.setAccountFieldMainData(fieldData, objectType, columnName, { from: address });
+let addAccountData = async function(adapter, address, fieldData, columnName) {
+    return adapter.setAccountFieldMainData(fieldData, columnName, { from: address });
 };
 
 let getAccountFieldLastMainData = async function(adapter, address, columnName) {
