@@ -15,9 +15,16 @@ module.exports = {
       network_id: "10",
       gas: 4612388
     },
-    kubernetisNode: {
+    kubernetesNode: {
       host: "127.0.0.1",
       port: 22100,
+      network_id: "10",
+      gasPrice: 0,
+      gas: 4612388
+    },
+    dev: {
+      host: "40.115.43.126",
+      port: 22000,
       network_id: "10",
       gasPrice: 0,
       gas: 4612388
@@ -48,6 +55,13 @@ module.exports = {
     KIM3: {
       host: "127.0.0.1",
       port: 22002,
+      network_id: "10",
+      gasPrice: 0,
+      gas: 4612388
+    },
+    KIM3: {
+      host: "127.0.0.1",
+      port: 22004,
       network_id: "10",
       gasPrice: 0,
       gas: 4612388
