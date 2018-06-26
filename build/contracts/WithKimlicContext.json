@@ -13,24 +13,24 @@
       "type": "constructor"
     }
   ],
-  "bytecode": "0x6080604052348015600f57600080fd5b506040516020806083833981016040525160008054600160a060020a03909216600160a060020a0319909216919091179055603580604e6000396000f3006080604052600080fd00a165627a7a72305820dd74aef03877ecff3a57f2f7e66a28afdda10815981cc32a6714754880f77e9f0029",
-  "deployedBytecode": "0x6080604052600080fd00a165627a7a72305820dd74aef03877ecff3a57f2f7e66a28afdda10815981cc32a6714754880f77e9f0029",
-  "sourceMap": "110:416:17:-;;;250:109;8:9:-1;5:2;;;30:1;27;20:12;5:2;250:109:17;;;;;;;;;;;;;304:8;:47;;-1:-1:-1;;;;;304:47:17;;;-1:-1:-1;;;;;;304:47:17;;;;;;;;;110:416;;;;;;",
-  "deployedSourceMap": "110:416:17:-;;;;;",
+  "bytecode": "0x6080604052348015600f57600080fd5b506040516020806083833981016040525160008054600160a060020a03909216600160a060020a0319909216919091179055603580604e6000396000f3006080604052600080fd00a165627a7a72305820f4cbfbff97a75ba84fd6a431a56fcf68f8697bc50becf2b3b31fc284a6369fae0029",
+  "deployedBytecode": "0x6080604052600080fd00a165627a7a72305820f4cbfbff97a75ba84fd6a431a56fcf68f8697bc50becf2b3b31fc284a6369fae0029",
+  "sourceMap": "110:416:18:-;;;250:109;8:9:-1;5:2;;;30:1;27;20:12;5:2;250:109:18;;;;;;;;;;;;;304:8;:47;;-1:-1:-1;;;;;304:47:18;;;-1:-1:-1;;;;;;304:47:18;;;;;;;;;110:416;;;;;;",
+  "deployedSourceMap": "110:416:18:-;;;;;",
   "source": "pragma solidity ^0.4.23;\r\n\r\n\r\nimport \"./KimlicContractsContext.sol\";\r\nimport \"./KimlicContextStorage.sol\";\r\n\r\ncontract WithKimlicContext {\r\n    /// internal attributes ///\r\n    KimlicContextStorage internal _storage;\r\n\r\n    /// constructors ///\r\n    constructor(address contextStorage) public {\r\n        _storage = KimlicContextStorage(contextStorage);\r\n    }\r\n\r\n    /// internal methods ///\r\n    function getContext() internal view returns(KimlicContractsContext context) {\r\n        context = _storage.getContext();\r\n    }\r\n}",
   "sourcePath": "C:\\work\\quorum.smart-contracts\\contracts\\WithKimlicContext.sol",
   "ast": {
     "absolutePath": "/C/work/quorum.smart-contracts/contracts/WithKimlicContext.sol",
     "exportedSymbols": {
       "WithKimlicContext": [
-        3483
+        3540
       ]
     },
-    "id": 3484,
+    "id": 3541,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 3454,
+        "id": 3511,
         "literals": [
           "solidity",
           "^",
@@ -38,27 +38,27 @@
           ".23"
         ],
         "nodeType": "PragmaDirective",
-        "src": "0:24:17"
+        "src": "0:24:18"
       },
       {
         "absolutePath": "/C/work/quorum.smart-contracts/contracts/KimlicContractsContext.sol",
         "file": "./KimlicContractsContext.sol",
-        "id": 3455,
+        "id": 3512,
         "nodeType": "ImportDirective",
-        "scope": 3484,
+        "scope": 3541,
         "sourceUnit": 2428,
-        "src": "30:38:17",
+        "src": "30:38:18",
         "symbolAliases": [],
         "unitAlias": ""
       },
       {
         "absolutePath": "/C/work/quorum.smart-contracts/contracts/KimlicContextStorage.sol",
         "file": "./KimlicContextStorage.sol",
-        "id": 3456,
+        "id": 3513,
         "nodeType": "ImportDirective",
-        "scope": 3484,
+        "scope": 3541,
         "sourceUnit": 1911,
-        "src": "70:36:17",
+        "src": "70:36:18",
         "symbolAliases": [],
         "unitAlias": ""
       },
@@ -68,20 +68,20 @@
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": true,
-        "id": 3483,
+        "id": 3540,
         "linearizedBaseContracts": [
-          3483
+          3540
         ],
         "name": "WithKimlicContext",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "constant": false,
-            "id": 3458,
+            "id": 3515,
             "name": "_storage",
             "nodeType": "VariableDeclaration",
-            "scope": 3483,
-            "src": "177:38:17",
+            "scope": 3540,
+            "src": "177:38:18",
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
@@ -90,11 +90,11 @@
             },
             "typeName": {
               "contractScope": null,
-              "id": 3457,
+              "id": 3514,
               "name": "KimlicContextStorage",
               "nodeType": "UserDefinedTypeName",
               "referencedDeclaration": 1910,
-              "src": "177:20:17",
+              "src": "177:20:18",
               "typeDescriptions": {
                 "typeIdentifier": "t_contract$_KimlicContextStorage_$1910",
                 "typeString": "contract KimlicContextStorage"
@@ -105,26 +105,26 @@
           },
           {
             "body": {
-              "id": 3469,
+              "id": 3526,
               "nodeType": "Block",
-              "src": "293:66:17",
+              "src": "293:66:18",
               "statements": [
                 {
                   "expression": {
                     "argumentTypes": null,
-                    "id": 3467,
+                    "id": 3524,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftHandSide": {
                       "argumentTypes": null,
-                      "id": 3463,
+                      "id": 3520,
                       "name": "_storage",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 3458,
-                      "src": "304:8:17",
+                      "referencedDeclaration": 3515,
+                      "src": "304:8:18",
                       "typeDescriptions": {
                         "typeIdentifier": "t_contract$_KimlicContextStorage_$1910",
                         "typeString": "contract KimlicContextStorage"
@@ -137,12 +137,12 @@
                       "arguments": [
                         {
                           "argumentTypes": null,
-                          "id": 3465,
+                          "id": 3522,
                           "name": "contextStorage",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 3460,
-                          "src": "336:14:17",
+                          "referencedDeclaration": 3517,
+                          "src": "336:14:18",
                           "typeDescriptions": {
                             "typeIdentifier": "t_address",
                             "typeString": "address"
@@ -156,18 +156,18 @@
                             "typeString": "address"
                           }
                         ],
-                        "id": 3464,
+                        "id": 3521,
                         "name": "KimlicContextStorage",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
                         "referencedDeclaration": 1910,
-                        "src": "315:20:17",
+                        "src": "315:20:18",
                         "typeDescriptions": {
                           "typeIdentifier": "t_type$_t_contract$_KimlicContextStorage_$1910_$",
                           "typeString": "type(contract KimlicContextStorage)"
                         }
                       },
-                      "id": 3466,
+                      "id": 3523,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
@@ -175,26 +175,26 @@
                       "lValueRequested": false,
                       "names": [],
                       "nodeType": "FunctionCall",
-                      "src": "315:36:17",
+                      "src": "315:36:18",
                       "typeDescriptions": {
                         "typeIdentifier": "t_contract$_KimlicContextStorage_$1910",
                         "typeString": "contract KimlicContextStorage"
                       }
                     },
-                    "src": "304:47:17",
+                    "src": "304:47:18",
                     "typeDescriptions": {
                       "typeIdentifier": "t_contract$_KimlicContextStorage_$1910",
                       "typeString": "contract KimlicContextStorage"
                     }
                   },
-                  "id": 3468,
+                  "id": 3525,
                   "nodeType": "ExpressionStatement",
-                  "src": "304:47:17"
+                  "src": "304:47:18"
                 }
               ]
             },
             "documentation": "constructors ///\r",
-            "id": 3470,
+            "id": 3527,
             "implemented": true,
             "isConstructor": true,
             "isDeclaredConst": false,
@@ -202,16 +202,16 @@
             "name": "",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 3461,
+              "id": 3518,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3460,
+                  "id": 3517,
                   "name": "contextStorage",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3470,
-                  "src": "262:22:17",
+                  "scope": 3527,
+                  "src": "262:22:18",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -219,10 +219,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 3459,
+                    "id": 3516,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "262:7:17",
+                    "src": "262:7:18",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
                       "typeString": "address"
@@ -232,43 +232,43 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "261:24:17"
+              "src": "261:24:18"
             },
             "payable": false,
             "returnParameters": {
-              "id": 3462,
+              "id": 3519,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "293:0:17"
+              "src": "293:0:18"
             },
-            "scope": 3483,
-            "src": "250:109:17",
+            "scope": 3540,
+            "src": "250:109:18",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
           },
           {
             "body": {
-              "id": 3481,
+              "id": 3538,
               "nodeType": "Block",
-              "src": "473:50:17",
+              "src": "473:50:18",
               "statements": [
                 {
                   "expression": {
                     "argumentTypes": null,
-                    "id": 3479,
+                    "id": 3536,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftHandSide": {
                       "argumentTypes": null,
-                      "id": 3475,
+                      "id": 3532,
                       "name": "context",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 3473,
-                      "src": "484:7:17",
+                      "referencedDeclaration": 3530,
+                      "src": "484:7:18",
                       "typeDescriptions": {
                         "typeIdentifier": "t_contract$_KimlicContractsContext_$2427",
                         "typeString": "contract KimlicContractsContext"
@@ -283,18 +283,18 @@
                         "argumentTypes": [],
                         "expression": {
                           "argumentTypes": null,
-                          "id": 3476,
+                          "id": 3533,
                           "name": "_storage",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 3458,
-                          "src": "494:8:17",
+                          "referencedDeclaration": 3515,
+                          "src": "494:8:18",
                           "typeDescriptions": {
                             "typeIdentifier": "t_contract$_KimlicContextStorage_$1910",
                             "typeString": "contract KimlicContextStorage"
                           }
                         },
-                        "id": 3477,
+                        "id": 3534,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -302,13 +302,13 @@
                         "memberName": "getContext",
                         "nodeType": "MemberAccess",
                         "referencedDeclaration": 1878,
-                        "src": "494:19:17",
+                        "src": "494:19:18",
                         "typeDescriptions": {
                           "typeIdentifier": "t_function_external_view$__$returns$_t_contract$_KimlicContractsContext_$2427_$",
                           "typeString": "function () view external returns (contract KimlicContractsContext)"
                         }
                       },
-                      "id": 3478,
+                      "id": 3535,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
@@ -316,26 +316,26 @@
                       "lValueRequested": false,
                       "names": [],
                       "nodeType": "FunctionCall",
-                      "src": "494:21:17",
+                      "src": "494:21:18",
                       "typeDescriptions": {
                         "typeIdentifier": "t_contract$_KimlicContractsContext_$2427",
                         "typeString": "contract KimlicContractsContext"
                       }
                     },
-                    "src": "484:31:17",
+                    "src": "484:31:18",
                     "typeDescriptions": {
                       "typeIdentifier": "t_contract$_KimlicContractsContext_$2427",
                       "typeString": "contract KimlicContractsContext"
                     }
                   },
-                  "id": 3480,
+                  "id": 3537,
                   "nodeType": "ExpressionStatement",
-                  "src": "484:31:17"
+                  "src": "484:31:18"
                 }
               ]
             },
             "documentation": "internal methods ///\r",
-            "id": 3482,
+            "id": 3539,
             "implemented": true,
             "isConstructor": false,
             "isDeclaredConst": true,
@@ -343,23 +343,23 @@
             "name": "getContext",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 3471,
+              "id": 3528,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "416:2:17"
+              "src": "416:2:18"
             },
             "payable": false,
             "returnParameters": {
-              "id": 3474,
+              "id": 3531,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3473,
+                  "id": 3530,
                   "name": "context",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3482,
-                  "src": "441:30:17",
+                  "scope": 3539,
+                  "src": "441:30:18",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -368,11 +368,11 @@
                   },
                   "typeName": {
                     "contractScope": null,
-                    "id": 3472,
+                    "id": 3529,
                     "name": "KimlicContractsContext",
                     "nodeType": "UserDefinedTypeName",
                     "referencedDeclaration": 2427,
-                    "src": "441:22:17",
+                    "src": "441:22:18",
                     "typeDescriptions": {
                       "typeIdentifier": "t_contract$_KimlicContractsContext_$2427",
                       "typeString": "contract KimlicContractsContext"
@@ -382,33 +382,33 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "440:32:17"
+              "src": "440:32:18"
             },
-            "scope": 3483,
-            "src": "397:126:17",
+            "scope": 3540,
+            "src": "397:126:18",
             "stateMutability": "view",
             "superFunction": null,
             "visibility": "internal"
           }
         ],
-        "scope": 3484,
-        "src": "110:416:17"
+        "scope": 3541,
+        "src": "110:416:18"
       }
     ],
-    "src": "0:526:17"
+    "src": "0:526:18"
   },
   "legacyAST": {
     "absolutePath": "/C/work/quorum.smart-contracts/contracts/WithKimlicContext.sol",
     "exportedSymbols": {
       "WithKimlicContext": [
-        3483
+        3540
       ]
     },
-    "id": 3484,
+    "id": 3541,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 3454,
+        "id": 3511,
         "literals": [
           "solidity",
           "^",
@@ -416,27 +416,27 @@
           ".23"
         ],
         "nodeType": "PragmaDirective",
-        "src": "0:24:17"
+        "src": "0:24:18"
       },
       {
         "absolutePath": "/C/work/quorum.smart-contracts/contracts/KimlicContractsContext.sol",
         "file": "./KimlicContractsContext.sol",
-        "id": 3455,
+        "id": 3512,
         "nodeType": "ImportDirective",
-        "scope": 3484,
+        "scope": 3541,
         "sourceUnit": 2428,
-        "src": "30:38:17",
+        "src": "30:38:18",
         "symbolAliases": [],
         "unitAlias": ""
       },
       {
         "absolutePath": "/C/work/quorum.smart-contracts/contracts/KimlicContextStorage.sol",
         "file": "./KimlicContextStorage.sol",
-        "id": 3456,
+        "id": 3513,
         "nodeType": "ImportDirective",
-        "scope": 3484,
+        "scope": 3541,
         "sourceUnit": 1911,
-        "src": "70:36:17",
+        "src": "70:36:18",
         "symbolAliases": [],
         "unitAlias": ""
       },
@@ -446,20 +446,20 @@
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": true,
-        "id": 3483,
+        "id": 3540,
         "linearizedBaseContracts": [
-          3483
+          3540
         ],
         "name": "WithKimlicContext",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "constant": false,
-            "id": 3458,
+            "id": 3515,
             "name": "_storage",
             "nodeType": "VariableDeclaration",
-            "scope": 3483,
-            "src": "177:38:17",
+            "scope": 3540,
+            "src": "177:38:18",
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
@@ -468,11 +468,11 @@
             },
             "typeName": {
               "contractScope": null,
-              "id": 3457,
+              "id": 3514,
               "name": "KimlicContextStorage",
               "nodeType": "UserDefinedTypeName",
               "referencedDeclaration": 1910,
-              "src": "177:20:17",
+              "src": "177:20:18",
               "typeDescriptions": {
                 "typeIdentifier": "t_contract$_KimlicContextStorage_$1910",
                 "typeString": "contract KimlicContextStorage"
@@ -483,26 +483,26 @@
           },
           {
             "body": {
-              "id": 3469,
+              "id": 3526,
               "nodeType": "Block",
-              "src": "293:66:17",
+              "src": "293:66:18",
               "statements": [
                 {
                   "expression": {
                     "argumentTypes": null,
-                    "id": 3467,
+                    "id": 3524,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftHandSide": {
                       "argumentTypes": null,
-                      "id": 3463,
+                      "id": 3520,
                       "name": "_storage",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 3458,
-                      "src": "304:8:17",
+                      "referencedDeclaration": 3515,
+                      "src": "304:8:18",
                       "typeDescriptions": {
                         "typeIdentifier": "t_contract$_KimlicContextStorage_$1910",
                         "typeString": "contract KimlicContextStorage"
@@ -515,12 +515,12 @@
                       "arguments": [
                         {
                           "argumentTypes": null,
-                          "id": 3465,
+                          "id": 3522,
                           "name": "contextStorage",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 3460,
-                          "src": "336:14:17",
+                          "referencedDeclaration": 3517,
+                          "src": "336:14:18",
                           "typeDescriptions": {
                             "typeIdentifier": "t_address",
                             "typeString": "address"
@@ -534,18 +534,18 @@
                             "typeString": "address"
                           }
                         ],
-                        "id": 3464,
+                        "id": 3521,
                         "name": "KimlicContextStorage",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
                         "referencedDeclaration": 1910,
-                        "src": "315:20:17",
+                        "src": "315:20:18",
                         "typeDescriptions": {
                           "typeIdentifier": "t_type$_t_contract$_KimlicContextStorage_$1910_$",
                           "typeString": "type(contract KimlicContextStorage)"
                         }
                       },
-                      "id": 3466,
+                      "id": 3523,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
@@ -553,26 +553,26 @@
                       "lValueRequested": false,
                       "names": [],
                       "nodeType": "FunctionCall",
-                      "src": "315:36:17",
+                      "src": "315:36:18",
                       "typeDescriptions": {
                         "typeIdentifier": "t_contract$_KimlicContextStorage_$1910",
                         "typeString": "contract KimlicContextStorage"
                       }
                     },
-                    "src": "304:47:17",
+                    "src": "304:47:18",
                     "typeDescriptions": {
                       "typeIdentifier": "t_contract$_KimlicContextStorage_$1910",
                       "typeString": "contract KimlicContextStorage"
                     }
                   },
-                  "id": 3468,
+                  "id": 3525,
                   "nodeType": "ExpressionStatement",
-                  "src": "304:47:17"
+                  "src": "304:47:18"
                 }
               ]
             },
             "documentation": "constructors ///\r",
-            "id": 3470,
+            "id": 3527,
             "implemented": true,
             "isConstructor": true,
             "isDeclaredConst": false,
@@ -580,16 +580,16 @@
             "name": "",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 3461,
+              "id": 3518,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3460,
+                  "id": 3517,
                   "name": "contextStorage",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3470,
-                  "src": "262:22:17",
+                  "scope": 3527,
+                  "src": "262:22:18",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -597,10 +597,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 3459,
+                    "id": 3516,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "262:7:17",
+                    "src": "262:7:18",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
                       "typeString": "address"
@@ -610,43 +610,43 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "261:24:17"
+              "src": "261:24:18"
             },
             "payable": false,
             "returnParameters": {
-              "id": 3462,
+              "id": 3519,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "293:0:17"
+              "src": "293:0:18"
             },
-            "scope": 3483,
-            "src": "250:109:17",
+            "scope": 3540,
+            "src": "250:109:18",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
           },
           {
             "body": {
-              "id": 3481,
+              "id": 3538,
               "nodeType": "Block",
-              "src": "473:50:17",
+              "src": "473:50:18",
               "statements": [
                 {
                   "expression": {
                     "argumentTypes": null,
-                    "id": 3479,
+                    "id": 3536,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftHandSide": {
                       "argumentTypes": null,
-                      "id": 3475,
+                      "id": 3532,
                       "name": "context",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 3473,
-                      "src": "484:7:17",
+                      "referencedDeclaration": 3530,
+                      "src": "484:7:18",
                       "typeDescriptions": {
                         "typeIdentifier": "t_contract$_KimlicContractsContext_$2427",
                         "typeString": "contract KimlicContractsContext"
@@ -661,18 +661,18 @@
                         "argumentTypes": [],
                         "expression": {
                           "argumentTypes": null,
-                          "id": 3476,
+                          "id": 3533,
                           "name": "_storage",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 3458,
-                          "src": "494:8:17",
+                          "referencedDeclaration": 3515,
+                          "src": "494:8:18",
                           "typeDescriptions": {
                             "typeIdentifier": "t_contract$_KimlicContextStorage_$1910",
                             "typeString": "contract KimlicContextStorage"
                           }
                         },
-                        "id": 3477,
+                        "id": 3534,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -680,13 +680,13 @@
                         "memberName": "getContext",
                         "nodeType": "MemberAccess",
                         "referencedDeclaration": 1878,
-                        "src": "494:19:17",
+                        "src": "494:19:18",
                         "typeDescriptions": {
                           "typeIdentifier": "t_function_external_view$__$returns$_t_contract$_KimlicContractsContext_$2427_$",
                           "typeString": "function () view external returns (contract KimlicContractsContext)"
                         }
                       },
-                      "id": 3478,
+                      "id": 3535,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
@@ -694,26 +694,26 @@
                       "lValueRequested": false,
                       "names": [],
                       "nodeType": "FunctionCall",
-                      "src": "494:21:17",
+                      "src": "494:21:18",
                       "typeDescriptions": {
                         "typeIdentifier": "t_contract$_KimlicContractsContext_$2427",
                         "typeString": "contract KimlicContractsContext"
                       }
                     },
-                    "src": "484:31:17",
+                    "src": "484:31:18",
                     "typeDescriptions": {
                       "typeIdentifier": "t_contract$_KimlicContractsContext_$2427",
                       "typeString": "contract KimlicContractsContext"
                     }
                   },
-                  "id": 3480,
+                  "id": 3537,
                   "nodeType": "ExpressionStatement",
-                  "src": "484:31:17"
+                  "src": "484:31:18"
                 }
               ]
             },
             "documentation": "internal methods ///\r",
-            "id": 3482,
+            "id": 3539,
             "implemented": true,
             "isConstructor": false,
             "isDeclaredConst": true,
@@ -721,23 +721,23 @@
             "name": "getContext",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 3471,
+              "id": 3528,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "416:2:17"
+              "src": "416:2:18"
             },
             "payable": false,
             "returnParameters": {
-              "id": 3474,
+              "id": 3531,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3473,
+                  "id": 3530,
                   "name": "context",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3482,
-                  "src": "441:30:17",
+                  "scope": 3539,
+                  "src": "441:30:18",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -746,11 +746,11 @@
                   },
                   "typeName": {
                     "contractScope": null,
-                    "id": 3472,
+                    "id": 3529,
                     "name": "KimlicContractsContext",
                     "nodeType": "UserDefinedTypeName",
                     "referencedDeclaration": 2427,
-                    "src": "441:22:17",
+                    "src": "441:22:18",
                     "typeDescriptions": {
                       "typeIdentifier": "t_contract$_KimlicContractsContext_$2427",
                       "typeString": "contract KimlicContractsContext"
@@ -760,26 +760,26 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "440:32:17"
+              "src": "440:32:18"
             },
-            "scope": 3483,
-            "src": "397:126:17",
+            "scope": 3540,
+            "src": "397:126:18",
             "stateMutability": "view",
             "superFunction": null,
             "visibility": "internal"
           }
         ],
-        "scope": 3484,
-        "src": "110:416:17"
+        "scope": 3541,
+        "src": "110:416:18"
       }
     ],
-    "src": "0:526:17"
+    "src": "0:526:18"
   },
   "compiler": {
     "name": "solc",
-    "version": "0.4.23+commit.124ca40d.Emscripten.clang"
+    "version": "0.4.24+commit.e67f0147.Emscripten.clang"
   },
   "networks": {},
-  "schemaVersion": "2.0.0",
-  "updatedAt": "2018-06-22T09:40:37.647Z"
+  "schemaVersion": "2.0.1",
+  "updatedAt": "2018-06-26T13:41:11.114Z"
 }
