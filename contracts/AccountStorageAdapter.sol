@@ -13,9 +13,9 @@ contract AccountStorageAdapter is Ownable, WithKimlicContext {
 
     /// private attributes ///
     string private constant metaDataKey = "metaData";
-    string private constant metaIsVerifiedKey = "metaIsVerified";
+    string private constant metaVerificationStatusKey = "metaVerificationStatus";
     string private constant metaVerifiedAtKey = "metaVerifiedAt";
-    string private constant metaVerifiedByKey = "metaVerifiedBy";
+    string private constant metaVerificationContractKey = "metaVerificationContract";
     string private constant lengthKey = "length";
 
     /// constructors ///
@@ -41,22 +41,22 @@ contract AccountStorageAdapter is Ownable, WithKimlicContext {
         updateAccountField(msg.sender, data, accountFieldName);
     }
 
-    function getLastAccountDataVerifiedBy(address accountAddress, string accountFieldName)
-        public view returns(address verifiedBy) {
+    function getLastAccountDataVerificationContractAddress(address accountAddress, string accountFieldName)
+        public view returns(address verificationContract) {
         
         uint index = getFieldHistoryLength(accountAddress, accountFieldName);
-        return getAccountDataVerifiedBy(accountAddress, accountFieldName, index);
+        return getAccountDataVerificationContractAddress(accountAddress, accountFieldName, index);
     }
 
-    function getAccountDataVerifiedBy(address accountAddress, string accountFieldName, uint index)
+    function getAccountDataVerificationContractAddress(address accountAddress, string accountFieldName, uint index)
         public
         view
         checkIsColmnNameAllowed(accountFieldName)
         checkReadingDataRestrictions(accountAddress)
-        returns(address verifiedBy) {
+        returns(address verificationContract) {
         
-        bytes memory verifiedByKey = abi.encode(accountAddress, accountFieldName, index, metaVerifiedByKey);
-        verifiedBy = getContext().getAccountStorage().getAddress(keccak256(verifiedByKey));
+        bytes memory verificationContractKey = abi.encode(accountAddress, accountFieldName, index, metaVerificationContractKey);
+        verificationContract = getContext().getAccountStorage().getAddress(keccak256(verificationContractKey));
     }
 
     function getAccountFieldLastMainData(address accountAddress, string accountFieldName)
@@ -79,7 +79,7 @@ contract AccountStorageAdapter is Ownable, WithKimlicContext {
     }
 
     function getAccountFieldLastVerificationData(address accountAddress, string accountFieldName)
-        public view returns(bool isVerified, address verifiedBy, uint256 verifiedAt) {
+        public view returns(bool verificationStatus, address verificationContract, uint256 verifiedAt) {
 
         uint index = getFieldHistoryLength(accountAddress, accountFieldName);
         return getAccountFieldVerificationData(accountAddress, accountFieldName, index);
@@ -90,16 +90,16 @@ contract AccountStorageAdapter is Ownable, WithKimlicContext {
         view
         checkIsColmnNameAllowed(accountFieldName)
         checkReadingDataRestrictions(accountAddress)
-        returns(bool isVerified, address verifiedBy, uint256 verifiedAt) {
+        returns(bool verificationStatus, address verificationContract, uint256 verifiedAt) {
 
 
         AccountStorage accountStorage = getContext().getAccountStorage();
 
-        bytes memory isVerifiedKey = abi.encode(accountAddress, accountFieldName, index, metaIsVerifiedKey);
-        isVerified = accountStorage.getBool(keccak256(isVerifiedKey));
+        bytes memory verificationStatusKey = abi.encode(accountAddress, accountFieldName, index, metaVerificationStatusKey);
+        verificationStatus = accountStorage.getBool(keccak256(verificationStatusKey));
 
-        bytes memory verifiedByKey = abi.encode(accountAddress, accountFieldName, index, metaVerifiedByKey);
-        verifiedBy = accountStorage.getAddress(keccak256(verifiedByKey));
+        bytes memory verificationContractKey = abi.encode(accountAddress, accountFieldName, index, metaVerificationContractKey);
+        verificationContract = accountStorage.getAddress(keccak256(verificationContractKey));
 
         bytes memory verifiedAtKey = abi.encode(accountAddress, accountFieldName, index, metaVerifiedAtKey);
         verifiedAt = accountStorage.getUint(keccak256(verifiedAtKey));
@@ -107,15 +107,15 @@ contract AccountStorageAdapter is Ownable, WithKimlicContext {
 
     function setAccountFieldVerificationData(
         address accountAddress, string accountFieldName,
-        bool isVerified, address verifiedBy, uint verifiedAt) public {
+        bool verificationStatus, address verificationContract, uint verifiedAt) public {
 
         uint index = getFieldHistoryLength(accountAddress, accountFieldName);
-        setAccountFieldVerificationData(accountAddress, accountFieldName, index, isVerified, verifiedBy, verifiedAt);
+        setAccountFieldVerificationData(accountAddress, accountFieldName, index, verificationStatus, verificationContract, verifiedAt);
     }
 
     function setAccountFieldVerificationData(
         address accountAddress, string accountFieldName, uint index,
-        bool isVerified, address verifiedBy, uint verifiedAt) 
+        bool verificationStatus, address verificationContract, uint verifiedAt) 
         public
         checkIsColmnNameAllowed(accountFieldName)
         verificationContractOrOwnerOnly() {
@@ -124,11 +124,11 @@ contract AccountStorageAdapter is Ownable, WithKimlicContext {
         
         AccountStorage accountStorage = context.getAccountStorage();
 
-        bytes memory isVerifiedKey = abi.encode(accountAddress, accountFieldName, index, metaIsVerifiedKey);
-        accountStorage.setBool(keccak256(isVerifiedKey), isVerified);
+        bytes memory verificationStatusKey = abi.encode(accountAddress, accountFieldName, index, metaVerificationStatusKey);
+        accountStorage.setBool(keccak256(verificationStatusKey), verificationStatus);
 
-        bytes memory verifiedByKey = abi.encode(accountAddress, accountFieldName, index, metaVerifiedByKey);
-        accountStorage.setAddress(keccak256(verifiedByKey), verifiedBy);
+        bytes memory verificationContractKey = abi.encode(accountAddress, accountFieldName, index, metaVerificationContractKey);
+        accountStorage.setAddress(keccak256(verificationContractKey), verificationContract);
 
         bytes memory verifiedAtKey = abi.encode(accountAddress, accountFieldName, index, metaVerifiedAtKey);
         accountStorage.setUint(keccak256(verifiedAtKey), verifiedAt);

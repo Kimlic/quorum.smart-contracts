@@ -51,7 +51,7 @@ contract ProvisioningContract is Ownable, WithKimlicContext {
         sendRewards();
     }
     
-    function getData() public view onlyOwner() returns(string data, bool isVerified, address verifiedBy, uint256 verifiedAt) {
+    function getData() public view onlyOwner() returns(string data, bool verificationStatus, address verificationContractAddress, uint256 verifiedAt) {
 
         require(status == Status.DataProvided);
         
@@ -59,7 +59,7 @@ contract ProvisioningContract is Ownable, WithKimlicContext {
 
         ( data ) = adapter.getAccountFieldMainData(account, _fieldName, _index);
 
-        ( isVerified, verifiedBy, verifiedAt ) = adapter.getAccountFieldVerificationData(account, _fieldName, _index); 
+        ( verificationStatus, verificationContractAddress, verifiedAt ) = adapter.getAccountFieldVerificationData(account, _fieldName, _index); 
     }
     
 
@@ -68,9 +68,9 @@ contract ProvisioningContract is Ownable, WithKimlicContext {
     function sendRewards() private {
         KimlicContractsContext context = getContext();
 
-        address verifiedBy = context.getAccountStorageAdapter().getAccountDataVerifiedBy(account, _fieldName, _index);
+        address verificationContractAddress = context.getAccountStorageAdapter().getAccountDataVerificationContractAddress(account, _fieldName, _index);
 
-        BaseVerification verificationContract = BaseVerification(verifiedBy);
+        BaseVerification verificationContract = BaseVerification(verificationContractAddress);
         address coOwner = verificationContract.coOwner();
         address attestationParty = verificationContract.owner();
 

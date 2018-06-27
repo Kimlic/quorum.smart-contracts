@@ -10,7 +10,7 @@ import "./KimlicToken.sol";
 contract BaseVerification is Ownable, WithKimlicContext {
     string public accountFieldName;
     address public coOwner;
-    bool public isVerified;
+    bool public verificationStatus;
     uint public dataIndex;
     address public verificator;
     address public accountAddress;
@@ -30,13 +30,13 @@ contract BaseVerification is Ownable, WithKimlicContext {
     }
 
     function setVerificationResult(bool verificationResult) public onlyOwner() {
-        require(!isVerified);
+        require(!verificationStatus);
 
         KimlicContractsContext context = getContext();
         KimlicToken token = context.getKimlicToken();
         require(token.balanceOf(address(this)) == _rewardAmount);
         
-        isVerified = verificationResult;
+        verificationStatus = verificationResult;
 
         token.transfer(owner, _rewardAmount);
 

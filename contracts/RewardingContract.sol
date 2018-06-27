@@ -66,13 +66,13 @@ contract RewardingContract is Ownable, WithKimlicContext {
     }
 
     function getIsDataVerified(address accountAddress, string accountFieldName) 
-            private view returns(bool isVerified) {
-        address verifiedBy = getContext().getAccountStorageAdapter()
-            .getLastAccountDataVerifiedBy(accountAddress, accountFieldName);
+            private view returns(bool verificationStatus) {
+        address verificationContractAddress = getContext().getAccountStorageAdapter()
+            .getLastAccountDataVerificationContractAddress(accountAddress, accountFieldName);
         
-        if (verifiedBy != address(0)) {
-            BaseVerification verificationContract = BaseVerification(verifiedBy);   
-            isVerified = verificationContract.isVerified();
+        if (verificationContractAddress != address(0)) {
+            BaseVerification verificationContract = BaseVerification(verificationContractAddress);   
+            verificationStatus = verificationContract.verificationStatus();
         }
     }
 
