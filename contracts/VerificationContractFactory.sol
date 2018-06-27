@@ -27,23 +27,17 @@ contract VerificationContractFactory is WithKimlicContext {
     }
 
     function createEmailVerification(address account, address coOwnerAddress, address verificatorAddress, string key) public {
-        createBaseVerificationContract(
-            account, coOwnerAddress, verificatorAddress,
-            key, "email");
+        createBaseVerificationContract(account, coOwnerAddress, verificatorAddress, key, "email");
     }
 
     function createPhoneVerification(address account, address coOwnerAddress, address verificatorAddress, string key) public {
-        createBaseVerificationContract(
-            account, coOwnerAddress, verificatorAddress,
-            key, "phone");
+        createBaseVerificationContract(account, coOwnerAddress, verificatorAddress, key, "phone");
     }
 
     function createDocumentVerification(address account, address coOwnerAddress, address verificatorAddress, string key) public {
-        createBaseVerificationContract(
-            account, coOwnerAddress, verificatorAddress,
-            key, "documents");
+        createBaseVerificationContract(account, coOwnerAddress, verificatorAddress, key, "documents.id_card");
     }
-    
+
     /// private methods ///
     function createBaseVerificationContract(
         address account, address coOwnerAddress, address verificatorAddress, string key,

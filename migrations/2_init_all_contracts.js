@@ -50,6 +50,7 @@ module.exports = function(deployer, network, accounts) {
     var provisioningContractFactoryInstance;
     var rewardingContractInstance;
     var provisioningPriceInstance;
+    var accountStorageAdapterInstance;
 
     var deployConfig = {
         "from": mainAccount.address
@@ -65,7 +66,8 @@ module.exports = function(deployer, network, accounts) {
     .then(() => {
         return deployer.deploy(AccountStorageAdapter, KimlicContextStorage.address, deployConfig);
     })
-    .then(() => {
+    .then((instance) => {
+        accountStorageAdapterInstance = instance;
         return deployer.deploy(RelyingPartyStorageAdapter, KimlicContextStorage.address, deployConfig);
     })
     .then(() => {
@@ -100,6 +102,7 @@ module.exports = function(deployer, network, accounts) {
 
         await setupKimlicContextStorageInstance();
         await setupKimlicContractsContextInstance();
+        await setupAcccountStorageAdapter();
         await setupProvisioningContractFactoryInstance();
         await setupRewardingContractInstance();
         await setupProvisioningPriceInstance();
@@ -119,6 +122,32 @@ module.exports = function(deployer, network, accounts) {
 
         savePartiesConfig(partiesConfig);
     });
+
+    var setupAcccountStorageAdapter = async () => {
+
+        console.log(getFormatedConsoleLable("Setup account storage adapter instance:"));
+
+        console.log('Add allowed column name "identity"');
+        await accountStorageAdapterInstance.addAllowedColumnName("identity");//TODO probably we dont need this column anymore
+        console.log('Add allowed column name "email"');
+        await accountStorageAdapterInstance.addAllowedColumnName("email");
+        console.log('Add allowed column name "phone"');
+        await accountStorageAdapterInstance.addAllowedColumnName("phone");
+        console.log('Add allowed column name "documents.id_card"');
+        await accountStorageAdapterInstance.addAllowedColumnName("documents.id_card");
+        console.log('Add allowed column name "documents.passport"');
+        await accountStorageAdapterInstance.addAllowedColumnName("documents.passport");
+        console.log('Add allowed column name "documents.driver_license"');
+        await accountStorageAdapterInstance.addAllowedColumnName("documents.driver_license");
+        console.log('Add allowed column name "documents.residence_permit_card"');
+        await accountStorageAdapterInstance.addAllowedColumnName("documents.residence_permit_card");
+        console.log('Add allowed column name "addresses.billing"');
+        await accountStorageAdapterInstance.addAllowedColumnName("addresses.billing");
+        console.log('Add allowed column name "addresses.living"');
+        await accountStorageAdapterInstance.addAllowedColumnName("addresses.living");
+        console.log('Add allowed column name "device"');
+        await accountStorageAdapterInstance.addAllowedColumnName("device");//TODO probably we dont need this column anymore
+    };
 
     var setupKimlicContextStorageInstance = async () => {
 

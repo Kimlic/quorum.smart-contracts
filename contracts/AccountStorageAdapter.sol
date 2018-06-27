@@ -9,6 +9,7 @@ import "./AccountStorage.sol";
 contract AccountStorageAdapter is Ownable, WithKimlicContext {
 
     /// public attributes ///
+    mapping(string=>bool) allowedColumnNames;
 
     /// private attributes ///
     string private constant metaDataKey = "metaData";
@@ -24,17 +25,36 @@ contract AccountStorageAdapter is Ownable, WithKimlicContext {
 
     /// public methods ///
 
+    function addAllowedColumnName(string columnName) public onlyOwner() {
+        allowedColumnNames[columnName] = true;
+    }
+
+    function removeAllowedColumnName(string columnName) public onlyOwner() {
+        delete allowedColumnNames[columnName];
+    }
+
+    function isAllowedColumnName(string columnName) public view onlyOwner() returns(bool) {
+        return allowedColumnNames[columnName];
+    }
+
     function setAccountFieldMainData(string data, string accountFieldName) public {
         updateAccountField(msg.sender, data, accountFieldName);
     }
 
-    function getLastAccountDataVerifiedBy(address accountAddress, string accountFieldName) public view returns(address verifiedBy) {
+    function getLastAccountDataVerifiedBy(address accountAddress, string accountFieldName)
+        public view returns(address verifiedBy) {
+        
         uint index = getFieldHistoryLength(accountAddress, accountFieldName);
         return getAccountDataVerifiedBy(accountAddress, accountFieldName, index);
     }
 
     function getAccountDataVerifiedBy(address accountAddress, string accountFieldName, uint index)
-            public view checkReadingDataRestrictions(accountAddress) returns(address verifiedBy) {
+        public
+        view
+        checkIsColmnNameAllowed(accountFieldName)
+        checkReadingDataRestrictions(accountAddress)
+        returns(address verifiedBy) {
+        
         bytes memory verifiedByKey = abi.encode(accountAddress, accountFieldName, index, metaVerifiedByKey);
         verifiedBy = getContext().getAccountStorage().getAddress(keccak256(verifiedByKey));
     }
@@ -56,7 +76,6 @@ contract AccountStorageAdapter is Ownable, WithKimlicContext {
 
         bytes memory dataKey = abi.encode(accountAddress, accountFieldName, index, metaDataKey);
         data = accountStorage.getString(keccak256(dataKey));
-        
     }
 
     function getAccountFieldLastVerificationData(address accountAddress, string accountFieldName)
@@ -69,6 +88,7 @@ contract AccountStorageAdapter is Ownable, WithKimlicContext {
     function getAccountFieldVerificationData(address accountAddress, string accountFieldName, uint index)
         public
         view
+        checkIsColmnNameAllowed(accountFieldName)
         checkReadingDataRestrictions(accountAddress)
         returns(bool isVerified, address verifiedBy, uint256 verifiedAt) {
 
@@ -95,7 +115,10 @@ contract AccountStorageAdapter is Ownable, WithKimlicContext {
 
     function setAccountFieldVerificationData(
         address accountAddress, string accountFieldName, uint index,
-        bool isVerified, address verifiedBy, uint verifiedAt) public verificationContractOrOwnerOnly() {
+        bool isVerified, address verifiedBy, uint verifiedAt) 
+        public
+        checkIsColmnNameAllowed(accountFieldName)
+        verificationContractOrOwnerOnly() {
 
         KimlicContractsContext context = getContext();
         
@@ -113,7 +136,12 @@ contract AccountStorageAdapter is Ownable, WithKimlicContext {
         context.getRewardingContract().checkMilestones(accountAddress, accountFieldName);
     }
 
-    function getFieldHistoryLength(address accountAddress, string accountFieldName) public view returns(uint length){
+    function getFieldHistoryLength(address accountAddress, string accountFieldName)
+        public
+        view
+        checkIsColmnNameAllowed(accountFieldName)
+        returns(uint length){
+        
         bytes memory fieldHistoryLengthKey = abi.encode(accountAddress, accountFieldName, lengthKey);
         length = getContext().getAccountStorage().getUint(keccak256(fieldHistoryLengthKey));
     }
@@ -163,7 +191,7 @@ contract AccountStorageAdapter is Ownable, WithKimlicContext {
         KimlicContractsContext context = getContext();
         require(
             context.getVerificationContractFactory().createdContracts(msg.sender) ||
-            msg.sender == context.owner());
+            msg.sender == context.owner(), "Access to this method allowed for verification contract or owner only");
         _;
     }
 
@@ -175,7 +203,13 @@ contract AccountStorageAdapter is Ownable, WithKimlicContext {
             msg.sender == address(context.getRewardingContract()) ||
             msg.sender == owner ||
             msg.sender == context.owner() ||
-            msg.sender == account);
+            msg.sender == account,
+            "Access to this method not allowed from current account");
+        _;
+    }
+
+    modifier checkIsColmnNameAllowed(string name) {
+        require(allowedColumnNames[name], "Provided column name is not allowed");
         _;
     }
 }
