@@ -50,9 +50,9 @@ contract("Verification", function(accounts) {
             await verificationContract.setVerificationResult(true, sendConfig);
         });
         
-        it(`Should get "verificationStatus". "verificationStatus" must be true`, async () => {
+        it(`Should get verification status. Status must be "Verified"(1)`, async () => {
             let verificationContract = await BaseVerification.at(verificationContractAddress);
-            let verificationStatus = await verificationContract.verificationStatus.call();
+            let verificationStatus = await verificationContract.status.call();
             assert.equal(verificationStatus, true);
         });
     };

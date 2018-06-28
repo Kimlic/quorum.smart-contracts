@@ -45,6 +45,12 @@ contract VerificationContractFactory is WithKimlicContext {
         
         KimlicContractsContext context = getContext();
         uint dataIndex = context.getAccountStorageAdapter().getFieldHistoryLength(account, accountFieldName);
+        require(dataIndex > 0, "Data is empty");
+
+        address verificationContractAddress = context.getAccountStorageAdapter()
+            .getAccountDataVerificationContractAddress(account, accountFieldName, dataIndex);
+        require(verificationContractAddress == address(0), "Verification contract for this data already created");
+
         BaseVerification createdContract = new BaseVerification(
             _storage, _rewardAmount, account, coOwnerAddress, dataIndex, verificatorAddress, accountFieldName);
         createdContract.transferOwnership(msg.sender);
@@ -53,5 +59,8 @@ contract VerificationContractFactory is WithKimlicContext {
         createdContracts[createdContractAddress] = true;
         contracts[key] = createdContractAddress;
         context.getKimlicToken().transferFrom(coOwnerAddress, createdContractAddress, _rewardAmount);
+        
+        context.getAccountStorageAdapter().setAccountFieldVerificationContractAddress(
+            account, accountFieldName, createdContractAddress);
     }
 }

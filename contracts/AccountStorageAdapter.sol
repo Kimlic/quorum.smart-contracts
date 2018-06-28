@@ -5,6 +5,8 @@ import "./WithKimlicContext.sol";
 import "./openzeppelin-solidity/Ownable.sol";
 import "./KimlicContractsContext.sol";
 import "./AccountStorage.sol";
+import "./BaseVerification.sol";
+
 
 contract AccountStorageAdapter is Ownable, WithKimlicContext {
 
@@ -79,7 +81,7 @@ contract AccountStorageAdapter is Ownable, WithKimlicContext {
     }
 
     function getAccountFieldLastVerificationData(address accountAddress, string accountFieldName)
-        public view returns(bool verificationStatus, address verificationContract, uint256 verifiedAt) {
+        public view returns(BaseVerification.Status verificationStatus, address verificationContractAddress, uint256 verifiedAt) {
 
         uint index = getFieldHistoryLength(accountAddress, accountFieldName);
         return getAccountFieldVerificationData(accountAddress, accountFieldName, index);
@@ -90,32 +92,27 @@ contract AccountStorageAdapter is Ownable, WithKimlicContext {
         view
         checkIsColmnNameAllowed(accountFieldName)
         checkReadingDataRestrictions(accountAddress)
-        returns(bool verificationStatus, address verificationContract, uint256 verifiedAt) {
+        returns(BaseVerification.Status verificationStatus, address verificationContractAddress, uint256 verifiedAt) {
 
 
         AccountStorage accountStorage = getContext().getAccountStorage();
-
-        bytes memory verificationStatusKey = abi.encode(accountAddress, accountFieldName, index, metaVerificationStatusKey);
-        verificationStatus = accountStorage.getBool(keccak256(verificationStatusKey));
-
         bytes memory verificationContractKey = abi.encode(accountAddress, accountFieldName, index, metaVerificationContractKey);
-        verificationContract = accountStorage.getAddress(keccak256(verificationContractKey));
-
-        bytes memory verifiedAtKey = abi.encode(accountAddress, accountFieldName, index, metaVerifiedAtKey);
-        verifiedAt = accountStorage.getUint(keccak256(verifiedAtKey));
+        verificationContractAddress = accountStorage.getAddress(keccak256(verificationContractKey));
+        BaseVerification verificationContract = BaseVerification(verificationContractAddress);
+        
+        verificationStatus = verificationContract.status();
+        verifiedAt = verificationContract.verifiedAt();
     }
 
-    function setAccountFieldVerificationData(
-        address accountAddress, string accountFieldName,
-        bool verificationStatus, address verificationContract, uint verifiedAt) public {
+    function setAccountFieldVerificationContractAddress(
+        address accountAddress, string accountFieldName, address verificationContractAddress) public {
 
         uint index = getFieldHistoryLength(accountAddress, accountFieldName);
-        setAccountFieldVerificationData(accountAddress, accountFieldName, index, verificationStatus, verificationContract, verifiedAt);
+        setAccountFieldVerificationContractAddress(accountAddress, accountFieldName, index, verificationContractAddress);
     }
 
-    function setAccountFieldVerificationData(
-        address accountAddress, string accountFieldName, uint index,
-        bool verificationStatus, address verificationContract, uint verifiedAt) 
+    function setAccountFieldVerificationContractAddress(
+        address accountAddress, string accountFieldName, uint index, address verificationContractAddress) 
         public
         checkIsColmnNameAllowed(accountFieldName)
         verificationContractOrOwnerOnly() {
@@ -124,14 +121,8 @@ contract AccountStorageAdapter is Ownable, WithKimlicContext {
         
         AccountStorage accountStorage = context.getAccountStorage();
 
-        bytes memory verificationStatusKey = abi.encode(accountAddress, accountFieldName, index, metaVerificationStatusKey);
-        accountStorage.setBool(keccak256(verificationStatusKey), verificationStatus);
-
         bytes memory verificationContractKey = abi.encode(accountAddress, accountFieldName, index, metaVerificationContractKey);
-        accountStorage.setAddress(keccak256(verificationContractKey), verificationContract);
-
-        bytes memory verifiedAtKey = abi.encode(accountAddress, accountFieldName, index, metaVerifiedAtKey);
-        accountStorage.setUint(keccak256(verifiedAtKey), verifiedAt);
+        accountStorage.setAddress(keccak256(verificationContractKey), verificationContractAddress);
 
         context.getRewardingContract().checkMilestones(accountAddress, accountFieldName);
     }
@@ -191,7 +182,9 @@ contract AccountStorageAdapter is Ownable, WithKimlicContext {
         KimlicContractsContext context = getContext();
         require(
             context.getVerificationContractFactory().createdContracts(msg.sender) ||
-            msg.sender == context.owner(), "Access to this method allowed for verification contract or owner only");
+            msg.sender == address(context.getVerificationContractFactory()) ||
+            msg.sender == context.owner(),
+            "Access to this method allowed for verification contract, verification contract factory or account storage adapter owner only");
         _;
     }
 
@@ -200,6 +193,7 @@ contract AccountStorageAdapter is Ownable, WithKimlicContext {
         require(
             context.getVerificationContractFactory().createdContracts(msg.sender) ||
             context.getProvisioningContractFactory().createdContracts(msg.sender) ||
+            msg.sender == address(context.getVerificationContractFactory()) ||
             msg.sender == address(context.getRewardingContract()) ||
             msg.sender == owner ||
             msg.sender == context.owner() ||

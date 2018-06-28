@@ -27,6 +27,7 @@ contract ProvisioningContractFactory is WithKimlicContext {
         KimlicContractsContext context = getContext();
         uint reward = context.getProvisioningPrice().getPrice(accountFieldName);
         uint dataIndex = context.getAccountStorageAdapter().getFieldHistoryLength(account, accountFieldName);
+        require(dataIndex > 0, "Data is empty");
 
         createdContract = new ProvisioningContract(_storage, account, accountFieldName, dataIndex, reward);
         createdContract.transferOwnership(msg.sender);

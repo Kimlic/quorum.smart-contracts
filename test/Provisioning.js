@@ -75,7 +75,7 @@ contract("Provisioning", function(accounts) {
         await provisioningContractFactory.setDataProvidedStatus(relyingPartySendConfig);
     });
 
-    it(`Should return column data and object type to owner.`, async () => {
+    it(`Should return column data to owner.`, async () => {
         let provisioningContractFactory = await ProvisioningContract.at(provisioningContractAddress);
         let data = await provisioningContractFactory.getData.call(relyingPartySendConfig, relyingPartySendConfig);
         
