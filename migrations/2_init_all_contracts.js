@@ -9,7 +9,7 @@ var AccountStorageAdapter = artifacts.require("./AccountStorageAdapter.sol");
 var VerificationContractFactory = artifacts.require("./VerificationContractFactory.sol");
 var ProvisioningContractFactory = artifacts.require("./ProvisioningContractFactory.sol");
 var KimlicToken = artifacts.require("./KimlicToken.sol");
-var ProvisioningPrice = artifacts.require("./ProvisioningPrice.sol");
+var PriceList = artifacts.require("./PriceList.sol");
 var RewardingContract = artifacts.require("./RewardingContract.sol");
 var RelyingPartyStorageAdapter = artifacts.require("./RelyingPartyStorageAdapter.sol");
 var RelyingPartyStorage = artifacts.require("./RelyingPartyStorage.sol");
@@ -45,12 +45,26 @@ module.exports = function(deployer, network, accounts) {
         console.log('Config account not found.\nAccount: ' + mainAccount.address);
     }
 
-    var kimlicContextStorageInstance;
-    var kimlicContractsContextInstance;
-    var provisioningContractFactoryInstance;
-    var rewardingContractInstance;
-    var provisioningPriceInstance;
-    var accountStorageAdapterInstance;
+    let kimlicContextStorageInstance;
+    let kimlicContractsContextInstance;
+    let provisioningContractFactoryInstance;
+    let rewardingContractInstance;
+    let provisioningPriceListInstance;
+    let accountStorageAdapterInstance;
+    let verificationPriceListInstance;
+
+    let accountColumns = [
+        "identity",//TODO probably we dont need this column anymore
+        "email",
+        "phone",
+        "documents.id_card",
+        "documents.passport",
+        "documents.driver_license",
+        "documents.residence_permit_card",
+        "addresses.billing",
+        "addresses.living",
+        "device"//TODO probably we dont need this column anymore
+    ]
 
     var deployConfig = {
         "from": mainAccount.address
@@ -91,10 +105,14 @@ module.exports = function(deployer, network, accounts) {
         return deployer.deploy(KimlicToken, deployConfig);
     })
     .then(() => {
-        return deployer.deploy(ProvisioningPrice, deployConfig);
+        return deployer.deploy(PriceList, deployConfig);
     })
     .then((instance) => {
-        provisioningPriceInstance = instance;
+        provisioningPriceListInstance = instance;
+        return deployer.deploy(PriceList, deployConfig);
+    })
+    .then((instance) => {
+        verificationPriceListInstance = instance;
         return deployer.deploy(RewardingContract, KimlicContextStorage.address, deployConfig);
     })
     .then(async (instance) => {
@@ -105,58 +123,52 @@ module.exports = function(deployer, network, accounts) {
         await setupAcccountStorageAdapter();
         await setupProvisioningContractFactoryInstance();
         await setupRewardingContractInstance();
-        await setupProvisioningPriceInstance();
+        await setupPriceListInstance(provisioningPriceListInstance, "provisioning pricelist instance");
+        await setupPriceListInstance(verificationPriceListInstance, "verification pricelist instance");
         await setupCommunityTokenWalletAddress();
 
 
         let partiesConfig = {};
 
         let veriffName = "Veriff";
-        await setupParty(partiesConfig, veriffName, veriffName + "p@ssw0rd");
+        partiesConfig[veriffName] = await setupParty(veriffName, veriffName + "p@ssw0rd");
+        setupAPAccessToFieldVerification(partiesConfig[veriffName].address, ["documents.id_card"])
         
         let kimlicName = "Kimlic";
-        await setupParty(partiesConfig, kimlicName, kimlicName + "p@ssw0rd");
+        partiesConfig[kimlicName] = await setupParty(kimlicName, kimlicName + "p@ssw0rd");
+        setupAPAccessToFieldVerification(partiesConfig[kimlicName].address, ["email", "phone"])
 
         let relyingPartyNme = "FirstRelyingParty";
-        await setupParty(partiesConfig, relyingPartyNme, relyingPartyNme + "p@ssw0rd");
+        partiesConfig[relyingPartyNme] = await setupParty(relyingPartyNme, relyingPartyNme + "p@ssw0rd");
 
         savePartiesConfig(partiesConfig);
     });
 
-    var setupAcccountStorageAdapter = async () => {
+    let setupAPAccessToFieldVerification = async (apAddress, allowedColumns) => {
+        var adapter = await AttestationPartyStorageAdapter.deployed();
+        allowedColumns.forEach(columnName => {
+            adapter.addAccessToFieldVerification(apAddress, columnName);
+        });
+    };
+
+    let setupAcccountStorageAdapter = async () => {
 
         console.log(getFormatedConsoleLable("Setup account storage adapter instance:"));
 
-        console.log('Add allowed column name "identity"');
-        await accountStorageAdapterInstance.addAllowedColumnName("identity");//TODO probably we dont need this column anymore
-        console.log('Add allowed column name "email"');
-        await accountStorageAdapterInstance.addAllowedColumnName("email");
-        console.log('Add allowed column name "phone"');
-        await accountStorageAdapterInstance.addAllowedColumnName("phone");
-        console.log('Add allowed column name "documents.id_card"');
-        await accountStorageAdapterInstance.addAllowedColumnName("documents.id_card");
-        console.log('Add allowed column name "documents.passport"');
-        await accountStorageAdapterInstance.addAllowedColumnName("documents.passport");
-        console.log('Add allowed column name "documents.driver_license"');
-        await accountStorageAdapterInstance.addAllowedColumnName("documents.driver_license");
-        console.log('Add allowed column name "documents.residence_permit_card"');
-        await accountStorageAdapterInstance.addAllowedColumnName("documents.residence_permit_card");
-        console.log('Add allowed column name "addresses.billing"');
-        await accountStorageAdapterInstance.addAllowedColumnName("addresses.billing");
-        console.log('Add allowed column name "addresses.living"');
-        await accountStorageAdapterInstance.addAllowedColumnName("addresses.living");
-        console.log('Add allowed column name "device"');
-        await accountStorageAdapterInstance.addAllowedColumnName("device");//TODO probably we dont need this column anymore
+        for (let i = 0; i < accountColumns.length; i++) {            
+            console.log(`Add allowed column name "${accountColumns[i]}"`);
+            await accountStorageAdapterInstance.addAllowedColumnName(accountColumns[i]);
+        }
     };
 
-    var setupKimlicContextStorageInstance = async () => {
+    let setupKimlicContextStorageInstance = async () => {
 
         console.log(getFormatedConsoleLable("Setup kimlic context storage instance:"));
         console.log("Context = " + kimlicContractsContextInstance.address);
         await kimlicContextStorageInstance.setContext(kimlicContractsContextInstance.address, deployConfig);
     };
     
-    var setupKimlicContractsContextInstance = async () => {
+    let setupKimlicContractsContextInstance = async () => {
         
         console.log(getFormatedConsoleLable("Setup kimlic contracts context instance:"));
         
@@ -184,8 +196,11 @@ module.exports = function(deployer, network, accounts) {
         console.log(`\nVerificationContractFactory = ${VerificationContractFactory.address}`);
         await kimlicContractsContextInstance.setVerificationContractFactory(VerificationContractFactory.address, deployConfig);
         
-        console.log(`\nProvisioningPrice = ${ProvisioningPrice.address}`);
-        await kimlicContractsContextInstance.setProvisioningPrice(ProvisioningPrice.address, deployConfig);
+        console.log(`\nProvisioningPriceList = ${provisioningPriceListInstance.address}`);
+        await kimlicContractsContextInstance.setProvisioningPriceList(provisioningPriceListInstance.address, deployConfig);
+        
+        console.log(`\nVerificationPriceList = ${verificationPriceListInstance.address}`);
+        await kimlicContractsContextInstance.setVerificationPriceList(verificationPriceListInstance.address, deployConfig);
         
         console.log(`\nProvisioningContractFactory = ${ProvisioningContractFactory.address}`);
         await kimlicContractsContextInstance.setProvisioningContractFactory(ProvisioningContractFactory.address, deployConfig);
@@ -197,9 +212,9 @@ module.exports = function(deployer, network, accounts) {
         await kimlicContractsContextInstance.setRewardingContract(RewardingContract.address, deployConfig);
     };
     
-    var setupProvisioningContractFactoryInstance = async () => {
+    let setupProvisioningContractFactoryInstance = async () => {
         
-        var interests = {
+        let interests = {
             communityTokenWallet: 25,
             coOwner: 25,
             attestationParty: 25,
@@ -212,8 +227,8 @@ module.exports = function(deployer, network, accounts) {
             interests.coOwner, interests.attestationParty, interests.account, deployConfig);
     };
     
-    var setupRewardingContractInstance = async () => {
-        var rewards = {
+    let setupRewardingContractInstance = async () => {
+        let rewards = {
             mielstone1: 15,
             mielstone2: 25
         };
@@ -225,31 +240,14 @@ module.exports = function(deployer, network, accounts) {
         await rewardingContractInstance.setMilestone2Reward(rewards.mielstone2, deployConfig);
     };
     
-    var setupProvisioningPriceInstance = async () => {
-        
-        console.log(getFormatedConsoleLable("setupProvisioningPriceInstance"));
-        var prices = {
-            email: 10,
-            phone: 15,
-            identity: 12,
-            documents: 22,
-            addresses: 16
-        };
-        
-        console.log(`Email = ${prices.email}`); 
-        await provisioningPriceInstance.setPrice(0, prices.email, deployConfig);
-        
-        console.log(`Phone = ${prices.phone}`); 
-        await provisioningPriceInstance.setPrice(1, prices.phone, deployConfig);
-        
-        console.log(`Identity = ${prices.identity}`); 
-        await provisioningPriceInstance.setPrice(2, prices.identity, deployConfig);
-        
-        console.log(`Documents = ${prices.documents}`); 
-        await provisioningPriceInstance.setPrice(4, prices.documents, deployConfig);
-        
-        console.log(`Addresses = ${prices.addresses}`); 
-        await provisioningPriceInstance.setPrice(5, prices.addresses, deployConfig);
+    let setupPriceListInstance = async (instance, contractCaption) => {
+        console.log(getFormatedConsoleLable(`setup ${contractCaption}`));
+
+        for (let i = 0; i < accountColumns.length; i++) {
+            let price = 4 * Math.floor(1 + Math.random() * 5);
+            console.log(`"${accountColumns[i]}" price = ${price} tokens`); 
+            await instance.setPrice(accountColumns[i], price, deployConfig);
+        }
     };
 
     let setupCommunityTokenWalletAddress = async () => {
@@ -264,7 +262,7 @@ module.exports = function(deployer, network, accounts) {
     }
     
 
-    let setupParty = async (partiesConfig, name, password) => {
+    let setupParty = async (name, password) => {
         let address = web3.personal.newAccount(password);
         console.log(`Created new "${name}" party address: "${address}", password: "${password}"`);
         web3.personal.unlockAccount(address, password);
@@ -293,9 +291,7 @@ module.exports = function(deployer, network, accounts) {
         let provisioningAllowance = await kimlicToken.allowance.call(address, ProvisioningContractFactory.address, { from: address });
         console.log(`Allowance from "${address}" to provisioning contract factory at address "${ProvisioningContractFactory.address}" - ${provisioningAllowance}`);
 
-        partiesConfig[name] = { address: address, password: password };
-
-        return address;
+        return { address: address, password: password };
     };
     
     let getFormatedConsoleLable = function(unformatedLable){

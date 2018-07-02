@@ -35,7 +35,6 @@ contract("Provisioning", function(accounts) {
     let relyingPartyConfig = config["FirstRelyingParty"];
     let relyingPartySendConfig = { from: relyingPartyConfig.address };
     let kimlicSendConfig = { from: kimlicConfig.address };
-    let verificatorAddress = accounts[0];
     
     it("Should unlock relying party account", async () => {
         web3.personal.unlockAccount(kimlicConfig.address, kimlicConfig.password);
@@ -51,7 +50,7 @@ contract("Provisioning", function(accounts) {
 
         let verificationContractFactory = await VerificationContractFactory.deployed();
         await verificationContractFactory.createEmailVerification(accountAddress, kimlicConfig.address,
-            verificatorAddress, verificationContractkey, kimlicSendConfig);
+            verificationContractkey, kimlicSendConfig);
         let verificationContractAddress =  await verificationContractFactory.getVerificationContract.call(verificationContractkey, kimlicSendConfig);
         let verificationContract = await BaseVerification.at(verificationContractAddress);
         await verificationContract.setVerificationResult(true, kimlicSendConfig);
@@ -75,7 +74,7 @@ contract("Provisioning", function(accounts) {
         await provisioningContractFactory.setDataProvidedStatus(relyingPartySendConfig);
     });
 
-    it(`Should return column data and object type to owner.`, async () => {
+    it(`Should return column data to owner.`, async () => {
         let provisioningContractFactory = await ProvisioningContract.at(provisioningContractAddress);
         let data = await provisioningContractFactory.getData.call(relyingPartySendConfig, relyingPartySendConfig);
         

@@ -6,7 +6,7 @@ import "./openzeppelin-solidity/Ownable.sol";
 import "./AccountStorage.sol";
 import "./AccountStorageAdapter.sol";
 import "./KimlicToken.sol";
-import "./ProvisioningPrice.sol";
+import "./PriceList.sol";
 import "./ProvisioningContractFactory.sol";
 import "./VerificationContractFactory.sol";
 import "./BaseStorage.sol";
@@ -25,6 +25,7 @@ contract KimlicContractsContext is Ownable {
     bytes32 private kimlicTokenKey;
     bytes32 private verificationContractFactoryKey;
     bytes32 private provisioningPriceKey;
+    bytes32 private verificationPriceListKey;
     bytes32 private provisioningContractFactoryKey;
     bytes32 private communityTokenWalletAddressKey;
     bytes32 private rewardingContractKey;
@@ -43,6 +44,7 @@ contract KimlicContractsContext is Ownable {
         kimlicTokenKey = keccak256(abi.encode("kimlicToken"));
         verificationContractFactoryKey = keccak256(abi.encode("verificationContractFactory"));
         provisioningPriceKey = keccak256(abi.encode("provisioningPrice"));
+        verificationPriceListKey = keccak256(abi.encode("verificationPriceList"));
         provisioningContractFactoryKey = keccak256(abi.encode("provisioningContractFactory"));
         communityTokenWalletAddressKey = keccak256(abi.encode("communityTokenWalletAddress"));
         rewardingContractKey = keccak256(abi.encode("rewardingContract"));
@@ -68,8 +70,12 @@ contract KimlicContractsContext is Ownable {
         verificationContractFactory = VerificationContractFactory(_storage.getAddress(verificationContractFactoryKey));
     }
 
-    function getProvisioningPrice() public view returns(ProvisioningPrice provisioningPrice) {
-        provisioningPrice = ProvisioningPrice(_storage.getAddress(provisioningPriceKey));
+    function getProvisioningPriceList() public view returns(PriceList provisioningPrice) {
+        provisioningPrice =  PriceList(_storage.getAddress(provisioningPriceKey));
+    }
+
+    function getVerificationPriceList() public view returns(PriceList verificationPriceList) {
+        verificationPriceList =  PriceList(_storage.getAddress(verificationPriceListKey));
     }
 
     function getProvisioningContractFactory() public view returns(ProvisioningContractFactory provisioningContractFactory) {
@@ -118,8 +124,12 @@ contract KimlicContractsContext is Ownable {
         _storage.setAddress(verificationContractFactoryKey, verificationContractFactoryAddress);
     }
 
-    function setProvisioningPrice(address provisioningPriceAddress) public onlyOwner() {
+    function setProvisioningPriceList(address provisioningPriceAddress) public onlyOwner() {
         _storage.setAddress(provisioningPriceKey, provisioningPriceAddress);
+    }
+
+    function setVerificationPriceList(address verificationPriceListAddress) public onlyOwner() {
+        _storage.setAddress(verificationPriceListKey, verificationPriceListAddress);
     }
 
     function setProvisioningContractFactory(address provisioningContractFactoryAddress) public onlyOwner() {

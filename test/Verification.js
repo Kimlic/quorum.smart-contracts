@@ -21,11 +21,11 @@ contract("Verification", function(accounts) {
         //await addAccountData(adapter, accountAddress, accountConsts.addressValue, accountConsts.addressesColumnName);
     });
 
-    let verificationTests = (factoryMethodName, columnName, coOwnerAddress, verificatorAddress,
+    let verificationTests = (factoryMethodName, columnName, verificatorAddress,
             verificationContractkey, sendConfig) => {
         it(`Should create ${columnName} verification contract`, async () => {
             let verificationContractFactory = await VerificationContractFactory.deployed();
-            await verificationContractFactory[factoryMethodName](accountAddress, coOwnerAddress,
+            await verificationContractFactory[factoryMethodName](accountAddress,
                 verificatorAddress, verificationContractkey, sendConfig);
         });
         
@@ -36,9 +36,9 @@ contract("Verification", function(accounts) {
             assert.notEqual(verificationContractAddress, "0x0000000000000000000000000000000000000000");
         });
 
-        it(`Should return column data and object type to owner.`, async () => {
+        it(`Should return column data to owner.`, async () => {
             let verificationContract = await BaseVerification.at(verificationContractAddress);
-            let data = await verificationContract.getData.call(sendConfig);
+            let data = await verificationContract.getData.call({ "from": verificatorAddress });
             
             let adapter = await AccountStorageAdapter.deployed();
             let accountData = await getAccountFieldLastMainData(adapter, accountAddress, columnName);
@@ -47,12 +47,12 @@ contract("Verification", function(accounts) {
         
         it(`Should set verification ${columnName} result`, async () => {
             let verificationContract = await BaseVerification.at(verificationContractAddress);
-            await verificationContract.setVerificationResult(true, sendConfig);
+            await verificationContract.setVerificationResult(true, { "from": verificatorAddress });
         });
         
-        it(`Should get "verificationStatus". "verificationStatus" must be true`, async () => {
+        it(`Should get verification status. Status must be "Verified"(1)`, async () => {
             let verificationContract = await BaseVerification.at(verificationContractAddress);
-            let verificationStatus = await verificationContract.verificationStatus.call();
+            let verificationStatus = await verificationContract.status.call();
             assert.equal(verificationStatus, true);
         });
     };
@@ -82,19 +82,18 @@ contract("Verification", function(accounts) {
     let config = getPartiesConfig();
     let kimlicConfig = config["Kimlic"];
     let veriffConfig = config["Veriff"];
+    let relyingPartyConfig = config["FirstRelyingParty"];
     
     it("Should unlock verificators accounts", async () => {
-        web3.personal.unlockAccount(kimlicConfig.address, kimlicConfig.password);
-        web3.personal.unlockAccount(veriffConfig.address, veriffConfig.password);
+        await web3.personal.unlockAccount(kimlicConfig.address, kimlicConfig.password);
+        await web3.personal.unlockAccount(veriffConfig.address, veriffConfig.password);
+        await web3.personal.unlockAccount(relyingPartyConfig.address, relyingPartyConfig.password);
     });
     
-    verificationTests("createEmailVerification", accountConsts.emailColumnName, kimlicConfig.address,
-        verificatorAddress, uuidv4(), { "from": kimlicConfig.address });
+    verificationTests("createEmailVerification", accountConsts.emailColumnName, kimlicConfig.address, uuidv4(), { "from": kimlicConfig.address });
 
-    verificationTests("createPhoneVerification", accountConsts.phoneColumnName, kimlicConfig.address,
-        verificatorAddress, uuidv4(), { "from": kimlicConfig.address });
+    verificationTests("createPhoneVerification", accountConsts.phoneColumnName, kimlicConfig.address, uuidv4(), { "from": kimlicConfig.address });
     
-    verificationTests("createDocumentVerification", accountConsts.documentsColumnName, kimlicConfig.address,
-        verificatorAddress, uuidv4(), { "from": veriffConfig.address });
+    verificationTests("createDocumentVerification", accountConsts.documentsColumnName, veriffConfig.address, uuidv4(), { "from": relyingPartyConfig.address });
     
 });

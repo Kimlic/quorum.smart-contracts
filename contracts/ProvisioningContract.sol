@@ -51,7 +51,7 @@ contract ProvisioningContract is Ownable, WithKimlicContext {
         sendRewards();
     }
     
-    function getData() public view onlyOwner() returns(string data, bool verificationStatus, address verificationContractAddress, uint256 verifiedAt) {
+    function getData() public view onlyOwner() returns(string data, BaseVerification.Status verificationStatus, address verificationContractAddress, uint256 verifiedAt) {
 
         require(status == Status.DataProvided);
         
