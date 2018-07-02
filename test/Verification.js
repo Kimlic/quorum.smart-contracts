@@ -84,8 +84,8 @@ contract("Verification", function(accounts) {
     let veriffConfig = config["Veriff"];
     
     it("Should unlock verificators accounts", async () => {
-        web3.personal.unlockAccount(kimlicConfig.address, kimlicConfig.password);
-        web3.personal.unlockAccount(veriffConfig.address, veriffConfig.password);
+        await web3.personal.unlockAccount(kimlicConfig.address, kimlicConfig.password);
+        await web3.personal.unlockAccount(veriffConfig.address, veriffConfig.password);
     });
     
     verificationTests("createEmailVerification", accountConsts.emailColumnName, kimlicConfig.address,

@@ -25,7 +25,7 @@ contract ProvisioningContractFactory is WithKimlicContext {
             public returns(ProvisioningContract createdContract) {
         
         KimlicContractsContext context = getContext();
-        uint reward = context.getProvisioningPrice().getPrice(accountFieldName);
+        uint reward = context.getProvisioningPriceList().getPrice(accountFieldName);
         uint dataIndex = context.getAccountStorageAdapter().getFieldHistoryLength(account, accountFieldName);
         require(dataIndex > 0, "Data is empty");
 
