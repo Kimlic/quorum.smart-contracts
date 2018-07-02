@@ -4,16 +4,17 @@ pragma solidity ^0.4.23;
 import "./BaseStorage.sol";
 import "./WithKimlicContext.sol";
 import "./BaseStorage.sol";
+import "./KimlicContractsContext.sol";
 
 contract BasePartyStorageAdapter is WithKimlicContext {
 
     /// private attributes ///
-    string private constant legalName = "legalName";
-    string private constant shortName = "shortName";
-    string private constant businessArea = "businessArea";
-    string private constant legalResidenceCountry = "legalResidenceCountry";
-    string private constant website = "website";
-    string private constant dataPrivacyUrl = "dataPrivacyUrl";
+    string private constant legalNameKey = "legalName";
+    string private constant shortNameKey = "shortName";
+    string private constant businessAreaKey = "businessArea";
+    string private constant legalResidenceCountryKey = "legalResidenceCountry";
+    string private constant websiteKey = "website";
+    string private constant dataPrivacyUrlKey = "dataPrivacyUrl";
 
 
     /// constructors ///
@@ -24,53 +25,53 @@ contract BasePartyStorageAdapter is WithKimlicContext {
     /// public methods ///
 
     /* Setters */
-    function setLegalName(address party, string value) public accessRestriction() {
-        setStringValue(party, value, legalName);
+    function setLegalName(address party, string value) public setAccessRestriction(party) {
+        setStringValue(party, value, legalNameKey);
     }
     
-    function setShortName(address party, string value) public accessRestriction() {
-        setStringValue(party, value, shortName);
+    function setShortName(address party, string value) public setAccessRestriction(party) {
+        setStringValue(party, value, shortNameKey);
     }
     
-    function setBusinessArea(address party, string value) public accessRestriction() {
-        setStringValue(party, value, businessArea);
+    function setBusinessArea(address party, string value) public setAccessRestriction(party) {
+        setStringValue(party, value, businessAreaKey);
     }
     
-    function setLegalResidenceCountry(address party, string value) public accessRestriction() {
-        setStringValue(party, value, legalResidenceCountry);
+    function setLegalResidenceCountry(address party, string value) public setAccessRestriction(party) {
+        setStringValue(party, value, legalResidenceCountryKey);
     }
     
-    function setWebsite(address party, string value) public accessRestriction() {
-        setStringValue(party, value, website);
+    function setWebsite(address party, string value) public setAccessRestriction(party) {
+        setStringValue(party, value, websiteKey);
     }
     
-    function setDataPrivacyUrl(address party, string value) public accessRestriction() {
-        setStringValue(party, value, dataPrivacyUrl);
+    function setDataPrivacyUrl(address party, string value) public setAccessRestriction(party) {
+        setStringValue(party, value, dataPrivacyUrlKey);
     }
 
     /* Getters */
-    function getLegalName(address party) public view accessRestriction() returns(string) {
-        return getStringValue(party, legalName);
+    function getLegalName(address party) public view getAccessRestriction(party) returns(string) {
+        return getStringValue(party, legalNameKey);
     }
     
-    function getShortName(address party) public view accessRestriction() returns(string) {
-        return getStringValue(party, shortName);
+    function getShortName(address party) public view getAccessRestriction(party) returns(string) {
+        return getStringValue(party, shortNameKey);
     }
     
-    function getBusinessArea(address party) public view accessRestriction() returns(string) {
-        return getStringValue(party, businessArea);
+    function getBusinessArea(address party) public view getAccessRestriction(party) returns(string) {
+        return getStringValue(party, businessAreaKey);
     }
     
-    function getLegalResidenceCountry(address party) public view accessRestriction() returns(string) {
-        return getStringValue(party, legalResidenceCountry);
+    function getLegalResidenceCountry(address party) public view getAccessRestriction(party) returns(string) {
+        return getStringValue(party, legalResidenceCountryKey);
     }
     
-    function getWebsite(address party) public view accessRestriction() returns(string) {
-        return getStringValue(party, website);
+    function getWebsite(address party) public view getAccessRestriction(party) returns(string) {
+        return getStringValue(party, websiteKey);
     }
     
-    function getDataPrivacyUrl(address party) public view accessRestriction() returns(string) {
-        return getStringValue(party, dataPrivacyUrl);
+    function getDataPrivacyUrl(address party) public view getAccessRestriction(party) returns(string) {
+        return getStringValue(party, dataPrivacyUrlKey);
     }
 
     /// private methods ///
@@ -88,7 +89,15 @@ contract BasePartyStorageAdapter is WithKimlicContext {
     function getStorage() view internal returns (BaseStorage);
 
     /// Modifiers ///
-    modifier accessRestriction() {
+    modifier setAccessRestriction(address party) {
+        KimlicContractsContext context = getContext();
+        require(
+            msg.sender == party || 
+            msg.sender == context.owner());
+        _;
+    }
+
+    modifier getAccessRestriction(address party) {
         _;
     }
 }

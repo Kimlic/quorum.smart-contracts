@@ -35,7 +35,7 @@ contract AccountStorageAdapter is Ownable, WithKimlicContext {
         delete allowedColumnNames[columnName];
     }
 
-    function isAllowedColumnName(string columnName) public view onlyOwner() returns(bool) {
+    function isAllowedColumnName(string columnName) public view returns(bool) {
         return allowedColumnNames[columnName];
     }
 

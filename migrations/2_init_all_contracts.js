@@ -131,18 +131,27 @@ module.exports = function(deployer, network, accounts) {
         let partiesConfig = {};
 
         let veriffName = "Veriff";
-        await setupParty(partiesConfig, veriffName, veriffName + "p@ssw0rd");
+        partiesConfig[veriffName] = await setupParty(veriffName, veriffName + "p@ssw0rd");
+        setupAPAccessToFieldVerification(partiesConfig[veriffName].address, ["documents.id_card"])
         
         let kimlicName = "Kimlic";
-        await setupParty(partiesConfig, kimlicName, kimlicName + "p@ssw0rd");
+        partiesConfig[kimlicName] = await setupParty(kimlicName, kimlicName + "p@ssw0rd");
+        setupAPAccessToFieldVerification(partiesConfig[kimlicName].address, ["email", "phone"])
 
         let relyingPartyNme = "FirstRelyingParty";
-        await setupParty(partiesConfig, relyingPartyNme, relyingPartyNme + "p@ssw0rd");
+        partiesConfig[relyingPartyNme] = await setupParty(relyingPartyNme, relyingPartyNme + "p@ssw0rd");
 
         savePartiesConfig(partiesConfig);
     });
 
-    var setupAcccountStorageAdapter = async () => {
+    let setupAPAccessToFieldVerification = async (apAddress, allowedColumns) => {
+        var adapter = await AttestationPartyStorageAdapter.deployed();
+        allowedColumns.forEach(columnName => {
+            adapter.addAccessToFieldVerification(apAddress, columnName);
+        });
+    };
+
+    let setupAcccountStorageAdapter = async () => {
 
         console.log(getFormatedConsoleLable("Setup account storage adapter instance:"));
 
@@ -152,14 +161,14 @@ module.exports = function(deployer, network, accounts) {
         }
     };
 
-    var setupKimlicContextStorageInstance = async () => {
+    let setupKimlicContextStorageInstance = async () => {
 
         console.log(getFormatedConsoleLable("Setup kimlic context storage instance:"));
         console.log("Context = " + kimlicContractsContextInstance.address);
         await kimlicContextStorageInstance.setContext(kimlicContractsContextInstance.address, deployConfig);
     };
     
-    var setupKimlicContractsContextInstance = async () => {
+    let setupKimlicContractsContextInstance = async () => {
         
         console.log(getFormatedConsoleLable("Setup kimlic contracts context instance:"));
         
@@ -203,9 +212,9 @@ module.exports = function(deployer, network, accounts) {
         await kimlicContractsContextInstance.setRewardingContract(RewardingContract.address, deployConfig);
     };
     
-    var setupProvisioningContractFactoryInstance = async () => {
+    let setupProvisioningContractFactoryInstance = async () => {
         
-        var interests = {
+        let interests = {
             communityTokenWallet: 25,
             coOwner: 25,
             attestationParty: 25,
@@ -218,8 +227,8 @@ module.exports = function(deployer, network, accounts) {
             interests.coOwner, interests.attestationParty, interests.account, deployConfig);
     };
     
-    var setupRewardingContractInstance = async () => {
-        var rewards = {
+    let setupRewardingContractInstance = async () => {
+        let rewards = {
             mielstone1: 15,
             mielstone2: 25
         };
@@ -231,7 +240,7 @@ module.exports = function(deployer, network, accounts) {
         await rewardingContractInstance.setMilestone2Reward(rewards.mielstone2, deployConfig);
     };
     
-    var setupPriceListInstance = async (instance, contractCaption) => {
+    let setupPriceListInstance = async (instance, contractCaption) => {
         console.log(getFormatedConsoleLable(`setup ${contractCaption}`));
 
         for (let i = 0; i < accountColumns.length; i++) {
@@ -253,7 +262,7 @@ module.exports = function(deployer, network, accounts) {
     }
     
 
-    let setupParty = async (partiesConfig, name, password) => {
+    let setupParty = async (name, password) => {
         let address = web3.personal.newAccount(password);
         console.log(`Created new "${name}" party address: "${address}", password: "${password}"`);
         web3.personal.unlockAccount(address, password);
@@ -282,9 +291,7 @@ module.exports = function(deployer, network, accounts) {
         let provisioningAllowance = await kimlicToken.allowance.call(address, ProvisioningContractFactory.address, { from: address });
         console.log(`Allowance from "${address}" to provisioning contract factory at address "${ProvisioningContractFactory.address}" - ${provisioningAllowance}`);
 
-        partiesConfig[name] = { address: address, password: password };
-
-        return address;
+        return { address: address, password: password };
     };
     
     let getFormatedConsoleLable = function(unformatedLable){

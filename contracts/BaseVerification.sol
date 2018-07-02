@@ -13,7 +13,7 @@ contract BaseVerification is Ownable, WithKimlicContext {
     address public coOwner;
     Status public status;
     uint public dataIndex;
-    address public verificator;
+    address public attestationParty;
     address public accountAddress;
     uint public tokensUnlockAt;
     uint public verifiedAt;
@@ -22,20 +22,19 @@ contract BaseVerification is Ownable, WithKimlicContext {
     enum Status { Created, Verified, Unverified, Canceled }
 
     /// private attributes ///
-    uint internal _rewardAmount;
+    uint internal _rewardAmount;//TODO make it public or remove
 
     /// constructors ///
     constructor(
-        address contextStorage, uint rewardAmount, address account, address coOwnerAddress, uint index, address verificatorAddress,
+        address contextStorage, uint rewardAmount, address account, address coOwnerAddress, uint index, address attestationPartyAddress,
         string fieldName) public WithKimlicContext(contextStorage) Ownable() {
 
         coOwner = coOwnerAddress;
         accountAddress = account;
         dataIndex = index;
-        verificator = verificatorAddress;
-        _rewardAmount = rewardAmount;
+        attestationParty = attestationPartyAddress;
         accountFieldName = fieldName;
-        
+        _rewardAmount = rewardAmount;
     }
 
     /// public methods ///

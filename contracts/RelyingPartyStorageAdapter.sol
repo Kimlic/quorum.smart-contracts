@@ -21,7 +21,4 @@ contract RelyingPartyStorageAdapter is BasePartyStorageAdapter {
     }
     
     /// Modifiers ///
-    modifier accessRestriction() {//TODO write restrictions
-        _;
-    }
 }
