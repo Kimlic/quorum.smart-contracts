@@ -75,13 +75,13 @@ contract BasePartyStorageAdapter is WithKimlicContext {
     }
 
     /// private methods ///
-    function setStringValue(address party, string value, string columnName) private {
-        bytes memory key = abi.encode(party, columnName);
+    function setStringValue(address party, string value, string fieldName) private {
+        bytes memory key = abi.encode(party, fieldName);
         getStorage().setString(keccak256(key), value);
     }
 
-    function getStringValue(address party, string columnName) private view returns(string) {
-        bytes memory key = abi.encode(party, columnName);
+    function getStringValue(address party, string fieldName) private view returns(string) {
+        bytes memory key = abi.encode(party, fieldName);
         return getStorage().getString(keccak256(key));
     }
 
