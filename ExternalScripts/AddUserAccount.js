@@ -12,11 +12,11 @@ module.exports = async function(callback) {
     web3.personal.unlockAccount(address, password);
     console.log("Account unlocked");
 
-    await addAccountData(adapter, address, accountConsts.phoneValue, accountConsts.phoneColumnName);
-    await addAccountData(adapter, address, accountConsts.emailValue, accountConsts.emailColumnName);
-    await addAccountData(adapter, address, accountConsts.identityValue, accountConsts.identityColumnName);
-    await addAccountData(adapter, address, accountConsts.documentValue, accountConsts.documentsColumnName);
-    await addAccountData(adapter, address, accountConsts.addressValue, accountConsts.addressesColumnName);
+    await addAccountData(adapter, address, accountConsts.phoneValue, accountConsts.phoneFieldName);
+    await addAccountData(adapter, address, accountConsts.emailValue, accountConsts.emailFieldName);
+    await addAccountData(adapter, address, accountConsts.identityValue, accountConsts.identityFieldName);
+    await addAccountData(adapter, address, accountConsts.documentValue, accountConsts.documentsFieldName);
+    await addAccountData(adapter, address, accountConsts.addressValue, accountConsts.addressesFieldName);
 
     console.log("Saving to file");
     let createdUsersFileName = "CreatedUsers.json";

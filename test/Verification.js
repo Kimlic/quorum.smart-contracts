@@ -1,5 +1,5 @@
 /*jshint esversion: 6 *//*jshint esversion: 6 */
-var fs = require("fs");
+let fs = require("fs");
 
 let VerificationContractFactory = artifacts.require("./VerificationContractFactory.sol");
 let BaseVerification = artifacts.require("./BaseVerification.sol");
@@ -14,40 +14,39 @@ contract("Verification", function(accounts) {
 
     it("init account", async () => {
         let adapter = await AccountStorageAdapter.deployed();
-        await addAccountData(adapter, accountAddress, accountConsts.phoneValue, accountConsts.phoneColumnName);
-        await addAccountData(adapter, accountAddress, accountConsts.emailValue, accountConsts.emailColumnName);
-        //await addAccountData(adapter, accountAddress, accountConsts.identityValue, accountConsts.identityColumnName);
-        await addAccountData(adapter, accountAddress, accountConsts.documentValue, accountConsts.documentsColumnName);
-        //await addAccountData(adapter, accountAddress, accountConsts.addressValue, accountConsts.addressesColumnName);
+        await addAccountData(adapter, accountAddress, accountConsts.phoneValue + "VerificationTest", accountConsts.phoneFieldName);
+        await addAccountData(adapter, accountAddress, accountConsts.emailValue + "VerificationTest", accountConsts.emailFieldName);
+        //await addAccountData(adapter, accountAddress, accountConsts.identityValue + "VerificationTest", accountConsts.identityFieldName);
+        await addAccountData(adapter, accountAddress, accountConsts.documentValue + "VerificationTest", accountConsts.documentsFieldName);
+        //await addAccountData(adapter, accountAddress, accountConsts.addressValue + "VerificationTest", accountConsts.addressesFieldName);
     });
 
-    let verificationTests = (factoryMethodName, columnName, verificatorAddress,
-            verificationContractkey, sendConfig) => {
-        it(`Should create ${columnName} verification contract`, async () => {
+    let verificationTests = (factoryMethodName, fieldName, attestationPartyAddress, verificationContractkey, sendConfig) => {
+        it(`Should create ${fieldName} verification contract`, async () => {
             let verificationContractFactory = await VerificationContractFactory.deployed();
             await verificationContractFactory[factoryMethodName](accountAddress,
-                verificatorAddress, verificationContractkey, sendConfig);
+                attestationPartyAddress, verificationContractkey, sendConfig);
         });
         
         var verificationContractAddress;
-        it(`Should return created ${columnName} verification contract by key ${verificationContractkey}`, async () => {
+        it(`Should return created ${fieldName} verification contract by key ${verificationContractkey}`, async () => {
             let verificationContractFactory = await VerificationContractFactory.deployed();
             verificationContractAddress =  await verificationContractFactory.getVerificationContract.call(verificationContractkey, sendConfig);
             assert.notEqual(verificationContractAddress, "0x0000000000000000000000000000000000000000");
         });
 
-        it(`Should return column data to owner.`, async () => {
+        it(`Should return field data to owner.`, async () => {
             let verificationContract = await BaseVerification.at(verificationContractAddress);
-            let data = await verificationContract.getData.call({ "from": verificatorAddress });
+            let data = await verificationContract.getData.call({ "from": attestationPartyAddress });
             
             let adapter = await AccountStorageAdapter.deployed();
-            let accountData = await getAccountFieldLastMainData(adapter, accountAddress, columnName);
+            let accountData = await getAccountFieldLastMainData(adapter, accountAddress, fieldName);
             assert.deepEqual(data, accountData);
         });
         
-        it(`Should set verification ${columnName} result`, async () => {
+        it(`Should set verification ${fieldName} result`, async () => {
             let verificationContract = await BaseVerification.at(verificationContractAddress);
-            await verificationContract.setVerificationResult(true, { "from": verificatorAddress });
+            await verificationContract.setVerificationResult(true, { "from": attestationPartyAddress });
         });
         
         it(`Should get verification status. Status must be "Verified"(1)`, async () => {
@@ -90,10 +89,10 @@ contract("Verification", function(accounts) {
         await web3.personal.unlockAccount(relyingPartyConfig.address, relyingPartyConfig.password);
     });
     
-    verificationTests("createEmailVerification", accountConsts.emailColumnName, kimlicConfig.address, uuidv4(), { "from": kimlicConfig.address });
+    verificationTests("createEmailVerification", accountConsts.emailFieldName, kimlicConfig.address, uuidv4(), { "from": kimlicConfig.address });
 
-    verificationTests("createPhoneVerification", accountConsts.phoneColumnName, kimlicConfig.address, uuidv4(), { "from": kimlicConfig.address });
+    verificationTests("createPhoneVerification", accountConsts.phoneFieldName, kimlicConfig.address, uuidv4(), { "from": kimlicConfig.address });
     
-    verificationTests("createDocumentVerification", accountConsts.documentsColumnName, veriffConfig.address, uuidv4(), { "from": relyingPartyConfig.address });
+    verificationTests("createDocumentVerification", accountConsts.documentsFieldName, veriffConfig.address, uuidv4(), { "from": relyingPartyConfig.address });
     
 });

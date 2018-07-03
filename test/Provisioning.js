@@ -43,13 +43,13 @@ contract("Provisioning", function(accounts) {
     
     let provisioningContractkey = uuidv4();
     let verificationContractkey = uuidv4();
-    let columnName = accountConsts.emailColumnName;
+    let fieldName = accountConsts.phoneFieldName;
     it("init account with verified data", async () => {
         let adapter = await AccountStorageAdapter.deployed();
-        await addAccountData(adapter, accountAddress, accountConsts.emailValue, columnName);
+        await addAccountData(adapter, accountAddress, accountConsts.phoneValue + "ProvisioningTest", fieldName);
 
         let verificationContractFactory = await VerificationContractFactory.deployed();
-        await verificationContractFactory.createEmailVerification(accountAddress, kimlicConfig.address,
+        await verificationContractFactory.createPhoneVerification(accountAddress, kimlicConfig.address,
             verificationContractkey, kimlicSendConfig);
         let verificationContractAddress =  await verificationContractFactory.getVerificationContract.call(verificationContractkey, kimlicSendConfig);
         let verificationContract = await BaseVerification.at(verificationContractAddress);
@@ -59,7 +59,7 @@ contract("Provisioning", function(accounts) {
 
     it(`Should create provisioning contract`, async () => {
         let provisioningContractFactory = await ProvisioningContractFactory.deployed();
-        await provisioningContractFactory.createProvisioningContract(accountAddress, columnName, provisioningContractkey, relyingPartySendConfig);
+        await provisioningContractFactory.createProvisioningContract(accountAddress, fieldName, provisioningContractkey, relyingPartySendConfig);
     });
     
     var provisioningContractAddress;
@@ -74,13 +74,13 @@ contract("Provisioning", function(accounts) {
         await provisioningContractFactory.setDataProvidedStatus(relyingPartySendConfig);
     });
 
-    it(`Should return column data to owner.`, async () => {
+    it(`Should return field data to owner.`, async () => {
         let provisioningContractFactory = await ProvisioningContract.at(provisioningContractAddress);
         let data = await provisioningContractFactory.getData.call(relyingPartySendConfig, relyingPartySendConfig);
         
         let adapter = await AccountStorageAdapter.deployed();
-        let accountMainData = [ await getAccountFieldLastMainData(adapter, accountAddress, columnName, kimlicSendConfig) ];
-        let accountVerificationData = await getAccountFieldLastVerificationData(adapter, accountAddress, columnName, kimlicSendConfig);
+        let accountMainData = [ await getAccountFieldLastMainData(adapter, accountAddress, fieldName, kimlicSendConfig) ];
+        let accountVerificationData = await getAccountFieldLastVerificationData(adapter, accountAddress, fieldName, kimlicSendConfig);
         let accountData = accountMainData.concat(accountVerificationData);
         assert.deepEqual(data, accountData);
     });

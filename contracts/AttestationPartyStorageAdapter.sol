@@ -15,28 +15,28 @@ contract AttestationPartyStorageAdapter is BasePartyStorageAdapter {
         
     }
 
-    function addAccessToFieldVerification(address party, string columnName) public {
-        require(getContext().getAccountStorageAdapter().isAllowedColumnName(columnName));
+    function addAccessToFieldVerification(address party, string fieldName) public {
+        require(getContext().getAccountStorageAdapter().isAllowedFieldName(fieldName));
 
         AttestationPartyStorage storageAdapter = AttestationPartyStorage(getStorage());
-        storageAdapter.setBool(getAllowanceKey(party, columnName), true);
+        storageAdapter.setBool(getAllowanceKey(party, fieldName), true);
     }
 
-    function getIsFieldVerificationAllowed(address party, string columnName) public view returns(bool) {
-        require(getContext().getAccountStorageAdapter().isAllowedColumnName(columnName));
+    function getIsFieldVerificationAllowed(address party, string fieldName) public view returns(bool) {
+        require(getContext().getAccountStorageAdapter().isAllowedFieldName(fieldName));
 
         AttestationPartyStorage storageAdapter = AttestationPartyStorage(getStorage());
-        return storageAdapter.getBool(getAllowanceKey(party, columnName));
+        return storageAdapter.getBool(getAllowanceKey(party, fieldName));
     }
 
-    function removeAccessToFieldVerification(address party, string columnName) public {
+    function removeAccessToFieldVerification(address party, string fieldName) public {
         AttestationPartyStorage storageAdapter = AttestationPartyStorage(getStorage());
-        storageAdapter.deleteBool(getAllowanceKey(party, columnName));
+        storageAdapter.deleteBool(getAllowanceKey(party, fieldName));
     }
 
     /// internal methods ///
-    function getAllowanceKey(address party, string columnName) internal pure returns(bytes32) {
-        return keccak256(abi.encode(party, accessKeyPart, columnName));
+    function getAllowanceKey(address party, string fieldName) internal pure returns(bytes32) {
+        return keccak256(abi.encode(party, accessKeyPart, fieldName));
     }
 
     function getStorage() view internal returns (BaseStorage) {

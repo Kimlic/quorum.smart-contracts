@@ -70,12 +70,12 @@ contract KimlicContractsContext is Ownable {
         verificationContractFactory = VerificationContractFactory(_storage.getAddress(verificationContractFactoryKey));
     }
 
-    function getProvisioningPriceList() public view returns(PriceList provisioningPrice) {
-        provisioningPrice =  PriceList(_storage.getAddress(provisioningPriceKey));
+    function getProvisioningPriceList() public view returns(PriceList provisioningPriceList) {
+        provisioningPriceList = PriceList(_storage.getAddress(provisioningPriceKey));
     }
 
     function getVerificationPriceList() public view returns(PriceList verificationPriceList) {
-        verificationPriceList =  PriceList(_storage.getAddress(verificationPriceListKey));
+        verificationPriceList = PriceList(_storage.getAddress(verificationPriceListKey));
     }
 
     function getProvisioningContractFactory() public view returns(ProvisioningContractFactory provisioningContractFactory) {
@@ -124,8 +124,8 @@ contract KimlicContractsContext is Ownable {
         _storage.setAddress(verificationContractFactoryKey, verificationContractFactoryAddress);
     }
 
-    function setProvisioningPriceList(address provisioningPriceAddress) public onlyOwner() {
-        _storage.setAddress(provisioningPriceKey, provisioningPriceAddress);
+    function setProvisioningPriceList(address provisioningPriceListAddress) public onlyOwner() {
+        _storage.setAddress(provisioningPriceKey, provisioningPriceListAddress);
     }
 
     function setVerificationPriceList(address verificationPriceListAddress) public onlyOwner() {
