@@ -53,8 +53,8 @@ module.exports = function(deployer, network, accounts) {
     let accountStorageAdapterInstance;
     let verificationPriceListInstance;
 
-    let accountColumns = [
-        "identity",//TODO probably we dont need this column anymore
+    let accountFields = [
+        "identity",//TODO probably we dont need this field anymore
         "email",
         "phone",
         "documents.id_card",
@@ -63,7 +63,7 @@ module.exports = function(deployer, network, accounts) {
         "documents.residence_permit_card",
         "addresses.billing",
         "addresses.living",
-        "device"//TODO probably we dont need this column anymore
+        "device"//TODO probably we dont need this field anymore
     ]
 
     var deployConfig = {
@@ -144,10 +144,10 @@ module.exports = function(deployer, network, accounts) {
         savePartiesConfig(partiesConfig);
     });
 
-    let setupAPAccessToFieldVerification = async (apAddress, allowedColumns) => {
+    let setupAPAccessToFieldVerification = async (apAddress, allowedFields) => {
         var adapter = await AttestationPartyStorageAdapter.deployed();
-        allowedColumns.forEach(columnName => {
-            adapter.addAccessToFieldVerification(apAddress, columnName);
+        allowedFields.forEach(fieldName => {
+            adapter.addAccessToFieldVerification(apAddress, fieldName);
         });
     };
 
@@ -155,9 +155,9 @@ module.exports = function(deployer, network, accounts) {
 
         console.log(getFormatedConsoleLable("Setup account storage adapter instance:"));
 
-        for (let i = 0; i < accountColumns.length; i++) {            
-            console.log(`Add allowed column name "${accountColumns[i]}"`);
-            await accountStorageAdapterInstance.addAllowedColumnName(accountColumns[i]);
+        for (let i = 0; i < accountFields.length; i++) {            
+            console.log(`Add allowed field name "${accountFields[i]}"`);
+            await accountStorageAdapterInstance.addAllowedFieldName(accountFields[i]);
         }
     };
 
@@ -243,10 +243,10 @@ module.exports = function(deployer, network, accounts) {
     let setupPriceListInstance = async (instance, contractCaption) => {
         console.log(getFormatedConsoleLable(`setup ${contractCaption}`));
 
-        for (let i = 0; i < accountColumns.length; i++) {
+        for (let i = 0; i < accountFields.length; i++) {
             let price = 4 * Math.floor(1 + Math.random() * 5);
-            console.log(`"${accountColumns[i]}" price = ${price} tokens`); 
-            await instance.setPrice(accountColumns[i], price, deployConfig);
+            console.log(`"${accountFields[i]}" price = ${price} tokens`); 
+            await instance.setPrice(accountFields[i], price, deployConfig);
         }
     };
 
