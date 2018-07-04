@@ -11,7 +11,7 @@ import "./BaseVerification.sol";
 contract AccountStorageAdapter is Ownable, WithKimlicContext {
 
     /// public attributes ///
-    mapping(string=>bool) allowedColumnNames;
+    mapping(string=>bool) allowedFieldNames;
 
     /// private attributes ///
     string private constant metaDataKey = "metaData";
@@ -27,16 +27,16 @@ contract AccountStorageAdapter is Ownable, WithKimlicContext {
 
     /// public methods ///
 
-    function addAllowedColumnName(string columnName) public onlyOwner() {
-        allowedColumnNames[columnName] = true;
+    function addAllowedFieldName(string fieldName) public onlyOwner() {
+        allowedFieldNames[fieldName] = true;
     }
 
-    function removeAllowedColumnName(string columnName) public onlyOwner() {
-        delete allowedColumnNames[columnName];
+    function removeAllowedFieldName(string fieldName) public onlyOwner() {
+        delete allowedFieldNames[fieldName];
     }
 
-    function isAllowedColumnName(string columnName) public view returns(bool) {
-        return allowedColumnNames[columnName];
+    function isAllowedFieldName(string fieldName) public view returns(bool) {
+        return allowedFieldNames[fieldName];
     }
 
     function setAccountFieldMainData(string data, string accountFieldName) public {
@@ -203,7 +203,7 @@ contract AccountStorageAdapter is Ownable, WithKimlicContext {
     }
 
     modifier checkIsColmnNameAllowed(string name) {
-        require(allowedColumnNames[name], "Provided column name is not allowed");
+        require(allowedFieldNames[name], "Provided field name is not allowed");
         _;
     }
 }

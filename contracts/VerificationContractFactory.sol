@@ -51,7 +51,7 @@ contract VerificationContractFactory is WithKimlicContext {
 
         require(
             context.getAttestationPartyStorageAdapter().getIsFieldVerificationAllowed(attestationPartyAddress, accountFieldName),
-            "provided attestation party have not access to this column verification");
+            "provided attestation party have not access to this field verification");
 
         uint rewardAmount = context.getVerificationPriceList().getPrice(accountFieldName);
 
