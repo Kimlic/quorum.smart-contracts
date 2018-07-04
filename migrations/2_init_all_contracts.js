@@ -36,9 +36,9 @@ module.exports = function(deployer, network, accounts) {
             "params": [mainAccount.address, mainAccount.password],
             "id": 1
         };
-        console.log("send unlock request " + JSON.stringify(unlockAccountRequest));
+        console.log("send unlock request \n" + JSON.stringify(unlockAccountRequest, null, 4));
         var response = deployer.provider.send(unlockAccountRequest);
-        console.log("response: " + JSON.stringify(response));
+        console.log("response: \n" + JSON.stringify(response, null, 4));
     
     } else {
         mainAccount.address = accounts[0];
@@ -258,7 +258,7 @@ module.exports = function(deployer, network, accounts) {
 
     let savePartiesConfig = (config) => {
         console.log(`Saving parties config into file "${partiesConfigFileName}"`);
-        fs.writeFileSync(partiesConfigFileName, JSON.stringify(config));
+        fs.writeFileSync(partiesConfigFileName, JSON.stringify(config, null, 4));
     }
     
 

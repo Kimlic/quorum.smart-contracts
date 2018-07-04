@@ -25,6 +25,6 @@ module.exports = async function(callback) {
         createdUsers = JSON.parse(fs.readFileSync(createdUsersFileName)) || [];
     }
     createdUsers.push({address: address, password: password});
-    fs.writeFileSync(createdUsersFileName, JSON.stringify(createdUsers));
+    fs.writeFileSync(createdUsersFileName, JSON.stringify(createdUsers, null, 4));
     callback.call();
 }
