@@ -22,9 +22,9 @@ module.exports = function(deployer, network, accounts) {
         partiesConfig[kimlicName] = await setupParty(kimlicTokenInstance, kimlicName, kimlicName + "p@ssw0rd");
         setupAPAccessToFieldVerification(partiesConfig[kimlicName].address, ["email", "phone"])
 
-        let relyingPartyNme = "FirstRelyingParty";
-        partiesConfig[relyingPartyNme] = await setupParty(kimlicTokenInstance, relyingPartyNme, relyingPartyNme + "p@ssw0rd");
-
+        let relyingPartyName = "FirstRelyingParty";
+        partiesConfig[relyingPartyName] = await setupParty(kimlicTokenInstance, relyingPartyName, relyingPartyName + "p@ssw0rd");
+        console.log(JSON.stringify(partiesConfig, null, 4));
         savePartiesConfig(partiesConfig);
     });
     
@@ -43,7 +43,7 @@ module.exports = function(deployer, network, accounts) {
         });
     };
 
-    let setupParty = async (kimlicTokenInstance, partiesConfig, name, password) => {
+    let setupParty = async (kimlicTokenInstance, name, password) => {
         let address = web3.personal.newAccount(password);
         console.log(`Created new "${name}" party address: "${address}", password: "${password}"`);
         web3.personal.unlockAccount(address, password);
@@ -69,8 +69,6 @@ module.exports = function(deployer, network, accounts) {
 
         let provisioningAllowance = await kimlicTokenInstance.allowance.call(address, ProvisioningContractFactory.address, { from: address });
         console.log(`Allowance from "${address}" to provisioning contract factory at address "${ProvisioningContractFactory.address}" - ${provisioningAllowance}`);
-
-        partiesConfig[name] = { address: address, password: password };
 
         return { address: address, password: password };
     };
