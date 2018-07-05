@@ -48,7 +48,7 @@ contract ProvisioningContract is Ownable, WithKimlicContext {
     function isVerificationFinished() public view onlyOwner() returns(bool) {
         AccountStorageAdapter adapter = getContext().getAccountStorageAdapter();
 
-        address verificationContractAddress = adapter.getAccountDataVerificationContractAddress(account, _fieldName, _index);
+        address verificationContractAddress = adapter.getAccountFieldVerificationContractAddress(account, _fieldName, _index);
 
         if (verificationContractAddress != address(0)) {
             BaseVerification verificationContract = BaseVerification(verificationContractAddress);
@@ -81,7 +81,7 @@ contract ProvisioningContract is Ownable, WithKimlicContext {
         KimlicContractsContext context = getContext();
 
         address verificationContractAddress = context.getAccountStorageAdapter()
-            .getAccountDataVerificationContractAddress(account, _fieldName, _index);
+            .getAccountFieldVerificationContractAddress(account, _fieldName, _index);
 
         BaseVerification verificationContract = BaseVerification(verificationContractAddress);
         address coOwner = verificationContract.coOwner();

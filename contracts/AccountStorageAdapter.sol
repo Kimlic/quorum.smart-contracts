@@ -47,10 +47,10 @@ contract AccountStorageAdapter is Ownable, WithKimlicContext {
         public view returns(address verificationContract) {
         
         uint index = getFieldHistoryLength(accountAddress, accountFieldName);
-        return getAccountDataVerificationContractAddress(accountAddress, accountFieldName, index);
+        return getAccountFieldVerificationContractAddress(accountAddress, accountFieldName, index);
     }
 
-    function getAccountDataVerificationContractAddress(address accountAddress, string accountFieldName, uint index)
+    function getAccountFieldVerificationContractAddress(address accountAddress, string accountFieldName, uint index)
         public
         view
         checkIsColmnNameAllowed(accountFieldName)
@@ -91,10 +91,10 @@ contract AccountStorageAdapter is Ownable, WithKimlicContext {
         public
         view
         //checkIsColmnNameAllowed(accountFieldName)
-        //checkReadingDataRestrictions(accountAddress)// removed cause of same getAccountDataVerificationContractAddress restrictions
+        //checkReadingDataRestrictions(accountAddress)// removed cause of same getAccountFieldVerificationContractAddress restrictions
         returns(BaseVerification.Status verificationStatus, address verificationContractAddress, uint256 verifiedAt) {
 
-        verificationContractAddress = getAccountDataVerificationContractAddress(accountAddress, accountFieldName, index);
+        verificationContractAddress = getAccountFieldVerificationContractAddress(accountAddress, accountFieldName, index);
         BaseVerification verificationContract = BaseVerification(verificationContractAddress);
         
         verificationStatus = verificationContract.status();
@@ -110,10 +110,10 @@ contract AccountStorageAdapter is Ownable, WithKimlicContext {
 
     function getIsFieldVerificationContractExistAndNotCanceled(address accountAddress, string accountFieldName, uint index)
         //checkIsColmnNameAllowed(accountFieldName)
-        //checkReadingDataRestrictions(accountAddress)// removed cause of same getAccountDataVerificationContractAddress restrictions
+        //checkReadingDataRestrictions(accountAddress)// removed cause of same getAccountFieldVerificationContractAddress restrictions
         public view returns(bool result) {
         
-        address verificationContractAddress = getAccountDataVerificationContractAddress(accountAddress, accountFieldName, index);
+        address verificationContractAddress = getAccountFieldVerificationContractAddress(accountAddress, accountFieldName, index);
         if (verificationContractAddress != address(0)) {
             BaseVerification verificationContract = BaseVerification(verificationContractAddress);
             BaseVerification.Status verificationStatus = verificationContract.status();
