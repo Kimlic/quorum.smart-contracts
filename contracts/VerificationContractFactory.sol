@@ -45,9 +45,9 @@ contract VerificationContractFactory is WithKimlicContext {
         uint dataIndex = accountStorageAdapter.getFieldHistoryLength(account, accountFieldName);
         require(dataIndex > 0, "Data is empty");
 
-        address verificationContractAddress = context.getAccountStorageAdapter()
-            .getAccountDataVerificationContractAddress(account, accountFieldName, dataIndex);
-        require(verificationContractAddress == address(0), "Verification contract for this data already created");
+        bool verificationContractAlreadyExist = context.getAccountStorageAdapter()
+            .getIsFieldVerificationContractExistAndNotCanceled(account, accountFieldName, dataIndex);
+        require(!verificationContractAlreadyExist, "Verification contract for this data already created");
 
         require(
             context.getAttestationPartyStorageAdapter().getIsFieldVerificationAllowed(attestationPartyAddress, accountFieldName),

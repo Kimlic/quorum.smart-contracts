@@ -43,7 +43,7 @@ contract AccountStorageAdapter is Ownable, WithKimlicContext {
         updateAccountField(msg.sender, data, accountFieldName);
     }
 
-    function getLastAccountDataVerificationContractAddress(address accountAddress, string accountFieldName)
+    function getAccountFieldLastVerificationContractAddress(address accountAddress, string accountFieldName)
         public view returns(address verificationContract) {
         
         uint index = getFieldHistoryLength(accountAddress, accountFieldName);
@@ -90,18 +90,35 @@ contract AccountStorageAdapter is Ownable, WithKimlicContext {
     function getAccountFieldVerificationData(address accountAddress, string accountFieldName, uint index)
         public
         view
-        checkIsColmnNameAllowed(accountFieldName)
-        checkReadingDataRestrictions(accountAddress)
+        //checkIsColmnNameAllowed(accountFieldName)
+        //checkReadingDataRestrictions(accountAddress)// removed cause of same getAccountDataVerificationContractAddress restrictions
         returns(BaseVerification.Status verificationStatus, address verificationContractAddress, uint256 verifiedAt) {
 
-
-        AccountStorage accountStorage = getContext().getAccountStorage();
-        bytes memory verificationContractKey = abi.encode(accountAddress, accountFieldName, index, metaVerificationContractKey);
-        verificationContractAddress = accountStorage.getAddress(keccak256(verificationContractKey));
+        verificationContractAddress = getAccountDataVerificationContractAddress(accountAddress, accountFieldName, index);
         BaseVerification verificationContract = BaseVerification(verificationContractAddress);
         
         verificationStatus = verificationContract.status();
         verifiedAt = verificationContract.verifiedAt();
+    }
+
+    function getIsFieldLastVerificationContractExistAndNotCanceled(address accountAddress, string accountFieldName) 
+        public view returns(bool result) {
+        
+        uint index = getFieldHistoryLength(accountAddress, accountFieldName);
+        return getIsFieldVerificationContractExistAndNotCanceled(accountAddress, accountFieldName, index);
+    }
+
+    function getIsFieldVerificationContractExistAndNotCanceled(address accountAddress, string accountFieldName, uint index)
+        //checkIsColmnNameAllowed(accountFieldName)
+        //checkReadingDataRestrictions(accountAddress)// removed cause of same getAccountDataVerificationContractAddress restrictions
+        public view returns(bool result) {
+        
+        address verificationContractAddress = getAccountDataVerificationContractAddress(accountAddress, accountFieldName, index);
+        if (verificationContractAddress != address(0)) {
+            BaseVerification verificationContract = BaseVerification(verificationContractAddress);
+            BaseVerification.Status verificationStatus = verificationContract.status();
+            result = verificationStatus != BaseVerification.Status.Canceled;
+        }
     }
 
     function setAccountFieldVerificationContractAddress(
