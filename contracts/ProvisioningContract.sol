@@ -44,9 +44,21 @@ contract ProvisioningContract is Ownable, WithKimlicContext {
     }
 
     /// public methods ///
+
+    function isVerificationFinished() public view onlyOwner() returns(bool) {
+        AccountStorageAdapter adapter = getContext().getAccountStorageAdapter();
+
+        address verificationContractAddress = adapter.getAccountDataVerificationContractAddress(account, _fieldName, _index);
+
+        if (verificationContractAddress != address(0)) {
+            BaseVerification verificationContract = BaseVerification(verificationContractAddress);
+            return verificationContract.status() == BaseVerification.Status.Verified ||
+                verificationContract.status() == BaseVerification.Status.Unverified;
+        }
+    }
+
     function setDataProvidedStatus() public {
         status = Status.DataProvided;
-
         sendRewards();
     }
     

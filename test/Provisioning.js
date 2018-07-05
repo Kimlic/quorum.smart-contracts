@@ -69,6 +69,12 @@ contract("Provisioning", function(accounts) {
         assert.notEqual(provisioningContractAddress, "0x0000000000000000000000000000000000000000");
     });
 
+    it(`Should get isVerificationFinished = true`, async () => {
+        let provisioningContractFactory = await ProvisioningContract.at(provisioningContractAddress);
+        let isVerificationFinished = await provisioningContractFactory.isVerificationFinished.call(relyingPartySendConfig);
+        assert.equal(isVerificationFinished, true);
+    });
+
     it(`Should set provisioning result`, async () => {
         let provisioningContractFactory = await ProvisioningContract.at(provisioningContractAddress);
         await provisioningContractFactory.setDataProvidedStatus(relyingPartySendConfig);

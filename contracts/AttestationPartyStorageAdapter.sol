@@ -10,12 +10,13 @@ contract AttestationPartyStorageAdapter is BasePartyStorageAdapter {
 
     /// private attributes ///
     string private constant accessKeyPart = "IsVerificaionAllowed";
+    
     /// constructors ///
     constructor (address contextStorage) public BasePartyStorageAdapter(contextStorage) {
         
     }
 
-    function addAccessToFieldVerification(address party, string fieldName) public {
+    function addAccessToFieldVerification(address party, string fieldName) public {//TODO access restrictions
         require(getContext().getAccountStorageAdapter().isAllowedFieldName(fieldName));
 
         AttestationPartyStorage storageAdapter = AttestationPartyStorage(getStorage());
@@ -29,7 +30,7 @@ contract AttestationPartyStorageAdapter is BasePartyStorageAdapter {
         return storageAdapter.getBool(getAllowanceKey(party, fieldName));
     }
 
-    function removeAccessToFieldVerification(address party, string fieldName) public {
+    function removeAccessToFieldVerification(address party, string fieldName) public {//TODO access restrictions
         AttestationPartyStorage storageAdapter = AttestationPartyStorage(getStorage());
         storageAdapter.deleteBool(getAllowanceKey(party, fieldName));
     }
