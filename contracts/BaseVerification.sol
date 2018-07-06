@@ -50,6 +50,10 @@ contract BaseVerification is Ownable, WithKimlicContext {
         token.transfer(owner, _rewardAmount);
 
         verifiedAt = block.timestamp;
+
+        if (verificationResult == true) {
+            context.getRewardingContract().checkMilestones(accountAddress, accountFieldName);
+        }
     }
 
     function getData() view public onlyOwner() returns (string data) {
@@ -58,9 +62,12 @@ contract BaseVerification is Ownable, WithKimlicContext {
 
     function withdraw() public onlyOwner() {
         require(block.timestamp >= tokensUnlockAt && status == Status.Created);
+        KimlicContractsContext context = getContext();
 
         status = Status.Canceled;
         KimlicToken kimlicToken = getContext().getKimlicToken();
         kimlicToken.transfer(owner, kimlicToken.balanceOf(address(this)));
+        
+        context.getAccountStorageAdapter().setFieldVerificationContractAddress(accountAddress, accountFieldName, address(0));
     }
 }

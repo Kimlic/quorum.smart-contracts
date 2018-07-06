@@ -21,3 +21,5 @@ build
 PartiesConfig.json
 output.txt
 CreatedUsers.json
+
+.idea

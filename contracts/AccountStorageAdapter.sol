@@ -105,20 +105,16 @@ contract AccountStorageAdapter is Ownable, WithKimlicContext {
         public view returns(bool result) {
         
         uint index = getFieldHistoryLength(accountAddress, accountFieldName);
-        return getIsFieldVerificationContractExistAndNotCanceled(accountAddress, accountFieldName, index);
+        return getIsFieldVerificationContractExist(accountAddress, accountFieldName, index);
     }
 
-    function getIsFieldVerificationContractExistAndNotCanceled(address accountAddress, string accountFieldName, uint index)
+    function getIsFieldVerificationContractExist(address accountAddress, string accountFieldName, uint index)
         //checkIsColmnNameAllowed(accountFieldName)
         //checkReadingDataRestrictions(accountAddress)// removed cause of same getFieldVerificationContractAddress restrictions
         public view returns(bool result) {
         
         address verificationContractAddress = getFieldVerificationContractAddress(accountAddress, accountFieldName, index);
-        if (verificationContractAddress != address(0)) {
-            BaseVerification verificationContract = BaseVerification(verificationContractAddress);
-            BaseVerification.Status verificationStatus = verificationContract.status();
-            result = verificationStatus != BaseVerification.Status.Canceled;
-        }
+        return verificationContractAddress != address(0);
     }
 
     function setFieldVerificationContractAddress(
@@ -134,14 +130,11 @@ contract AccountStorageAdapter is Ownable, WithKimlicContext {
         checkIsColmnNameAllowed(accountFieldName)
         verificationContractOrOwnerOnly() {
 
-        KimlicContractsContext context = getContext();
-        
+        KimlicContractsContext context = getContext();        
         AccountStorage accountStorage = context.getAccountStorage();
 
         bytes memory verificationContractKey = abi.encode(accountAddress, accountFieldName, index, metaVerificationContractKey);
         accountStorage.setAddress(keccak256(verificationContractKey), verificationContractAddress);
-
-        context.getRewardingContract().checkMilestones(accountAddress, accountFieldName);
     }
 
     function getFieldHistoryLength(address accountAddress, string accountFieldName)

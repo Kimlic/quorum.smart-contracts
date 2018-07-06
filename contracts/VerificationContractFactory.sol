@@ -47,7 +47,7 @@ contract VerificationContractFactory is WithKimlicContext {
         require(dataIndex > 0, "Data is empty");
 
         bool verificationContractAlreadyExist = context.getAccountStorageAdapter()
-            .getIsFieldVerificationContractExistAndNotCanceled(account, accountFieldName, dataIndex);
+            .getIsFieldVerificationContractExist(account, accountFieldName, dataIndex);
         require(!verificationContractAlreadyExist, "Verification contract for this data already created");
 
         require(

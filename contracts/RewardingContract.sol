@@ -31,6 +31,7 @@ contract RewardingContract is Ownable, WithKimlicContext {
 
 
     function checkMilestones(address accountAddress, string accountFieldName) public {
+        require(getContext().getVerificationContractFactory().createdContracts(msg.sender));
         if (isEqualStrings(accountFieldName, email) ||
             isEqualStrings(accountFieldName, phone)) {
             
