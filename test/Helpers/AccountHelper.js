@@ -14,15 +14,15 @@ let accountConsts = {
 }
 
 let addAccountData = async function(adapter, address, fieldData, fieldName) {
-    return adapter.setAccountFieldMainData(fieldData, fieldName, { from: address });
+    return adapter.setFieldMainData(fieldData, fieldName, { from: address });
 };
 
 let getAccountFieldLastMainData = async function(adapter, address, fieldName) {
-    return adapter.getAccountFieldLastMainData.call(address, fieldName, { from: address });
+    return adapter.getFieldLastMainData.call(address, fieldName, { from: address });
 };
 
 let getAccountFieldLastVerificationData = async function(adapter, address, fieldName) {
-    return adapter.getAccountFieldLastVerificationData.call(address, fieldName, { from: address });
+    return adapter.getFieldLastVerificationData.call(address, fieldName, { from: address });
 };
 
 let getAccountLastDataIndex = async function(adapter, address, fieldName) {

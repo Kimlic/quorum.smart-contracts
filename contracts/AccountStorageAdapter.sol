@@ -39,18 +39,18 @@ contract AccountStorageAdapter is Ownable, WithKimlicContext {
         return allowedFieldNames[fieldName];
     }
 
-    function setAccountFieldMainData(string data, string accountFieldName) public {
+    function setFieldMainData(string data, string accountFieldName) public {
         updateAccountField(msg.sender, data, accountFieldName);
     }
 
-    function getAccountFieldLastVerificationContractAddress(address accountAddress, string accountFieldName)
+    function getFieldLastVerificationContractAddress(address accountAddress, string accountFieldName)
         public view returns(address verificationContract) {
         
         uint index = getFieldHistoryLength(accountAddress, accountFieldName);
-        return getAccountFieldVerificationContractAddress(accountAddress, accountFieldName, index);
+        return getFieldVerificationContractAddress(accountAddress, accountFieldName, index);
     }
 
-    function getAccountFieldVerificationContractAddress(address accountAddress, string accountFieldName, uint index)
+    function getFieldVerificationContractAddress(address accountAddress, string accountFieldName, uint index)
         public
         view
         checkIsColmnNameAllowed(accountFieldName)
@@ -61,14 +61,14 @@ contract AccountStorageAdapter is Ownable, WithKimlicContext {
         verificationContract = getContext().getAccountStorage().getAddress(keccak256(verificationContractKey));
     }
 
-    function getAccountFieldLastMainData(address accountAddress, string accountFieldName)
+    function getFieldLastMainData(address accountAddress, string accountFieldName)
         public view returns(string data) {
 
         uint index = getFieldHistoryLength(accountAddress, accountFieldName);
-        return getAccountFieldMainData(accountAddress, accountFieldName, index);
+        return getFieldMainData(accountAddress, accountFieldName, index);
     }
 
-    function getAccountFieldMainData(address accountAddress, string accountFieldName, uint index)
+    function getFieldMainData(address accountAddress, string accountFieldName, uint index)
         public
         view
         checkReadingDataRestrictions(accountAddress)
@@ -80,21 +80,21 @@ contract AccountStorageAdapter is Ownable, WithKimlicContext {
         data = accountStorage.getString(keccak256(dataKey));
     }
 
-    function getAccountFieldLastVerificationData(address accountAddress, string accountFieldName)
+    function getFieldLastVerificationData(address accountAddress, string accountFieldName)
         public view returns(BaseVerification.Status verificationStatus, address verificationContractAddress, uint256 verifiedAt) {
 
         uint index = getFieldHistoryLength(accountAddress, accountFieldName);
-        return getAccountFieldVerificationData(accountAddress, accountFieldName, index);
+        return getFieldVerificationData(accountAddress, accountFieldName, index);
     }
 
-    function getAccountFieldVerificationData(address accountAddress, string accountFieldName, uint index)
+    function getFieldVerificationData(address accountAddress, string accountFieldName, uint index)
         public
         view
         //checkIsColmnNameAllowed(accountFieldName)
-        //checkReadingDataRestrictions(accountAddress)// removed cause of same getAccountFieldVerificationContractAddress restrictions
+        //checkReadingDataRestrictions(accountAddress)// removed cause of same getFieldVerificationContractAddress restrictions
         returns(BaseVerification.Status verificationStatus, address verificationContractAddress, uint256 verifiedAt) {
 
-        verificationContractAddress = getAccountFieldVerificationContractAddress(accountAddress, accountFieldName, index);
+        verificationContractAddress = getFieldVerificationContractAddress(accountAddress, accountFieldName, index);
         BaseVerification verificationContract = BaseVerification(verificationContractAddress);
         
         verificationStatus = verificationContract.status();
@@ -110,10 +110,10 @@ contract AccountStorageAdapter is Ownable, WithKimlicContext {
 
     function getIsFieldVerificationContractExistAndNotCanceled(address accountAddress, string accountFieldName, uint index)
         //checkIsColmnNameAllowed(accountFieldName)
-        //checkReadingDataRestrictions(accountAddress)// removed cause of same getAccountFieldVerificationContractAddress restrictions
+        //checkReadingDataRestrictions(accountAddress)// removed cause of same getFieldVerificationContractAddress restrictions
         public view returns(bool result) {
         
-        address verificationContractAddress = getAccountFieldVerificationContractAddress(accountAddress, accountFieldName, index);
+        address verificationContractAddress = getFieldVerificationContractAddress(accountAddress, accountFieldName, index);
         if (verificationContractAddress != address(0)) {
             BaseVerification verificationContract = BaseVerification(verificationContractAddress);
             BaseVerification.Status verificationStatus = verificationContract.status();
@@ -121,14 +121,14 @@ contract AccountStorageAdapter is Ownable, WithKimlicContext {
         }
     }
 
-    function setAccountFieldVerificationContractAddress(
+    function setFieldVerificationContractAddress(
         address accountAddress, string accountFieldName, address verificationContractAddress) public {
 
         uint index = getFieldHistoryLength(accountAddress, accountFieldName);
-        setAccountFieldVerificationContractAddress(accountAddress, accountFieldName, index, verificationContractAddress);
+        setFieldVerificationContractAddress(accountAddress, accountFieldName, index, verificationContractAddress);
     }
 
-    function setAccountFieldVerificationContractAddress(
+    function setFieldVerificationContractAddress(
         address accountAddress, string accountFieldName, uint index, address verificationContractAddress) 
         public
         checkIsColmnNameAllowed(accountFieldName)

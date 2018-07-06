@@ -35,6 +35,7 @@ contract VerificationContractFactory is WithKimlicContext {
     function createDocumentVerification(address account, address attestationPartyAddress, string key) public {
         createBaseVerificationContract(account, attestationPartyAddress, key, "documents.id_card");
     }
+    
     //TODO add create methods for all account fields or make createBaseVerificationContract public and use it for all types.
 
     /// private methods ///
@@ -64,6 +65,6 @@ contract VerificationContractFactory is WithKimlicContext {
         contracts[key] = createdContractAddress;
         context.getKimlicToken().transferFrom(msg.sender, createdContractAddress, rewardAmount);
         
-        context.getAccountStorageAdapter().setAccountFieldVerificationContractAddress(account, accountFieldName, createdContractAddress);
+        context.getAccountStorageAdapter().setFieldVerificationContractAddress(account, accountFieldName, createdContractAddress);
     }
 }

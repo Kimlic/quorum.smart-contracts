@@ -53,7 +53,7 @@ contract BaseVerification is Ownable, WithKimlicContext {
     }
 
     function getData() view public onlyOwner() returns (string data) {
-        return getContext().getAccountStorageAdapter().getAccountFieldMainData(accountAddress, accountFieldName, dataIndex);
+        return getContext().getAccountStorageAdapter().getFieldMainData(accountAddress, accountFieldName, dataIndex);
     }
 
     function withdraw() public onlyOwner() {
