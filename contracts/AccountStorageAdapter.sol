@@ -40,7 +40,7 @@ contract AccountStorageAdapter is Ownable, WithKimlicContext {
     }
 
     function setFieldMainData(string data, string accountFieldName) public {
-        updateAccountField(msg.sender, data, accountFieldName);
+        updateField(msg.sender, data, accountFieldName);
     }
 
     function getFieldLastVerificationContractAddress(address accountAddress, string accountFieldName)
@@ -156,7 +156,7 @@ contract AccountStorageAdapter is Ownable, WithKimlicContext {
 
     /// private methods ///
 
-    function updateAccountField(address accountAddress, string data, string accountFieldName) private {
+    function updateField(address accountAddress, string data, string accountFieldName) private {
         
         require(!isEqualStrings(data, ""));
         uint index = getFieldHistoryLength(accountAddress, accountFieldName);
