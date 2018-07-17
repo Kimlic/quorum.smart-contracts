@@ -4,13 +4,12 @@ let ProvisioningContractFactory = artifacts.require("./ProvisioningContractFacto
 let { getDeployConfig, getFormatedConsoleLable } = require("./Helpers/MigrationHelper");
 
 module.exports = function(deployer, network, accounts) {
+    console.log(getFormatedConsoleLable("Setup provisioning contract factory instance:"));
+
     let deployConfig = getDeployConfig(deployer, network, accounts);
 
     deployer.then(async () => {
         let provisioningContractFactoryInstance = await ProvisioningContractFactory.deployed();
-
-        console.log(getFormatedConsoleLable("Setup provisioning contract factory instance:"));
-        
         let interests = {
             communityTokenWallet: 25,
             coOwner: 25,

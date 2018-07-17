@@ -7,6 +7,7 @@ let PriceList = artifacts.require("./PriceList.sol");
 let { getDeployConfig, getFormatedConsoleLable, emptyAddress, accountFields } = require("./Helpers/MigrationHelper");
 
 module.exports = function(deployer, network, accounts) {
+    console.log(getFormatedConsoleLable(`Setup pricelists`));
     let deployConfig = getDeployConfig(deployer, network, accounts);
 
     deployer.then(async () => {

@@ -5,6 +5,7 @@ let RewardingContract = artifacts.require("./RewardingContract.sol");
 let { getDeployConfig, getFormatedConsoleLable } = require("./Helpers/MigrationHelper");
 
 module.exports = function(deployer, network, accounts) {
+    console.log(getFormatedConsoleLable("Setup rewarding contract instance:"));
     let deployConfig = getDeployConfig(deployer, network, accounts);
 
     deployer.then(async () => {
@@ -14,7 +15,6 @@ module.exports = function(deployer, network, accounts) {
             mielstone1: 15,
             mielstone2: 25
         };
-        console.log(getFormatedConsoleLable("Setup rewarding contract instance:"));
         console.log(`set milestone 1 reward = ${rewards.mielstone1}`);
         await rewardingContractInstance.setMilestone1Reward(rewards.mielstone1, deployConfig);
         

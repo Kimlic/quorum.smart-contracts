@@ -16,13 +16,12 @@ let unlockAccount = (deployer, address, password) => {
 let getDeployConfig = (deployer, network, accounts) => {
     
     let mainAccount = getMainAccount(network);
-    if (mainAccount.address) {
-        unlockAccount(deployer, mainAccount.address, mainAccount.password);
-    } else {
-        mainAccount = { address: accounts[0] };
+    if (!mainAccount.address) {
+        mainAccount = { address: accounts[0], password: "" };
         console.log("Main account address in config.json account not found for this network.\n" +
             "Using default truffle account address.");
     }
+    unlockAccount(deployer, mainAccount.address, mainAccount.password);
     console.log(`Main account address: ${mainAccount.address}`);
 
     return  {

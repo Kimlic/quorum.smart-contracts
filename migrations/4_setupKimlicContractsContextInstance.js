@@ -16,12 +16,13 @@ let AttestationPartyStorage = artifacts.require("./AttestationPartyStorage.sol")
 let { getDeployConfig, getFormatedConsoleLable } = require("./Helpers/MigrationHelper");
 
 module.exports = function(deployer, network, accounts) {
+    console.log(getFormatedConsoleLable("Setup kimlic contracts context instance:"));
+    
     let deployConfig = getDeployConfig(deployer, network, accounts);
     var communityTokenWalletAddress = accounts[0];//TODO move to config
 
     deployer.then(async () => {
         let kimlicContractsContextInstance = await KimlicContractsContext.deployed();
-        console.log(getFormatedConsoleLable("Setup kimlic contracts context instance:"));
         
         console.log(`\nAccountStorageAddress = ${AccountStorage.address}`);
         await kimlicContractsContextInstance.setAccountStorage(AccountStorage.address, deployConfig);
@@ -43,6 +44,8 @@ module.exports = function(deployer, network, accounts) {
         
         console.log(`\nKimlicToken = ${KimlicToken.address}`);
         await kimlicContractsContextInstance.setKimlicToken(KimlicToken.address, deployConfig);
+        console.log("nKimlicToken address is: ", 
+            await kimlicContractsContextInstance.getKimlicToken(deployConfig));
         
         console.log(`\nVerificationContractFactory = ${VerificationContractFactory.address}`);
         await kimlicContractsContextInstance.setVerificationContractFactory(VerificationContractFactory.address, deployConfig);
@@ -50,10 +53,15 @@ module.exports = function(deployer, network, accounts) {
         let provisioningPriceListInstance = await deployer.deploy(PriceList, deployConfig);
         console.log(`\nProvisioningPriceList = ${provisioningPriceListInstance.address}`);
         await kimlicContractsContextInstance.setProvisioningPriceList(provisioningPriceListInstance.address, deployConfig);
+        console.log("ProvisioningPriceList address is: ", 
+            await kimlicContractsContextInstance.getProvisioningPriceList(deployConfig));
         
         let verificationPriceListInstance = await deployer.deploy(PriceList, deployConfig);
         console.log(`\nVerificationPriceList = ${verificationPriceListInstance.address}`);
         await kimlicContractsContextInstance.setVerificationPriceList(verificationPriceListInstance.address, deployConfig);
+        console.log("verificationPriceList address is: ", 
+            await kimlicContractsContextInstance.getVerificationPriceList(deployConfig));
+        
         
         console.log(`\nProvisioningContractFactory = ${ProvisioningContractFactory.address}`);
         await kimlicContractsContextInstance.setProvisioningContractFactory(ProvisioningContractFactory.address, deployConfig);
@@ -63,5 +71,6 @@ module.exports = function(deployer, network, accounts) {
         
         console.log(`\nRewardingContract = ${RewardingContract.address}`);
         await kimlicContractsContextInstance.setRewardingContract(RewardingContract.address, deployConfig);
+
     });
 };
