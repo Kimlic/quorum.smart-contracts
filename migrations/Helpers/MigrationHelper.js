@@ -5,7 +5,7 @@ let unlockAccount = (deployer, address, password) => {
     var unlockAccountRequest = {
         "jsonrpc": "2.0",
         "method": "personal_unlockAccount",
-        "params": [address, password],
+        "params": [address, password, 1000],
         "id": 1
     };
     console.log("send unlock request " + JSON.stringify(unlockAccountRequest));
@@ -35,7 +35,6 @@ let getFormatedConsoleLable = function(unformatedLable){
 };
 
 let accountFields = [
-    "identity",//TODO probably we dont need this field anymore
     "email",
     "phone",
     "documents.id_card",

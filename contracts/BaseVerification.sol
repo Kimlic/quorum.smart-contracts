@@ -11,7 +11,6 @@ contract BaseVerification is Ownable, WithKimlicContext {
     /// public attributes ///
     string public accountFieldName;
     address public coOwner;
-    Status public status;
     uint public dataIndex;
     address public attestationParty;
     address public accountAddress;
@@ -23,6 +22,7 @@ contract BaseVerification is Ownable, WithKimlicContext {
 
     /// private attributes ///
     uint internal _rewardAmount;//TODO make it public or remove
+    Status public _status;
 
     /// constructors ///
     constructor(
@@ -35,20 +35,20 @@ contract BaseVerification is Ownable, WithKimlicContext {
         attestationParty = attestationPartyAddress;
         accountFieldName = fieldName;
         _rewardAmount = rewardAmount;
+        _status = Status.Created;
     }
 
     /// public methods ///
     function setVerificationResult(bool verificationResult) public onlyOwner() {
-        require(status == Status.Created);
+        require(_status == Status.Created);
 
         KimlicContractsContext context = getContext();
         KimlicToken token = context.getKimlicToken();
         require(token.balanceOf(address(this)) == _rewardAmount);
-        
-        status = verificationResult? Status.Verified: Status.Unverified;
 
         token.transfer(owner, _rewardAmount);
 
+        _status = verificationResult? Status.Verified: Status.Unverified;
         verifiedAt = block.timestamp;
 
         if (verificationResult == true) {
@@ -61,13 +61,23 @@ contract BaseVerification is Ownable, WithKimlicContext {
     }
 
     function withdraw() public onlyOwner() {
-        require(block.timestamp >= tokensUnlockAt && status == Status.Created);
+        require(block.timestamp >= tokensUnlockAt && _status == Status.Created);
         KimlicContractsContext context = getContext();
 
-        status = Status.Canceled;
+        _status = Status.Canceled;
         KimlicToken kimlicToken = getContext().getKimlicToken();
         kimlicToken.transfer(owner, kimlicToken.balanceOf(address(this)));
         
         context.getAccountStorageAdapter().setFieldVerificationContractAddress(accountAddress, accountFieldName, address(0));
+    }
+
+    function getStatus() public view returns(Status) {
+        KimlicContractsContext context = getContext();
+        require(
+            msg.sender == address(context.getAccountStorageAdapter()) ||
+            msg.sender == owner ||
+            msg.sender == address(context.getRewardingContract()) ||
+            msg.sender == context.owner() );
+        return _status;
     }
 }

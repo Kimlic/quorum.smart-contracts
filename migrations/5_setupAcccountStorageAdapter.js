@@ -12,7 +12,7 @@ module.exports = function(deployer, network, accounts) {
         let accountStorageAdapterInstance = await AccountStorageAdapter.deployed();
         for (let i = 0; i < accountFields.length; i++) {
             console.log(`Add allowed field name "${accountFields[i]}"`);
-            await accountStorageAdapterInstance.addAllowedFieldName(accountFields[i]);
+            await accountStorageAdapterInstance.addAllowedFieldName(accountFields[i], deployConfig);
         }
     });
 };

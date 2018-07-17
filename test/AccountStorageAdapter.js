@@ -34,8 +34,8 @@ contract("AccountStorageAdapter", function(accounts) {
         });
     };
     
-    checkSetAccountField(accountConsts.identityValue, accountConsts.identityFieldName, 1);
-    checkSetAccountField(accountConsts.identityValue + "2", accountConsts.identityFieldName, 2);
+    /*checkSetAccountField(accountConsts.identityValue, accountConsts.identityFieldName, 1);
+    checkSetAccountField(accountConsts.identityValue + "2", accountConsts.identityFieldName, 2);*/
     
     checkSetAccountField(accountConsts.emailValue, accountConsts.emailFieldName, 1);
     checkSetAccountField(accountConsts.emailValue + "2", accountConsts.emailFieldName, 2);

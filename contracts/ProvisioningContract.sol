@@ -16,10 +16,10 @@ contract ProvisioningContract is Ownable, WithKimlicContext {
     address public account;
     Status public status;
     uint public tokensUnlockAt;
+    string private fieldName;
+    uint private index;
 
     /// private attributes ///
-    string private _fieldName;
-    uint private _index;
     uint private _reward;
     /// enums ///
     enum Status { Created, DataProvided, Canceled }
@@ -27,7 +27,7 @@ contract ProvisioningContract is Ownable, WithKimlicContext {
     /// constructors ///
     constructor (
         address contextStorage, address accountAddress, string accountFieldName,
-        uint index, uint reward)
+        uint fieldIndex, uint reward)
             public WithKimlicContext(contextStorage) {
 
         KimlicContractsContext context = getContext();
@@ -39,8 +39,8 @@ contract ProvisioningContract is Ownable, WithKimlicContext {
         
         account = accountAddress;
         _reward = reward;
-        _fieldName = accountFieldName;
-        _index = index;
+        fieldName = accountFieldName;
+        index = fieldIndex;
     }
 
     /// public methods ///
@@ -48,12 +48,12 @@ contract ProvisioningContract is Ownable, WithKimlicContext {
     function isVerificationFinished() public view onlyOwner() returns(bool) {
         AccountStorageAdapter adapter = getContext().getAccountStorageAdapter();
 
-        address verificationContractAddress = adapter.getFieldVerificationContractAddress(account, _fieldName, _index);
+        address verificationContractAddress = adapter.getFieldVerificationContractAddress(account, fieldName, index);
 
         if (verificationContractAddress != address(0)) {
             BaseVerification verificationContract = BaseVerification(verificationContractAddress);
-            return verificationContract.status() == BaseVerification.Status.Verified ||
-                verificationContract.status() == BaseVerification.Status.Unverified;
+            return verificationContract.getStatus() == BaseVerification.Status.Verified ||
+                verificationContract.getStatus() == BaseVerification.Status.Unverified;
         }
     }
 
@@ -69,11 +69,18 @@ contract ProvisioningContract is Ownable, WithKimlicContext {
         
         AccountStorageAdapter adapter = getContext().getAccountStorageAdapter();
 
-        ( data ) = adapter.getFieldMainData(account, _fieldName, _index);
+        ( data ) = adapter.getFieldMainData(account, fieldName, index);
 
-        ( verificationStatus, verificationContractAddress, verifiedAt ) = adapter.getFieldVerificationData(account, _fieldName, _index); 
+        ( verificationStatus, verificationContractAddress, verifiedAt ) = adapter.getFieldVerificationData(account, fieldName, index); 
     }
-    
+
+    function withdraw() public onlyOwner() {
+        require(block.timestamp >= tokensUnlockAt && status == Status.Created);
+
+        status = Status.Canceled;
+        KimlicToken kimlicToken = getContext().getKimlicToken();
+        kimlicToken.transfer(owner, kimlicToken.balanceOf(address(this)));
+    }
 
     /// private methods ///
 
@@ -81,7 +88,7 @@ contract ProvisioningContract is Ownable, WithKimlicContext {
         KimlicContractsContext context = getContext();
 
         address verificationContractAddress = context.getAccountStorageAdapter()
-            .getFieldVerificationContractAddress(account, _fieldName, _index);
+            .getFieldVerificationContractAddress(account, fieldName, index);
 
         BaseVerification verificationContract = BaseVerification(verificationContractAddress);
         address coOwner = verificationContract.coOwner();
@@ -98,13 +105,5 @@ contract ProvisioningContract is Ownable, WithKimlicContext {
         kimlicToken.transfer(coOwner, coOwnerInterest);
         kimlicToken.transfer(context.getCommunityTokenWalletAddress(), communityTokenWalletInterest);
         kimlicToken.transfer(attestationParty, attestationPartyInterest);
-    }
-
-    function withdraw() public onlyOwner() {
-        require(block.timestamp >= tokensUnlockAt && status == Status.Created);
-
-        status = Status.Canceled;
-        KimlicToken kimlicToken = getContext().getKimlicToken();
-        kimlicToken.transfer(owner, kimlicToken.balanceOf(address(this)));
     }
 }

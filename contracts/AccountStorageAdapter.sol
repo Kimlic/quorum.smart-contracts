@@ -14,10 +14,8 @@ contract AccountStorageAdapter is Ownable, WithKimlicContext {
     mapping(string=>bool) allowedFieldNames;
 
     /// private attributes ///
-    string private constant metaDataKey = "metaData";
-    string private constant metaVerificationStatusKey = "metaVerificationStatus";
-    string private constant metaVerifiedAtKey = "metaVerifiedAt";
-    string private constant metaVerificationContractKey = "metaVerificationContract";
+    string private constant metaDataKey = "data";
+    string private constant metaVerificationContractKey = "verificationContractAddress";
     string private constant lengthKey = "length";
 
     /// constructors ///
@@ -97,15 +95,8 @@ contract AccountStorageAdapter is Ownable, WithKimlicContext {
         verificationContractAddress = getFieldVerificationContractAddress(accountAddress, accountFieldName, index);
         BaseVerification verificationContract = BaseVerification(verificationContractAddress);
         
-        verificationStatus = verificationContract.status();
+        verificationStatus = verificationContract.getStatus();
         verifiedAt = verificationContract.verifiedAt();
-    }
-
-    function getIsFieldLastVerificationContractExistAndNotCanceled(address accountAddress, string accountFieldName) 
-        public view returns(bool result) {
-        
-        uint index = getFieldHistoryLength(accountAddress, accountFieldName);
-        return getIsFieldVerificationContractExist(accountAddress, accountFieldName, index);
     }
 
     function getIsFieldVerificationContractExist(address accountAddress, string accountFieldName, uint index)

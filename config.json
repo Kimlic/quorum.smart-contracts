@@ -1,4 +1,10 @@
 {
+	"default": {
+		"addresses": {
+			"mainAccount": {
+			}
+		}
+	},
 	"kubernetisNode": {
 		"addresses": {
 			"mainAccount": {

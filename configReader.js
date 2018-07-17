@@ -1,12 +1,18 @@
-var fs = require("fs");
+let fs = require("fs");
+let { getValueByPath } = require("./commonLogic");
 
-var getMainAccount = function(network) {
-
-    var config = JSON.parse(fs.readFileSync('config.json'));
-    var mainAccount = config && config[network] && config[network].addresses
-        && config[network].addresses.mainAccount || {};
-
-    return mainAccount;
+let getMainAccount = (network) => {
+    return getConfigValueByPath(network, "addresses.mainAccount");
 };
 
-module.exports = { getMainAccount };
+let getConfigValueByPath = (network, path) => {
+    let config = JSON.parse(fs.readFileSync('config.json'));
+    let networkConfig = config[network] || {};
+    let defaultConfig = config["default"] || {};
+
+    return getValueByPath(networkConfig, path)
+        || getValueByPath(defaultConfig, path)
+        || {};
+};
+
+module.exports = { getMainAccount, getConfigValueByPath };

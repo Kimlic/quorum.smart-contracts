@@ -15,7 +15,7 @@ contract RewardingContract is Ownable, WithKimlicContext {
     /// private attributes ///
     string private constant email = "email";
     string private constant phone = "phone";
-    string private constant identity = "identity";
+    //string private constant identity = "identity";
     /// Constructors ///
     constructor (address contextStorage) public WithKimlicContext(contextStorage) {
     }
@@ -37,9 +37,9 @@ contract RewardingContract is Ownable, WithKimlicContext {
             
             checkMilestone1(accountAddress);
         } 
-        else if (isEqualStrings(accountFieldName, identity)) {
-            checkMilestone1(accountAddress);
-        }
+        /*else if (isEqualStrings(accountFieldName, identity)) {
+            checkMilestone2(accountAddress);
+        }*/
     }
 
     /// private methods ///
@@ -53,7 +53,8 @@ contract RewardingContract is Ownable, WithKimlicContext {
     }
 
     function checkMilestone2(address accountAddress) private {
-        if (getIsDataVerified(accountAddress, identity)) {
+        //TODO there is no "identity" field now, need to find out wich field must be checked
+        if (getIsDataVerified(accountAddress, "")) {//identity)) {
             sendReward(accountAddress, mielstone2Reward);
         }
     }
@@ -74,7 +75,7 @@ contract RewardingContract is Ownable, WithKimlicContext {
         if (verificationContractAddress != address(0)) {
             BaseVerification verificationContract = BaseVerification(verificationContractAddress);
             
-            isVerified = verificationContract.status() == BaseVerification.Status.Verified;
+            isVerified = verificationContract.getStatus() == BaseVerification.Status.Verified;
         }
     }
 
