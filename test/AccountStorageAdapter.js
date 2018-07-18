@@ -1,7 +1,7 @@
 /*jshint esversion: 6 */
 let AccountStorageAdapter = artifacts.require("./AccountStorageAdapter.sol");
 
-let { accountConsts, addAccountData, getAccountFieldLastMainData, getAccountLastDataIndex } = require("./Helpers/AccountHelper.js")
+let { accountConsts, addAccountData, getAccountFieldLastMainData, getAccountLastDataIndex, getFieldDetails } = require("./Helpers/AccountHelper.js")
 
 
 contract("AccountStorageAdapter", function(accounts) {

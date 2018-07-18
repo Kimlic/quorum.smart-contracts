@@ -5,7 +5,7 @@ let VerificationContractFactory = artifacts.require("./VerificationContractFacto
 let BaseVerification = artifacts.require("./BaseVerification.sol");
 let AccountStorageAdapter = artifacts.require("./AccountStorageAdapter.sol");
 
-let { accountConsts, addAccountData, getAccountFieldLastMainData, getAccountLastDataIndex } = require("./Helpers/AccountHelper.js")
+let { accountConsts, addAccountData, getAccountFieldLastMainData, getFieldDetails } = require("./Helpers/AccountHelper.js")
 
 
 contract("Verification", function(accounts) {
@@ -53,6 +53,11 @@ contract("Verification", function(accounts) {
             let verificationContract = await BaseVerification.at(verificationContractAddress);
             let verificationStatus = await verificationContract.status.call();
             assert.equal(verificationStatus, true);
+        });
+        it(`Should read account ${fieldName} full data`, async () => {
+            let adapter = await AccountStorageAdapter.deployed();
+            let detail = await getFieldDetails(adapter, accountAddress, fieldName);
+            console.log(`account details: ${JSON.stringify(detail)}`);
         });
     };
 
