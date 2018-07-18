@@ -45,15 +45,16 @@ contract ProvisioningContract is Ownable, WithKimlicContext {
 
     /// public methods ///
 
-    function isVerificationFinished() public view onlyOwner() returns(bool) {
+    function isVerificationFinished() public view returns(bool) {
         AccountStorageAdapter adapter = getContext().getAccountStorageAdapter();
 
         address verificationContractAddress = adapter.getFieldVerificationContractAddress(account, fieldName, index);
 
         if (verificationContractAddress != address(0)) {
             BaseVerification verificationContract = BaseVerification(verificationContractAddress);
-            return verificationContract.getStatus() == BaseVerification.Status.Verified ||
-                verificationContract.getStatus() == BaseVerification.Status.Unverified;
+            BaseVerification.Status verificationStatus = verificationContract.getStatus();
+            return verificationStatus == BaseVerification.Status.Verified ||
+                verificationStatus == BaseVerification.Status.Unverified;
         }
     }
 

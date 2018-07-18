@@ -2,10 +2,10 @@
 let KimlicToken = artifacts.require("./KimlicToken.sol");
 let RewardingContract = artifacts.require("./RewardingContract.sol");
 
-let { getFormatedConsoleLable } = require("./Helpers/MigrationHelper");
+let { getFormatedConsoleLabel } = require("./Helpers/MigrationHelper");
 
 module.exports = function(deployer, network, accounts) {
-    console.log(getFormatedConsoleLable("setup community token wallet address"));
+    console.log(getFormatedConsoleLabel("setup community token wallet address"));
     let communityTokenWalletAddress = accounts[0];//TODO move to config
 
     deployer.then(async () => {

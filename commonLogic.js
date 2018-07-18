@@ -1,16 +1,36 @@
 
-let getValueByPath = (networkConfig, path) => {
+let getValueByPath = (networkConfig, path, defaultValue = {}) => {
     var value = networkConfig;
     let pathParts = path.split(".");
-    for (let index = 0; index < pathParts.length; index++) {
+    for (let index = 0; index < pathParts.length -1; index++) {
         let pathPart = pathParts[index];
         
-        value = value[pathPart] || {};
-        //console.log(`pathPart: ${pathPart}, value: ${JSON.stringify(value)}`);
+        if (!value[pathPart]) {
+            value[pathPart] = {};
+        }
+        value = value[pathPart];
     }
-    value = Object.keys(value).length > 0 ? value : null;
-    //console.log(`value: ${JSON.stringify(value)}`);
-    return value;
+
+    const lastPathPart = pathParts.pop();
+    if (!value[lastPathPart]) {
+        value[lastPathPart] = defaultValue;
+    }
+    return value[lastPathPart];
 };
 
-module.exports = { getValueByPath };
+let setValueByPath = (networkConfig, path, data) => {
+    var selectedValue = networkConfig;
+    let pathParts = path.split(".");
+    for (let index = 0; index < pathParts.length - 1; index++) {
+        let pathPart = pathParts[index];
+        
+        if (!selectedValue[pathPart]) {
+            selectedValue[pathPart] = {};
+        }
+        selectedValue = selectedValue[pathPart];
+    }
+    const lastPathPart = pathParts.pop();
+    selectedValue[lastPathPart] = data;
+};
+
+module.exports = { getValueByPath, setValueByPath };

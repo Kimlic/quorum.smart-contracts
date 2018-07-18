@@ -5,36 +5,36 @@ let AttestationPartyStorageAdapter = artifacts.require("./AttestationPartyStorag
 let KimlicToken = artifacts.require("./KimlicToken.sol");
 
 let fs = require("fs");
-let { getFormatedConsoleLable } = require("./Helpers/MigrationHelper");
+let { getFormatedConsoleLabel } = require("./Helpers/MigrationHelper");
+const { loadDeployedConfigIntoCache, saveDeployedConfig, getNetworkDeployedConfig } = require("../deployedConfigHelper");
+const { getValueByPath } = require("../commonLogic");
+
+
 
 module.exports = function(deployer, network, accounts) {
+    loadDeployedConfigIntoCache();
+    const deployedConfig = getNetworkDeployedConfig(network);
+    const configPath = "partiesConfig.createdParties";
+    const currentSetup = getValueByPath(deployedConfig, configPath);
+
     deployer.then(async () => {
-        console.log(getFormatedConsoleLable("Setup initial parties: Kimlic, Veriff, FirstRelyingParty"));
+        console.log(getFormatedConsoleLabel("Setup initial parties: Kimlic, Veriff, FirstRelyingParty"));
         let kimlicTokenInstance = await KimlicToken.deployed();
 
-        let partiesConfig = {};
-
-        let veriffName = "Veriff";
-        partiesConfig[veriffName] = await setupParty(kimlicTokenInstance, veriffName, veriffName + "p@ssw0rd");
-        setupAPAccessToFieldVerification(partiesConfig[veriffName].address, ["documents.id_card"])
+        let veriffName = "veriff";
+        currentSetup[veriffName] = await setupParty(kimlicTokenInstance, veriffName, veriffName + "p@ssw0rd");
+        setupAPAccessToFieldVerification(currentSetup[veriffName].address, ["documents.id_card"])
         
-        let kimlicName = "Kimlic";
-        partiesConfig[kimlicName] = await setupParty(kimlicTokenInstance, kimlicName, kimlicName + "p@ssw0rd");
-        setupAPAccessToFieldVerification(partiesConfig[kimlicName].address, ["email", "phone"])
+        let kimlicName = "kimlic";
+        currentSetup[kimlicName] = await setupParty(kimlicTokenInstance, kimlicName, kimlicName + "p@ssw0rd");
+        setupAPAccessToFieldVerification(currentSetup[kimlicName].address, ["email", "phone"])
 
-        let relyingPartyName = "FirstRelyingParty";
-        partiesConfig[relyingPartyName] = await setupParty(kimlicTokenInstance, relyingPartyName, relyingPartyName + "p@ssw0rd");
-        console.log(JSON.stringify(partiesConfig, null, 4));
-        savePartiesConfig(partiesConfig);
+        let relyingPartyName = "firstRelyingParty";
+        currentSetup[relyingPartyName] = await setupParty(kimlicTokenInstance, relyingPartyName, relyingPartyName + "p@ssw0rd");
+        console.log(JSON.stringify(currentSetup, null, 4));
+
+        saveDeployedConfig();
     });
-    
-
-    let savePartiesConfig = (config) => {
-        let partiesConfigFileName = "PartiesConfig.json";
-        console.log(`Saving parties config into file "${partiesConfigFileName}"`);
-        fs.writeFileSync(partiesConfigFileName, JSON.stringify(config));
-    }
-    
 
     let setupAPAccessToFieldVerification = async (apAddress, allowedFields) => {
         var adapter = await AttestationPartyStorageAdapter.deployed();

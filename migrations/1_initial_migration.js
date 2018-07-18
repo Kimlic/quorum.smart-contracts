@@ -1,7 +1,7 @@
 var Migrations = artifacts.require("./Migrations.sol");
-let { getDeployConfig } = require("./Helpers/MigrationHelper");
+let { getTransactionConfig } = require("./Helpers/MigrationHelper");
 
 module.exports = function(deployer, network, accounts) {
-  let deployConfig = getDeployConfig(deployer, network, accounts);
-  deployer.deploy(Migrations, deployConfig);
+    let transactionConfig = getTransactionConfig(deployer, network, accounts);
+    deployer.deploy(Migrations, transactionConfig);
 };

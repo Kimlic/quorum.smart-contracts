@@ -5,10 +5,17 @@ let VerificationContractFactory = artifacts.require("./VerificationContractFacto
 let BaseVerification = artifacts.require("./BaseVerification.sol");
 let AccountStorageAdapter = artifacts.require("./AccountStorageAdapter.sol");
 
-let { accountConsts, addAccountData, getAccountFieldLastMainData, getAccountLastDataIndex } = require("./Helpers/AccountHelper.js")
+let { accountConsts, addAccountData, getAccountFieldLastMainData } = require("./Helpers/AccountHelper.js")
+const { loadDeployedConfigIntoCache, getNetworkDeployedConfig } = require("../deployedConfigHelper");
+const { getValueByPath } = require("../commonLogic");
 
 
 contract("Verification", function(accounts) {
+    const network = "ganache";
+    loadDeployedConfigIntoCache();
+    const deployedConfig = getNetworkDeployedConfig(network);
+    const configPath = "partiesConfig.createdParties";
+    const partiesConfig = getValueByPath(deployedConfig, configPath);
     
     let accountAddress = accounts[0];
 
@@ -65,23 +72,10 @@ contract("Verification", function(accounts) {
         });
     };
 
-    
-    let getPartiesConfig = () => {
-        let partiesConfigFileName = "PartiesConfig.json";
-        var partiesConfig = {};
-        if (fs.existsSync(partiesConfigFileName)) {
-            console.log(`Reading parties config from file "${partiesConfigFileName}"`);
-            partiesConfig = { ...partiesConfig, ...JSON.parse(fs.readFileSync(partiesConfigFileName))};
-        }
-        return partiesConfig;
-    };
-
-    let verificatorAddress = accounts[0];//TODO replace by real verificator address;
-
-    let config = getPartiesConfig();
-    let kimlicConfig = config["Kimlic"];
-    let veriffConfig = config["Veriff"];
-    let relyingPartyConfig = config["FirstRelyingParty"];
+    let config = partiesConfig;
+    let kimlicConfig = config["kimlic"];
+    let veriffConfig = config["veriff"];
+    let relyingPartyConfig = config["firstRelyingParty"];
     
     it("Should unlock verificators accounts", async () => {
         await web3.personal.unlockAccount(kimlicConfig.address, kimlicConfig.password);
@@ -94,5 +88,4 @@ contract("Verification", function(accounts) {
     verificationTests("createPhoneVerification", accountConsts.phoneFieldName, kimlicConfig.address, uuidv4(), { "from": kimlicConfig.address });
     
     verificationTests("createDocumentVerification", accountConsts.documentsFieldName, veriffConfig.address, uuidv4(), { "from": relyingPartyConfig.address });
-    
 });

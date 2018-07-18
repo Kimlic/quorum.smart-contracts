@@ -7,32 +7,31 @@ let AccountStorageAdapter = artifacts.require("./AccountStorageAdapter.sol");
 let ProvisioningContractFactory = artifacts.require("./ProvisioningContractFactory.sol");
 let ProvisioningContract = artifacts.require("./ProvisioningContract.sol");
 
-let { accountConsts, addAccountData, getAccountFieldLastMainData, getAccountFieldLastVerificationData, getAccountLastDataIndex } = require("./Helpers/AccountHelper.js")
+let { accountConsts, addAccountData, getAccountFieldLastMainData, getAccountFieldLastVerificationData } = require("./Helpers/AccountHelper.js")
+const { loadDeployedConfigIntoCache, getNetworkDeployedConfig } = require("../deployedConfigHelper");
+const { getValueByPath } = require("../commonLogic");
+
 
 
 contract("Provisioning", function(accounts) {
+    const network = "ganache";
+    loadDeployedConfigIntoCache();
+    const deployedConfig = getNetworkDeployedConfig(network);
+    const configPath = "partiesConfig.createdParties";
+    const partiesConfig = getValueByPath(deployedConfig, configPath);
+
     let uuidv4 = () => {
         return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
             var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
             return v.toString(16);
         });
     };
-
-    let getPartiesConfig = () => {
-        let partiesConfigFileName = "PartiesConfig.json";
-        var partiesConfig = {};
-        if (fs.existsSync(partiesConfigFileName)) {
-            console.log(`Reading parties config from file "${partiesConfigFileName}"`);
-            partiesConfig = { ...partiesConfig, ...JSON.parse(fs.readFileSync(partiesConfigFileName))};
-        }
-        return partiesConfig;
-    };
     
     let accountAddress = accounts[0];
 
-    let config = getPartiesConfig();
-    let kimlicConfig = config["Kimlic"];
-    let relyingPartyConfig = config["FirstRelyingParty"];
+    let config = partiesConfig;
+    let kimlicConfig = config["kimlic"];
+    let relyingPartyConfig = config["firstRelyingParty"];
     let relyingPartySendConfig = { from: relyingPartyConfig.address };
     let kimlicSendConfig = { from: kimlicConfig.address };
     
