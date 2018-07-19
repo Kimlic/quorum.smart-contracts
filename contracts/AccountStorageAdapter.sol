@@ -58,10 +58,12 @@ contract AccountStorageAdapter is Ownable, WithKimlicContext {
 
         bytes memory verificationContractKey = abi.encode(accountAddress, accountFieldName, index, metaVerificationContractKey);
         verificationContractAddress = accountStorage.getAddress(keccak256(verificationContractKey));
-        BaseVerification verificationContract = BaseVerification(verificationContractAddress);
-        
-        verificationStatus = verificationContract.status();
-        verifiedAt = verificationContract.verifiedAt();
+        if (verificationContractAddress != address(0)) {
+            BaseVerification verificationContract = BaseVerification(verificationContractAddress);
+            
+            verificationStatus = verificationContract.status();
+            verifiedAt = verificationContract.verifiedAt();
+        }
     }
 
     function getLastAccountDataVerificationContractAddress(address accountAddress, string accountFieldName)

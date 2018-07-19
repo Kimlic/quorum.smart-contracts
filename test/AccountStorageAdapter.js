@@ -32,6 +32,11 @@ contract("AccountStorageAdapter", function(accounts) {
             let newDataIndex = await getAccountLastDataIndex(adapter, accountAddress, fieldName);
             assert.equal(newDataIndex, expectedFieldIndex);
         });
+        it(`Should read account ${fieldName} full data`, async () => {
+            let adapter = await AccountStorageAdapter.deployed();
+            let detail = await getFieldDetails(adapter, accountAddress, fieldName);
+            console.log(`account details: ${JSON.stringify(detail)}`);
+        });
     };
     
     checkSetAccountData(accountConsts.identityValue, accountConsts.identityFieldName, 1);
