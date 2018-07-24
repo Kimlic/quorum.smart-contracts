@@ -107,4 +107,19 @@ contract ProvisioningContract is Ownable, WithKimlicContext {
         kimlicToken.transfer(context.getCommunityTokenWalletAddress(), communityTokenWalletInterest);
         kimlicToken.transfer(attestationParty, attestationPartyInterest);
     }
+
+    function getStatusName() public view returns(string) {
+        if (status == Status.None) {
+            return "None";
+        }
+        if (status == Status.Created) {
+            return "Created";
+        }
+        if (status == Status.DataProvided) {
+            return "DataProvided";
+        }
+        if (status == Status.Canceled) {
+            return "Canceled";
+        }
+    }
 }
