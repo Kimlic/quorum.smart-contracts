@@ -68,14 +68,36 @@ contract BaseVerification is Ownable, WithKimlicContext {
         context.getAccountStorageAdapter().setFieldVerificationContractAddress(accountAddress, accountFieldName, dataIndex, address(0));
     }
 
-    function getStatus() public view returns(Status) {
+    function getStatus() public view readStatusRestriction() returns(Status) {
+        return _status;
+    }
+
+    function getStatusName() public view readStatusRestriction() returns(string) {
+        if (_status == Status.None) {
+            return "None";
+        }
+        if (_status == Status.Created) {
+            return "Created";
+        }
+        if (_status == Status.Verified) {
+            return "Verified";
+        }
+        if (_status == Status.Unverified) {
+            return "Unverified";
+        }
+        if (_status == Status.Canceled) {
+            return "Canceled";
+        }
+    }
+
+    modifier readStatusRestriction() {
         KimlicContractsContext context = getContext();
         require(
-            context.getProvisioningContractFactory().createdContracts(msg.sender) ||
-            msg.sender == address(context.getAccountStorageAdapter()) ||
+            context.getProvisioningContractFactory().createdContracts(msg.sender) || //TODO add additional check()
+            msg.sender == address(context.getAccountStorageAdapter()) || //TODO add additional check()
             msg.sender == owner ||
-            msg.sender == address(context.getRewardingContract()) ||
+            msg.sender == address(context.getRewardingContract()) || //TODO add additional check()
             msg.sender == context.owner());
-        return _status;
+        _;
     }
 }
