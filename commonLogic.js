@@ -1,6 +1,6 @@
 
-let getValueByPath = (networkConfig, path, defaultValue = {}) => {
-    var value = networkConfig;
+let getValueByPath = (object, path, defaultValue = {}) => {
+    var value = object;
     let pathParts = path.split(".");
     for (let index = 0; index < pathParts.length -1; index++) {
         let pathPart = pathParts[index];
@@ -18,8 +18,8 @@ let getValueByPath = (networkConfig, path, defaultValue = {}) => {
     return value[lastPathPart];
 };
 
-let setValueByPath = (networkConfig, path, data) => {
-    var selectedValue = networkConfig;
+let setValueByPath = (object, path, data) => {
+    var selectedValue = object;
     let pathParts = path.split(".");
     for (let index = 0; index < pathParts.length - 1; index++) {
         let pathPart = pathParts[index];
@@ -33,4 +33,22 @@ let setValueByPath = (networkConfig, path, data) => {
     selectedValue[lastPathPart] = data;
 };
 
-module.exports = { getValueByPath, setValueByPath };
+const combinePath = (pathTemplate, config) => {
+    Object.keys(config).forEach(key => {
+        var regExp = new RegExp(`{${key}}`,"g");
+        pathTemplate = pathTemplate.replace(regExp, config[key]);
+    });
+    return pathTemplate;
+};
+
+
+let uuidv4 = () => {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+    });
+};
+
+const emptyAddress = "0x0000000000000000000000000000000000000000";
+
+module.exports = { getValueByPath, setValueByPath, emptyAddress, combinePath, uuidv4 };

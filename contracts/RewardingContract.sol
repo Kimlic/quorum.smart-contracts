@@ -47,16 +47,16 @@ contract RewardingContract is Ownable, WithKimlicContext {
         if (getIsDataVerified(accountAddress, email) &&
             getIsDataVerified(accountAddress, phone)) {
             
-            sendReward(accountAddress, mielstone2Reward);
+            sendReward(accountAddress, mielstone1Reward);
         }
         
     }
 
     function checkMilestone2(address accountAddress) private {
         //TODO there is no "identity" field now, need to find out wich field must be checked
-        if (getIsDataVerified(accountAddress, "")) {//identity)) {
+        /*if (getIsDataVerified(accountAddress, "")) {//identity)) {
             sendReward(accountAddress, mielstone2Reward);
-        }
+        }*/
     }
 
     function sendReward(address accountAddress, uint rewardAmount) private {

@@ -22,7 +22,7 @@ const getTransactionConfig = (deployer, network, accounts) => {
             "Using default truffle account address.");
     }
     unlockAccount(deployer, mainAccount.address, mainAccount.password);
-    console.log(`Main account address: ${mainAccount.address}`);
+    console.log(`Main account address: ${mainAccount.address}\n`);
 
     return  {
         "from": mainAccount.address
@@ -34,5 +34,4 @@ const getFormatedConsoleLabel = function(unformatedLable){
     return "\n" + separationString + " " + unformatedLable + " " + separationString + "\n";
 };
 
-const emptyAddress = "0x0000000000000000000000000000000000000000"
-module.exports = { unlockAccount, getTransactionConfig, getFormatedConsoleLabel, emptyAddress  };
+module.exports = { unlockAccount, getTransactionConfig, getFormatedConsoleLabel };

@@ -14,14 +14,28 @@ const AttestationPartyStorageAdapter = artifacts.require("./AttestationPartyStor
 const AttestationPartyStorage = artifacts.require("./AttestationPartyStorage.sol");
 
 const { getTransactionConfig, getFormatedConsoleLabel } = require("./Helpers/MigrationHelper");
+const { saveDeployedConfig, getNetworkDeployedConfig, deployedConfigPathConsts } = require("../deployedConfigHelper");
+const { setValueByPath } = require("../commonLogic");
 
 module.exports = function(deployer, network, accounts) {
     console.log(getFormatedConsoleLabel("Setup kimlic contracts context instance:"));
     
     const transactionConfig = getTransactionConfig(deployer, network, accounts);
-    const communityTokenWalletAddress = accounts[0];//TODO move to config
+
 
     deployer.then(async () => {
+        
+        const communityTokenWalletPassword = "p@ssw0rd";
+        const communityTokenWalletAddress = web3.personal.newAccount(communityTokenWalletPassword);
+        web3.personal.unlockAccount(communityTokenWalletAddress, communityTokenWalletPassword, 100);
+        await web3.eth.sendTransaction({"from": web3.eth.coinbase, "to": communityTokenWalletAddress, "value": 1000000000000000000});//1 eth
+
+        const deployedConfig = getNetworkDeployedConfig(web3.version.network);
+        setValueByPath(deployedConfig, deployedConfigPathConsts.communityTokenWallet.path, {
+            address: communityTokenWalletAddress, password: communityTokenWalletPassword
+        });
+        saveDeployedConfig();
+
         const kimlicContractsContextInstance = await KimlicContractsContext.deployed();
         
         console.log(`\nAccountStorageAddress = ${AccountStorage.address}`);
@@ -44,8 +58,6 @@ module.exports = function(deployer, network, accounts) {
         
         console.log(`\nKimlicToken = ${KimlicToken.address}`);
         await kimlicContractsContextInstance.setKimlicToken(KimlicToken.address, transactionConfig);
-        console.log("nKimlicToken address is: ", 
-            await kimlicContractsContextInstance.getKimlicToken(transactionConfig));
         
         console.log(`\nVerificationContractFactory = ${VerificationContractFactory.address}`);
         await kimlicContractsContextInstance.setVerificationContractFactory(VerificationContractFactory.address, transactionConfig);
@@ -53,15 +65,10 @@ module.exports = function(deployer, network, accounts) {
         const provisioningPriceListInstance = await deployer.deploy(PriceList, transactionConfig);
         console.log(`\nProvisioningPriceList = ${provisioningPriceListInstance.address}`);
         await kimlicContractsContextInstance.setProvisioningPriceList(provisioningPriceListInstance.address, transactionConfig);
-        console.log("ProvisioningPriceList address is: ", 
-            await kimlicContractsContextInstance.getProvisioningPriceList(transactionConfig));
         
         const verificationPriceListInstance = await deployer.deploy(PriceList, transactionConfig);
         console.log(`\nVerificationPriceList = ${verificationPriceListInstance.address}`);
         await kimlicContractsContextInstance.setVerificationPriceList(verificationPriceListInstance.address, transactionConfig);
-        console.log("verificationPriceList address is: ", 
-            await kimlicContractsContextInstance.getVerificationPriceList(transactionConfig));
-        
         
         console.log(`\nProvisioningContractFactory = ${ProvisioningContractFactory.address}`);
         await kimlicContractsContextInstance.setProvisioningContractFactory(ProvisioningContractFactory.address, transactionConfig);

@@ -1,28 +1,35 @@
 let fs = require("fs");
 
 const fileName = "deployedConfig.json";
-var deployedConfig = {};
-var isConfigLoaded = false;
+let deployedConfig = {};
+let isConfigLoaded = false;
 
-let cleanupDeployedConfig = function(network) {
-    deployedConfig[network] = {};
+
+const cleanupDeployedConfig = function(network) {
+    if (!isConfigLoaded) {
+        loadDeployedConfigIntoCache();
+    }
 }
 
-let getNetworkDeployedConfig = (network) => {
+const getNetworkDeployedConfig = (network) => {
+    if (!isConfigLoaded) {
+        loadDeployedConfigIntoCache();
+    }
+
     if (!deployedConfig[network]) {
         deployedConfig[network] = {};
     }
     return deployedConfig[network];
 };
 
-let loadDeployedConfigIntoCache = (network) => {
+const loadDeployedConfigIntoCache = () => {
     if (fs.existsSync(fileName)) {
         deployedConfig = JSON.parse(fs.readFileSync(fileName));
     }
     isConfigLoaded = true;
 };
 
-let saveDeployedConfig = () => {
+const saveDeployedConfig = () => {
     if(!isConfigLoaded) {
         throw "Config not loaded! Use loadDeployedConfigIntoCache method first."
     }
@@ -30,4 +37,85 @@ let saveDeployedConfig = () => {
 };
 
 
-module.exports = { saveDeployedConfig, loadDeployedConfigIntoCache, getNetworkDeployedConfig, cleanupDeployedConfig };
+const deployedConfigPathConsts = {//TODO move to config file?
+    deployedContracts: {
+        kimlicContextStorageAddress: {
+            path: "deployedContracts.kimlicContextStorageAddress"
+        },
+        kimlicContractsContextAddress: {
+            path: "deployedContracts.kimlicContractsContextAddress"
+        },
+        accountStorageAddress: {
+            path: "deployedContracts.accountStorageAddress"
+        },
+        accountStorageAdapterAddress: {
+            path: "deployedContracts.accountStorageAdapterAddress"
+        },
+        relyingPartyStorageAdapterAddress: {
+            path: "deployedContracts.relyingPartyStorageAdapterAddress"
+        },
+        relyingPartyStorageAddress: {
+            path: "deployedContracts.relyingPartyStorageAddress"
+        },
+        attestationPartyStorageAdapterAddress: {
+            path: "deployedContracts.attestationPartyStorageAdapterAddress"
+        },
+        attestationPartyStorageAddress: {
+            path: "deployedContracts.attestationPartyStorageAddress"
+        },
+        verificationContractFactoryAddress: {
+            path: "deployedContracts.verificationContractFactoryAddress"
+        },
+        provisioningContractFactoryAddress: {
+            path: "deployedContracts.provisioningContractFactoryAddress"
+        },
+        kimlicTokenAddress: {
+            path: "deployedContracts.kimlicTokenAddress"
+        },
+        rewardingContractAddress: {
+            path: "deployedContracts.rewardingContractAddress"
+        },
+        path: "deployedContracts"
+    },
+    accountStorageAdapter: {
+        allowedFieldNames: {
+            path: "accountStorageAdapter.allowedFieldNames"
+        },
+        path: "accountStorageAdapter"
+    },
+    provisioningContractFactory: {
+        intersets: {
+            path: "provisioningContractFactory.intersets"
+        },
+        path: "provisioningContractFactory"
+    },
+    rewardingContractConfig: {
+        rewards: {
+            path: "rewards"
+        },
+        path: "rewardingContractConfig"
+    },
+    communityTokenWallet: {
+        path: "communityTokenWallet"
+    },
+    partiesConfig: {
+        createdParties: {
+            path: "partiesConfig.createdParties",
+            party: {
+                pathTemplate: "partiesConfig.createdParties.{partyName}",
+                address: {
+                    pathTemplate: "partiesConfig.createdParties.{partyName}.address"
+                },
+                password: {
+                    pathTemplate: "partiesConfig.createdParties.{partyName}.password"
+                },
+                allowedFieldNames: {
+                    pathTemplate: "partiesConfig.createdParties.{partyName}.allowedFieldNames"
+                }
+            },
+        },
+        path: "partiesConfig"
+    }
+};
+
+module.exports = { saveDeployedConfig, loadDeployedConfigIntoCache, getNetworkDeployedConfig, cleanupDeployedConfig, deployedConfigPathConsts };

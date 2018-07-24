@@ -108,7 +108,7 @@ contract AccountStorageAdapter is Ownable, WithKimlicContext {
         return verificationContractAddress != address(0);
     }
 
-    function setFieldVerificationContractAddress(
+    function setFieldLastVerificationContractAddress(
         address accountAddress, string accountFieldName, address verificationContractAddress) public {
 
         uint index = getFieldHistoryLength(accountAddress, accountFieldName);

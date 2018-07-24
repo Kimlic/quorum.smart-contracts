@@ -24,22 +24,22 @@ contract VerificationContractFactory is WithKimlicContext {
         return contracts[key];
     }
 
+    //obsolete method, use createBaseVerificationContract.
     function createEmailVerification(address account, address attestationPartyAddress, string key) public {
         createBaseVerificationContract(account, attestationPartyAddress, key, "email");
     }
 
+    //obsolete method, use createBaseVerificationContract.
     function createPhoneVerification(address account, address attestationPartyAddress, string key) public {
         createBaseVerificationContract(account, attestationPartyAddress, key, "phone");
     }
 
+    //obsolete method, use createBaseVerificationContract.
     function createDocumentVerification(address account, address attestationPartyAddress, string key) public {
         createBaseVerificationContract(account, attestationPartyAddress, key, "documents.id_card");
     }
     
-    //TODO add create methods for all account fields or make createBaseVerificationContract public and use it for all types.
-
-    /// private methods ///
-    function createBaseVerificationContract(address account, address attestationPartyAddress, string key, string accountFieldName) private {
+    function createBaseVerificationContract(address account, address attestationPartyAddress, string key, string accountFieldName) public {
         KimlicContractsContext context = getContext();
 
         AccountStorageAdapter accountStorageAdapter = context.getAccountStorageAdapter();
@@ -56,8 +56,7 @@ contract VerificationContractFactory is WithKimlicContext {
 
         uint rewardAmount = context.getVerificationPriceList().getPrice(accountFieldName);
 
-        BaseVerification createdContract = new BaseVerification(
-            _storage, rewardAmount, account, msg.sender, dataIndex, attestationPartyAddress, accountFieldName);
+        BaseVerification createdContract = new BaseVerification(_storage, rewardAmount, account, msg.sender, dataIndex, accountFieldName);
         createdContract.transferOwnership(attestationPartyAddress);
 
         address createdContractAddress = address(createdContract);
@@ -65,6 +64,6 @@ contract VerificationContractFactory is WithKimlicContext {
         contracts[key] = createdContractAddress;
         context.getKimlicToken().transferFrom(msg.sender, createdContractAddress, rewardAmount);
         
-        context.getAccountStorageAdapter().setFieldVerificationContractAddress(account, accountFieldName, createdContractAddress);
+        context.getAccountStorageAdapter().setFieldVerificationContractAddress(account, accountFieldName, dataIndex, createdContractAddress);
     }
 }

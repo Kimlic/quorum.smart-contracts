@@ -1,18 +1,46 @@
-let fs = require("fs");
-let { getValueByPath } = require("./commonLogic");
+const fs = require("fs");
+const { getValueByPath } = require("./commonLogic");
 
-let getMainAccount = (network) => {
-    return getConfigValueByPath(network, "addresses.mainAccount");
+const fileName = "config.json";
+
+const getMainAccount = (network) => {
+    return getConfigValueByPath(network, configPathConsts.addresses.mainAccount.path);
 };
 
-let getConfigValueByPath = (network, path) => {
-    let config = JSON.parse(fs.readFileSync('config.json'));
-    let networkConfig = config[network] || {};
-    let defaultConfig = config["default"] || {};
+const getConfigValueByPath = (network, path, defaultValue = {}) => {
+    const config = JSON.parse(fs.readFileSync(fileName));
+    const networkConfig = config[network] || {};
+    const defaultConfig = config["default"] || {};
 
-    return getValueByPath(networkConfig, path)
-        || getValueByPath(defaultConfig, path)
-        || {};
+    return getValueByPath(networkConfig, path, null)
+        || getValueByPath(defaultConfig, path, null)
+        || defaultValue;
 };
 
-module.exports = { getMainAccount, getConfigValueByPath };
+const configPathConsts = {
+    addresses: {
+        path: "addresses",
+        mainAccount: {
+            path: "addresses.mainAccount",
+            partialPath: "mainAccount"
+        }
+    },
+    parties: {
+        path: "parties",
+        name: {
+            partialPath: "name",
+            path: "parties.name"
+        },
+        tokensBalance: {
+            partialPath: "tokensBalance",
+            path: "parties.tokensBalance"
+        },
+        allowedFieldNames: {
+            partialPath: "allowedFieldNames",
+            path: "parties.allowedFieldNames"
+        }
+    }
+}
+
+
+module.exports = { getMainAccount, getConfigValueByPath, configPathConsts };

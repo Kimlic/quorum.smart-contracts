@@ -12,29 +12,26 @@ contract BaseVerification is Ownable, WithKimlicContext {
     string public accountFieldName;
     address public coOwner;
     uint public dataIndex;
-    address public attestationParty;
     address public accountAddress;
     uint public tokensUnlockAt;
     uint public verifiedAt;
+    uint public rewardAmount;
     
     /// enums ///
-    enum Status { Created, Verified, Unverified, Canceled }
+    enum Status { None, Created, Verified, Unverified, Canceled }
 
     /// private attributes ///
-    uint internal _rewardAmount;//TODO make it public or remove
     Status public _status;
 
     /// constructors ///
-    constructor(
-        address contextStorage, uint rewardAmount, address account, address coOwnerAddress, uint index, address attestationPartyAddress,
-        string fieldName) public WithKimlicContext(contextStorage) Ownable() {
+    constructor(address contextStorage, uint reward, address account, address coOwnerAddress, uint index, string fieldName)
+        public WithKimlicContext(contextStorage) Ownable() {
 
         coOwner = coOwnerAddress;
         accountAddress = account;
         dataIndex = index;
-        attestationParty = attestationPartyAddress;
         accountFieldName = fieldName;
-        _rewardAmount = rewardAmount;
+        rewardAmount = reward;
         _status = Status.Created;
     }
 
@@ -44,9 +41,9 @@ contract BaseVerification is Ownable, WithKimlicContext {
 
         KimlicContractsContext context = getContext();
         KimlicToken token = context.getKimlicToken();
-        require(token.balanceOf(address(this)) == _rewardAmount);
+        require(token.balanceOf(address(this)) == rewardAmount);
 
-        token.transfer(owner, _rewardAmount);
+        token.transfer(owner, rewardAmount);
 
         _status = verificationResult? Status.Verified: Status.Unverified;
         verifiedAt = block.timestamp;
@@ -68,16 +65,17 @@ contract BaseVerification is Ownable, WithKimlicContext {
         KimlicToken kimlicToken = getContext().getKimlicToken();
         kimlicToken.transfer(owner, kimlicToken.balanceOf(address(this)));
         
-        context.getAccountStorageAdapter().setFieldVerificationContractAddress(accountAddress, accountFieldName, address(0));
+        context.getAccountStorageAdapter().setFieldVerificationContractAddress(accountAddress, accountFieldName, dataIndex, address(0));
     }
 
     function getStatus() public view returns(Status) {
         KimlicContractsContext context = getContext();
         require(
+            context.getProvisioningContractFactory().createdContracts(msg.sender) ||
             msg.sender == address(context.getAccountStorageAdapter()) ||
             msg.sender == owner ||
             msg.sender == address(context.getRewardingContract()) ||
-            msg.sender == context.owner() );
+            msg.sender == context.owner());
         return _status;
     }
 }

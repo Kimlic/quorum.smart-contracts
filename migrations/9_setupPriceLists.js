@@ -5,18 +5,17 @@ let KimlicContextStorage = artifacts.require("./KimlicContextStorage.sol");
 let PriceList = artifacts.require("./PriceList.sol");
 
 let { getTransactionConfig, getFormatedConsoleLabel, emptyAddress } = require("./Helpers/MigrationHelper");
-const { loadDeployedConfigIntoCache, saveDeployedConfig, getNetworkDeployedConfig } = require("../deployedConfigHelper");
+const { saveDeployedConfig, getNetworkDeployedConfig } = require("../deployedConfigHelper");
 const { getValueByPath } = require("../commonLogic");
 
 
 module.exports = function(deployer, network, accounts) {
-    loadDeployedConfigIntoCache();
-    const deployedConfig = getNetworkDeployedConfig(network);
+    console.log(getFormatedConsoleLabel(`Setup pricelists`));
+    const deployedConfig = getNetworkDeployedConfig(web3.version.network);
 
     const configPath = "accountStorageAdapter.allowedFieldNames";
     const accountFields = getValueByPath(deployedConfig, configPath);
-
-    console.log(getFormatedConsoleLabel(`Setup pricelists`));
+    
     let transactionConfig = getTransactionConfig(deployer, network, accounts);
 
     deployer.then(async () => {

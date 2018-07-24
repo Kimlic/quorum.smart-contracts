@@ -22,7 +22,7 @@ contract ProvisioningContract is Ownable, WithKimlicContext {
     /// private attributes ///
     uint private _reward;
     /// enums ///
-    enum Status { Created, DataProvided, Canceled }
+    enum Status { None, Created, DataProvided, Canceled }
 
     /// constructors ///
     constructor (

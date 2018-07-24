@@ -2,7 +2,7 @@
 const ProvisioningContractFactory = artifacts.require("./ProvisioningContractFactory.sol");
 
 const { getTransactionConfig, getFormatedConsoleLabel } = require("./Helpers/MigrationHelper");
-const { loadDeployedConfigIntoCache, saveDeployedConfig, getNetworkDeployedConfig } = require("../deployedConfigHelper");
+const { saveDeployedConfig, getNetworkDeployedConfig, deployedConfigPathConsts } = require("../deployedConfigHelper");
 const { setValueByPath, getValueByPath } = require("../commonLogic");
 
 module.exports = function(deployer, network, accounts) {
@@ -10,10 +10,8 @@ module.exports = function(deployer, network, accounts) {
     const transactionConfig = getTransactionConfig(deployer, network, accounts);
 
     deployer.then(async () => {
-        loadDeployedConfigIntoCache();
-        const deployedConfig = getNetworkDeployedConfig(network);
-
-        const configPath = "provisioningContractFactory.intersets";
+        const deployedConfig = getNetworkDeployedConfig(web3.version.network);
+        const configPath = deployedConfigPathConsts.provisioningContractFactory.intersets.path;
         let provisioningContractFactoryInterestsConfig = getValueByPath(deployedConfig, configPath);
 
         const provisioningContractFactoryInstance = await ProvisioningContractFactory.deployed();

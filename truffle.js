@@ -39,9 +39,10 @@ module.exports = {
         "chapter run clever race sure shoot solution aisle possible ridge flock august"
     },
     KIM1: {
+      from: "0xe0dfcd8ca47eec41d74d9e14760f9d5c5de78177",
       host: "127.0.0.1",
       port: 22000,
-      network_id: "10",
+      network_id: "*",
       gasPrice: 0,
       gas: 4612388
     },
