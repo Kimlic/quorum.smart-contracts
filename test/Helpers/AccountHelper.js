@@ -37,5 +37,10 @@ const createAccountAndSet1EthToBalance = async (web3) => {
     return { accountAddress, accountPassword };
 }
 
+
+let getFieldDetails = async function(adapter, address, fieldName) {
+    return adapter.getFieldDetails.call(address, fieldName, { from: address });
+};
+
 module.exports = { accountConsts, addAccountData, getAccountFieldLastMainData,
-    getAccountFieldLastVerificationData, getAccountLastDataIndex, createAccountAndSet1EthToBalance };
+    getAccountFieldLastVerificationData, getAccountLastDataIndex, createAccountAndSet1EthToBalance, getFieldDetails };

@@ -41,7 +41,30 @@ contract AccountStorageAdapter is Ownable, WithKimlicContext {
         updateField(msg.sender, data, accountFieldName);
     }
 
-    function getFieldLastVerificationContractAddress(address accountAddress, string accountFieldName)
+    function getFieldDetails(address accountAddress, string accountFieldName) 
+        public
+        view
+        checkIsColmnNameAllowed(accountFieldName)
+        checkReadingDataRestrictions(accountAddress)
+        returns(string data, BaseVerification.Status verificationStatus, address verificationContractAddress, uint256 verifiedAt) {
+
+        AccountStorage accountStorage = getContext().getAccountStorage();
+        uint index = getFieldHistoryLength(accountAddress, accountFieldName);
+        
+        bytes memory dataKey = abi.encode(accountAddress, accountFieldName, index, metaDataKey);
+        data = accountStorage.getString(keccak256(dataKey));
+
+        bytes memory verificationContractKey = abi.encode(accountAddress, accountFieldName, index, metaVerificationContractKey);
+        verificationContractAddress = accountStorage.getAddress(keccak256(verificationContractKey));
+        if (verificationContractAddress != address(0)) {
+            BaseVerification verificationContract = BaseVerification(verificationContractAddress);
+            
+            verificationStatus = verificationContract.getStatus();
+            verifiedAt = verificationContract.verifiedAt();
+        }
+    }
+
+    function getLastFieldVerificationContractAddress(address accountAddress, string accountFieldName)
         public view returns(address verificationContract) {
         
         uint index = getFieldHistoryLength(accountAddress, accountFieldName);
@@ -69,6 +92,7 @@ contract AccountStorageAdapter is Ownable, WithKimlicContext {
     function getFieldMainData(address accountAddress, string accountFieldName, uint index)
         public
         view
+        checkIsColmnNameAllowed(accountFieldName)
         checkReadingDataRestrictions(accountAddress)
         returns(string data) {
 

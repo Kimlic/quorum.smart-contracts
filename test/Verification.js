@@ -5,7 +5,7 @@ const BaseVerification = artifacts.require("./BaseVerification.sol");
 const AccountStorageAdapter = artifacts.require("./AccountStorageAdapter.sol");
 const AttestationPartyStorageAdapter = artifacts.require("./AttestationPartyStorageAdapter.sol");
 
-const { addAccountData, getAccountFieldLastMainData, createAccountAndSet1EthToBalance } = require("./Helpers/AccountHelper.js");
+const { addAccountData, getAccountFieldLastMainData, createAccountAndSet1EthToBalance, getFieldDetails } = require("./Helpers/AccountHelper.js");
 const { loadDeployedConfigIntoCache, getNetworkDeployedConfig, deployedConfigPathConsts } = require("../deployedConfigHelper");
 const { getValueByPath, combinePath, uuidv4, emptyAddress } = require("../commonLogic");
 
@@ -84,6 +84,10 @@ contract("Verification", function() {
             const verificationContract = await BaseVerification.at(verificationContractAddress);
             const verificationStatus = await verificationContract.getStatus.call();
             assert.equal(verificationStatus, 2);
+        });
+        it(`Should read account ${fieldName} full data`, async () => {
+            let adapter = await AccountStorageAdapter.deployed();
+            let detail = await getFieldDetails(adapter, accountAddress, fieldName);
         });
     };
 

@@ -70,7 +70,7 @@ contract RewardingContract is Ownable, WithKimlicContext {
     function getIsDataVerified(address accountAddress, string accountFieldName) 
             private view returns(bool isVerified) {
         address verificationContractAddress = getContext().getAccountStorageAdapter()
-            .getFieldLastVerificationContractAddress(accountAddress, accountFieldName);
+            .getLastFieldVerificationContractAddress(accountAddress, accountFieldName);
         
         if (verificationContractAddress != address(0)) {
             BaseVerification verificationContract = BaseVerification(verificationContractAddress);

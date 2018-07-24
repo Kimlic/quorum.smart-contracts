@@ -1,7 +1,7 @@
 /*jshint esversion: 6 */
 const AccountStorageAdapter = artifacts.require("./AccountStorageAdapter.sol");
 
-const { addAccountData, getAccountFieldLastMainData, getAccountLastDataIndex, createAccountAndSet1EthToBalance } = require("./Helpers/AccountHelper.js");
+const { addAccountData, getAccountFieldLastMainData, getAccountLastDataIndex, createAccountAndSet1EthToBalance, getFieldDetails } = require("./Helpers/AccountHelper.js");
 const { getNetworkDeployedConfig, deployedConfigPathConsts } = require("../deployedConfigHelper");
 const { getValueByPath } = require("../commonLogic");
 
@@ -37,6 +37,10 @@ contract("AccountStorageAdapter", function() {
             let adapter = await AccountStorageAdapter.deployed();
             let newDataIndex = await getAccountLastDataIndex(adapter, accountAddress, fieldName);
             assert.equal(newDataIndex, expectedFieldIndex);
+        });
+        it(`Should read account ${fieldName} full data`, async () => {
+            let adapter = await AccountStorageAdapter.deployed();
+            await getFieldDetails(adapter, accountAddress, fieldName);
         });
     };
     
