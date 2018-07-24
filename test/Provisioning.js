@@ -67,7 +67,7 @@ contract("Provisioning", function() {
 
         it(`Should set provisioning result`, async () => {
             const provisioningContractFactory = await ProvisioningContract.at(provisioningContractAddress);
-            await provisioningContractFactory.setDataProvidedStatus(relyingPartySendConfig);
+            await provisioningContractFactory.finalizeProvisioning(relyingPartySendConfig);
         });
 
         it(`Should return field data to owner.`, async () => {

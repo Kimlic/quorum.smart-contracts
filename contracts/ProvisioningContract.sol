@@ -58,7 +58,7 @@ contract ProvisioningContract is Ownable, WithKimlicContext {
         }
     }
 
-    function setDataProvidedStatus() public {
+    function finalizeProvisioning() public {
         status = Status.DataProvided;
         sendRewards();
     }
