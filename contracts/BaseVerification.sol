@@ -36,7 +36,7 @@ contract BaseVerification is Ownable, WithKimlicContext {
     }
 
     /// public methods ///
-    function setVerificationResult(bool verificationResult) public onlyOwner() {
+    function finalizeVerification(bool verificationResult) public onlyOwner() {
         require(_status == Status.Created);
 
         KimlicContractsContext context = getContext();

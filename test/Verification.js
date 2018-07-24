@@ -77,7 +77,7 @@ contract("Verification", function() {
         
         it(`Should set verification ${fieldName} result`, async () => {
             const verificationContract = await BaseVerification.at(verificationContractAddress);
-            await verificationContract.setVerificationResult(true, { "from": attestationPartyAddress });
+            await verificationContract.finalizeVerification(true, { "from": attestationPartyAddress });
         });
         
         it(`Should get verification status. Status must be "Verified"(2)`, async () => {
@@ -112,7 +112,7 @@ contract("Verification", function() {
         if (fieldName != "device") {
             console.log(`fieldName: ${fieldName}`);
             const apList = attestationPartyByFieldName[fieldName];
-            console.log(`apList: ${JSON.stringify(apList)}`);
+            console.log(`attestation parties list: ${JSON.stringify(apList)}`);
             if (apList && apList.length > 0) {
                 const apName = apList[0];
                 console.log(`apName: ${apName}`);

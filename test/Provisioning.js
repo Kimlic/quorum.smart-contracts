@@ -43,7 +43,7 @@ contract("Provisioning", function() {
 
             const verificationContractAddress =  await verificationContractFactory.getVerificationContract.call(verificationContractkey, attestationPartySendConfig);
             const verificationContract = await BaseVerification.at(verificationContractAddress);
-            await verificationContract.setVerificationResult(true, attestationPartySendConfig);
+            await verificationContract.finalizeVerification(true, attestationPartySendConfig);
         });
 
 
