@@ -11,6 +11,7 @@ contract RewardingContract is Ownable, WithKimlicContext {
     /// public attributes ///
     uint public mielstone1Reward;
     uint public mielstone2Reward;
+    mapping (string=>bool) mielstone2FieldNames;
     
     /// private attributes ///
     string private constant email = "email";
@@ -21,6 +22,15 @@ contract RewardingContract is Ownable, WithKimlicContext {
     }
 
     /// public methods ///
+    function addMielstone2FieldName(string fieldName) public onlyOwner() {
+        require(getContext().getAccountStorageAdapter().isAllowedFieldName(fieldName));
+        mielstone2FieldNames[fieldName] = true;
+    }
+
+    function removeMielstone2FieldName(string fieldName) public onlyOwner() {
+        delete mielstone2FieldNames[fieldName];
+    }
+
     function setMilestone1Reward(uint rewardAmount) public onlyOwner() {
         mielstone1Reward = rewardAmount;
     }
@@ -37,9 +47,9 @@ contract RewardingContract is Ownable, WithKimlicContext {
             
             checkMilestone1(accountAddress);
         } 
-        /*else if (isEqualStrings(accountFieldName, identity)) {
-            checkMilestone2(accountAddress);
-        }*/
+        else if (mielstone2FieldNames[accountFieldName]) {
+            checkMilestone2(accountAddress, accountFieldName);
+        }
     }
 
     /// private methods ///
@@ -52,11 +62,10 @@ contract RewardingContract is Ownable, WithKimlicContext {
         
     }
 
-    function checkMilestone2(address accountAddress) private {
-        //TODO there is no "identity" field now, need to find out wich field must be checked
-        /*if (getIsDataVerified(accountAddress, "")) {//identity)) {
+    function checkMilestone2(address accountAddress, string fieldName) private {
+        if (getIsDataVerified(accountAddress, fieldName)) {
             sendReward(accountAddress, mielstone2Reward);
-        }*/
+        }
     }
 
     function sendReward(address accountAddress, uint rewardAmount) private {
@@ -82,4 +91,5 @@ contract RewardingContract is Ownable, WithKimlicContext {
     function isEqualStrings(string leftValue, string rightValue) private pure returns(bool isEqual){//TODO move to lib
         isEqual = keccak256(bytes(leftValue)) == keccak256(bytes(rightValue));
     }
+
 }

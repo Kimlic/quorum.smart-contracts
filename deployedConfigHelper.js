@@ -91,7 +91,10 @@ const deployedConfigPathConsts = {//TODO move to config file?
     },
     rewardingContractConfig: {
         rewards: {
-            path: "rewards"
+            path: "rewardingContractConfig.rewards"
+        },
+        mielstone2fieldNames: {
+            path: "rewardingContractConfig.mielstone2fieldNames"
         },
         path: "rewardingContractConfig"
     },

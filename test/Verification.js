@@ -4,6 +4,7 @@ const VerificationContractFactory = artifacts.require("./VerificationContractFac
 const BaseVerification = artifacts.require("./BaseVerification.sol");
 const AccountStorageAdapter = artifacts.require("./AccountStorageAdapter.sol");
 const AttestationPartyStorageAdapter = artifacts.require("./AttestationPartyStorageAdapter.sol");
+const KimlicToken = artifacts.require("./KimlicToken.sol");
 
 const { addAccountData, getAccountFieldLastMainData, createAccountAndSet1EthToBalance, getFieldDetails } = require("./Helpers/AccountHelper.js");
 const { loadDeployedConfigIntoCache, getNetworkDeployedConfig, deployedConfigPathConsts } = require("../deployedConfigHelper");
@@ -132,5 +133,16 @@ contract("Verification", function() {
             }
             
         }
+    });
+
+    
+    it(`Should take rewards for verified data`, async () => {
+        const kimlicToken = await KimlicToken.deployed();
+
+        const rewards = getValueByPath(deployedConfig, deployedConfigPathConsts.rewardingContractConfig.rewards.path, []);
+
+        const balance = await kimlicToken.balanceOf.call(accountAddress);
+        const rewardingAmount = Object.values(rewards).reduce((a, b) => a + b, 0);
+        assert.equal(balance, rewardingAmount.toString());
     });
 });
