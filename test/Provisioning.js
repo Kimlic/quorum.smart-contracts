@@ -33,7 +33,7 @@ contract("Provisioning", function() {
         const provisioningContractkey = uuidv4();
         const verificationContractkey = uuidv4();
         const attestationPartySendConfig = { from: attestationPartyAddress };
-        it("Should init account with verified data", async () => {
+        it(`Should init account with verified "${fieldName}" data`, async () => {
             const adapter = await AccountStorageAdapter.deployed();
             await addAccountData(adapter, accountAddress, fieldName + "ProvisioningTest", fieldName);
             const verificationContractFactory = await VerificationContractFactory.deployed();
@@ -47,9 +47,10 @@ contract("Provisioning", function() {
         });
 
 
-        it(`Should create provisioning contract`, async () => {
+        it(`Should create provisioning "${fieldName}" contract`, async () => {
             const provisioningContractFactory = await ProvisioningContractFactory.deployed();
-            await provisioningContractFactory.createProvisioningContract(accountAddress, fieldName, provisioningContractkey, relyingPartySendConfig);
+            const transaction = await provisioningContractFactory.createProvisioningContract(accountAddress, fieldName, provisioningContractkey, relyingPartySendConfig);
+            console.log(`transaction = ${JSON.stringify(transaction)}, provisioningContractkey = "${provisioningContractkey}"`);
         });
         
         var provisioningContractAddress;

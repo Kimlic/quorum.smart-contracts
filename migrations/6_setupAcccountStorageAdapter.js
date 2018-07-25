@@ -1,11 +1,11 @@
 /*jshint esversion: 6 */
 
 const AccountStorageAdapter = artifacts.require("./AccountStorageAdapter.sol");
-const { getTransactionConfig, getFormatedConsoleLabel } = require("./Helpers/MigrationHelper");
+const { getFormatedConsoleLabel } = require("./Helpers/MigrationHelper");
 const { saveDeployedConfig, getNetworkDeployedConfig, deployedConfigPathConsts } = require("../deployedConfigHelper");
 const { setValueByPath } = require("../commonLogic");
 
-module.exports = function(deployer, network, accounts) {
+module.exports = function(deployer) {
     console.log(getFormatedConsoleLabel("Setup account storage adapter instance:"));
 
     const accountFields = [
@@ -20,7 +20,6 @@ module.exports = function(deployer, network, accounts) {
         "device"
     ];
 
-    const transactionConfig = getTransactionConfig(deployer, network, accounts);
     deployer.then(async () => {
         const accountStorageAdapterInstance = await AccountStorageAdapter.deployed();
 
@@ -28,7 +27,7 @@ module.exports = function(deployer, network, accounts) {
 
         accountFields.forEach(async (accountField) => {
             console.log(`Add allowed field name "${accountField}"`);
-            await accountStorageAdapterInstance.addAllowedFieldName(accountField, transactionConfig);
+            await accountStorageAdapterInstance.addAllowedFieldName(accountField);
         });
 
         setValueByPath(deployedConfig, deployedConfigPathConsts.accountStorageAdapter.allowedFieldNames.path, accountFields);

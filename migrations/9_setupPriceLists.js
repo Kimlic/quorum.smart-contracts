@@ -4,19 +4,17 @@ let KimlicContractsContext = artifacts.require("./KimlicContractsContext.sol");
 let KimlicContextStorage = artifacts.require("./KimlicContextStorage.sol");
 let PriceList = artifacts.require("./PriceList.sol");
 
-let { getTransactionConfig, getFormatedConsoleLabel, emptyAddress } = require("./Helpers/MigrationHelper");
-const { saveDeployedConfig, getNetworkDeployedConfig, deployedConfigPathConsts } = require("../deployedConfigHelper");
+let { getFormatedConsoleLabel, emptyAddress } = require("./Helpers/MigrationHelper");
+const { saveDeployedConfig, getNetworkDeployedConfig, deployedConfigPathConsts } = require("..eployedConfigHelper");
 const { getValueByPath } = require("../commonLogic");
 
 
-module.exports = function(deployer, network, accounts) {
+module.exports = function(deployer) {
     console.log(getFormatedConsoleLabel(`Setup pricelists`));
     const deployedConfig = getNetworkDeployedConfig(web3.version.network);
-
+ 
     const configPath = deployedConfigPathConsts.accountStorageAdapter.allowedFieldNames.path;
     const accountFields = getValueByPath(deployedConfig, configPath);
-    
-    let transactionConfig = getTransactionConfig(deployer, network, accounts);
 
     deployer.then(async () => {
         let kimlicContextStorageInstance = await KimlicContextStorage.deployed(); 
@@ -47,7 +45,7 @@ module.exports = function(deployer, network, accounts) {
         accountFields.forEach(async (fieldName) => {
             let price = 4 * Math.floor(1 + Math.random() * 5);
             console.log(`"${fieldName}" price = ${price} tokens`);
-            await instance.setPrice(fieldName, price, transactionConfig);
+            await instance.setPrice(fieldName, price);
             currentSetup[fieldName] = price;
         });
     };

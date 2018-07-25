@@ -13,16 +13,12 @@ const RelyingPartyStorage = artifacts.require("./RelyingPartyStorage.sol");
 const AttestationPartyStorageAdapter = artifacts.require("./AttestationPartyStorageAdapter.sol");
 const AttestationPartyStorage = artifacts.require("./AttestationPartyStorage.sol");
 
-const { getTransactionConfig, getFormatedConsoleLabel } = require("./Helpers/MigrationHelper");
+const { getFormatedConsoleLabel } = require("./Helpers/MigrationHelper");
 const { saveDeployedConfig, getNetworkDeployedConfig, deployedConfigPathConsts } = require("../deployedConfigHelper");
 const { setValueByPath } = require("../commonLogic");
 
 module.exports = function(deployer, network, accounts) {
     console.log(getFormatedConsoleLabel("Setup kimlic contracts context instance:"));
-    
-    const transactionConfig = getTransactionConfig(deployer, network, accounts);
-
-
     deployer.then(async () => {
         
         const communityTokenWalletPassword = "p@ssw0rd";
@@ -39,45 +35,45 @@ module.exports = function(deployer, network, accounts) {
         const kimlicContractsContextInstance = await KimlicContractsContext.deployed();
         
         console.log(`\nAccountStorageAddress = ${AccountStorage.address}`);
-        await kimlicContractsContextInstance.setAccountStorage(AccountStorage.address, transactionConfig);
+        await kimlicContractsContextInstance.setAccountStorage(AccountStorage.address);
         
         console.log(`\nAccountStorageAdapter = ${AccountStorageAdapter.address}`);
-        await kimlicContractsContextInstance.setAccountStorageAdapter(AccountStorageAdapter.address, transactionConfig);
+        await kimlicContractsContextInstance.setAccountStorageAdapter(AccountStorageAdapter.address);
         
         console.log(`\nRelyingPartyStorageAdapter = ${RelyingPartyStorageAdapter.address}`);
-        await kimlicContractsContextInstance.setRelyingPartyStorageAdapter(RelyingPartyStorageAdapter.address, transactionConfig);
+        await kimlicContractsContextInstance.setRelyingPartyStorageAdapter(RelyingPartyStorageAdapter.address);
         
         console.log(`\nRelyingPartyStorage = ${RelyingPartyStorage.address}`);
-        await kimlicContractsContextInstance.setRelyingPartyStorage(RelyingPartyStorage.address, transactionConfig);
+        await kimlicContractsContextInstance.setRelyingPartyStorage(RelyingPartyStorage.address);
         
         console.log(`\nAttestationPartyStorageAdapter = ${AttestationPartyStorageAdapter.address}`);
-        await kimlicContractsContextInstance.setAttestationPartyStorageAdapter(AttestationPartyStorageAdapter.address, transactionConfig);
+        await kimlicContractsContextInstance.setAttestationPartyStorageAdapter(AttestationPartyStorageAdapter.address);
         
         console.log(`\nAttestationPartyStorage = ${AttestationPartyStorage.address}`);
-        await kimlicContractsContextInstance.setAttestationPartyStorage(AttestationPartyStorage.address, transactionConfig);
+        await kimlicContractsContextInstance.setAttestationPartyStorage(AttestationPartyStorage.address);
         
         console.log(`\nKimlicToken = ${KimlicToken.address}`);
-        await kimlicContractsContextInstance.setKimlicToken(KimlicToken.address, transactionConfig);
+        await kimlicContractsContextInstance.setKimlicToken(KimlicToken.address);
         
         console.log(`\nVerificationContractFactory = ${VerificationContractFactory.address}`);
-        await kimlicContractsContextInstance.setVerificationContractFactory(VerificationContractFactory.address, transactionConfig);
+        await kimlicContractsContextInstance.setVerificationContractFactory(VerificationContractFactory.address);
         
-        const provisioningPriceListInstance = await deployer.deploy(PriceList, transactionConfig);
+        const provisioningPriceListInstance = await deployer.deploy(PriceList);
         console.log(`\nProvisioningPriceList = ${provisioningPriceListInstance.address}`);
-        await kimlicContractsContextInstance.setProvisioningPriceList(provisioningPriceListInstance.address, transactionConfig);
+        await kimlicContractsContextInstance.setProvisioningPriceList(provisioningPriceListInstance.address);
         
-        const verificationPriceListInstance = await deployer.deploy(PriceList, transactionConfig);
+        const verificationPriceListInstance = await deployer.deploy(PriceList);
         console.log(`\nVerificationPriceList = ${verificationPriceListInstance.address}`);
-        await kimlicContractsContextInstance.setVerificationPriceList(verificationPriceListInstance.address, transactionConfig);
+        await kimlicContractsContextInstance.setVerificationPriceList(verificationPriceListInstance.address);
         
         console.log(`\nProvisioningContractFactory = ${ProvisioningContractFactory.address}`);
-        await kimlicContractsContextInstance.setProvisioningContractFactory(ProvisioningContractFactory.address, transactionConfig);
+        await kimlicContractsContextInstance.setProvisioningContractFactory(ProvisioningContractFactory.address);
         
         console.log(`\nCommunity token wallet address = ${communityTokenWalletAddress}`);
-        await kimlicContractsContextInstance.setCommunityTokenWalletAddress(communityTokenWalletAddress, transactionConfig);
+        await kimlicContractsContextInstance.setCommunityTokenWalletAddress(communityTokenWalletAddress);
         
         console.log(`\nRewardingContract = ${RewardingContract.address}`);
-        await kimlicContractsContextInstance.setRewardingContract(RewardingContract.address, transactionConfig);
+        await kimlicContractsContextInstance.setRewardingContract(RewardingContract.address);
 
     });
 };

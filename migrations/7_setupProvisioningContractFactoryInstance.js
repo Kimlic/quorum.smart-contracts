@@ -1,13 +1,12 @@
 /*jshint esversion: 6 */
 const ProvisioningContractFactory = artifacts.require("./ProvisioningContractFactory.sol");
 
-const { getTransactionConfig, getFormatedConsoleLabel } = require("./Helpers/MigrationHelper");
+const { getFormatedConsoleLabel } = require("./Helpers/MigrationHelper");
 const { saveDeployedConfig, getNetworkDeployedConfig, deployedConfigPathConsts } = require("../deployedConfigHelper");
 const { setValueByPath, getValueByPath } = require("../commonLogic");
 
 module.exports = function(deployer, network, accounts) {
     console.log(getFormatedConsoleLabel("Setup provisioning contract factory instance:"));
-    const transactionConfig = getTransactionConfig(deployer, network, accounts);
 
     deployer.then(async () => {
         const deployedConfig = getNetworkDeployedConfig(web3.version.network);
@@ -25,7 +24,7 @@ module.exports = function(deployer, network, accounts) {
         
         console.log(JSON.stringify(interests, null, 4));
         await provisioningContractFactoryInstance.setInterestsPercent(interests.communityTokenWallet,
-            interests.coOwner, interests.attestationParty, interests.account, transactionConfig);
+            interests.coOwner, interests.attestationParty, interests.account);
         
         setValueByPath(deployedConfig, configPath, interests);
         saveDeployedConfig();

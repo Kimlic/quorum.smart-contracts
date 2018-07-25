@@ -3,16 +3,10 @@
 	},
 	"kubernetisNode": {
 		"addresses": {
-			"mainAccount": {
-			}
 		}
 	},
 	"KIM1": {
 		"addresses": {
-			"mainAccount": {
-				"address": "0xe0dfcd8ca47eec41d74d9e14760f9d5c5de78177",
-				"password": ""
-			},
 			"communityTokenWalletAddress": {
 
 			}

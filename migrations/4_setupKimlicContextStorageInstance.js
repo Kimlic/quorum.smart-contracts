@@ -3,18 +3,15 @@
 let KimlicContextStorage = artifacts.require("./KimlicContextStorage.sol");
 let KimlicContractsContext = artifacts.require("./KimlicContractsContext.sol");
 
-let { getTransactionConfig, getFormatedConsoleLabel } = require("./Helpers/MigrationHelper");
+let { getFormatedConsoleLabel } = require("./Helpers/MigrationHelper");
 
-module.exports = function(deployer, network, accounts) {
+module.exports = function(deployer) {
     console.log(getFormatedConsoleLabel("Setup kimlic context storage instance:"));
-    let transactionConfig = getTransactionConfig(deployer, network, accounts);
 
     deployer.then(async () => {
         let kimlicContextStorageInstance = await KimlicContextStorage.deployed();
         let kimlicContractsContextInstance = await KimlicContractsContext.deployed();
         console.log("Context = " + kimlicContractsContextInstance.address);
-        await kimlicContextStorageInstance.setContext(kimlicContractsContextInstance.address, transactionConfig);
+        await kimlicContextStorageInstance.setContext(kimlicContractsContextInstance.address);
     });
-
-
 };

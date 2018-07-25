@@ -35,7 +35,6 @@ contract ProvisioningContract is Ownable, WithKimlicContext {
         require(msg.sender == address(factory));
         
         tokensUnlockAt = block.timestamp + factory.tokensLockPeriod() * 1 hours;
-
         
         account = accountAddress;
         _reward = reward;
