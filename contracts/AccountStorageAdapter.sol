@@ -162,6 +162,20 @@ contract AccountStorageAdapter is Ownable, WithKimlicContext {
         length = getContext().getAccountStorage().getUint(keccak256(fieldHistoryLengthKey));
     }
 
+    function setRewardedAt(address accountAddress, uint milestone) public {
+        KimlicContractsContext context = getContext();
+        require(msg.sender == address(context.getRewardingContract()));
+
+        AccountStorage accountStorage = context.getAccountStorage();
+        bytes memory verificationContractKey = abi.encode(accountAddress, milestone, metaVerificationContractKey);
+        accountStorage.setUint(keccak256(verificationContractKey), block.timestamp);
+    }
+
+    function getRewardedAt(address accountAddress, uint milestone) public view returns(uint) {
+        bytes memory verificationContractKey = abi.encode(accountAddress, milestone, metaVerificationContractKey);
+        return getContext().getAccountStorage().getUint(keccak256(verificationContractKey));
+    }
+
     /// private methods ///
 
     function updateField(address accountAddress, string data, string accountFieldName) private {
@@ -228,7 +242,7 @@ contract AccountStorageAdapter is Ownable, WithKimlicContext {
     }
 
     modifier checkIsColmnNameAllowed(string name) {
-        require(allowedFieldNames[name], "Provided field name is not allowed");
+        require(isAllowedFieldName(name), "Provided field name is not allowed");
         _;
     }
 }

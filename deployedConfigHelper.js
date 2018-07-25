@@ -93,8 +93,8 @@ const deployedConfigPathConsts = {//TODO move to config file?
         rewards: {
             path: "rewardingContractConfig.rewards"
         },
-        mielstone2fieldNames: {
-            path: "rewardingContractConfig.mielstone2fieldNames"
+        milestone2fieldNames: {
+            path: "rewardingContractConfig.milestone2fieldNames"
         },
         path: "rewardingContractConfig"
     },
@@ -118,6 +118,9 @@ const deployedConfigPathConsts = {//TODO move to config file?
             },
         },
         path: "partiesConfig"
+    },
+    createdUsers: {
+        path: "createdUsers"
     }
 };
 

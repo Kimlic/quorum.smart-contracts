@@ -8,7 +8,7 @@ const ProvisioningContract = artifacts.require("./ProvisioningContract.sol");
 const { addAccountData, getAccountFieldLastMainData, 
     getAccountFieldLastVerificationData, createAccountAndSet1EthToBalance } = require("./Helpers/AccountHelper.js");
 const { loadDeployedConfigIntoCache, getNetworkDeployedConfig, deployedConfigPathConsts } = require("../deployedConfigHelper");
-const { getValueByPath, combinePath, uuidv4 } = require("../commonLogic");
+const { getValueByPath, combinePath, uuidv4, emptyAddress } = require("../commonLogic");
 
 
 contract("Provisioning", function() {
@@ -36,11 +36,10 @@ contract("Provisioning", function() {
         it(`Should init account with verified "${fieldName}" data`, async () => {
             const adapter = await AccountStorageAdapter.deployed();
             await addAccountData(adapter, accountAddress, fieldName + "ProvisioningTest", fieldName);
+
             const verificationContractFactory = await VerificationContractFactory.deployed();
             await verificationContractFactory.createBaseVerificationContract(accountAddress, attestationPartyAddress,
                 verificationContractkey, fieldName, relyingPartySendConfig);
-
-
             const verificationContractAddress =  await verificationContractFactory.getVerificationContract.call(verificationContractkey, attestationPartySendConfig);
             const verificationContract = await BaseVerification.at(verificationContractAddress);
             await verificationContract.finalizeVerification(true, attestationPartySendConfig);
@@ -49,15 +48,14 @@ contract("Provisioning", function() {
 
         it(`Should create provisioning "${fieldName}" contract`, async () => {
             const provisioningContractFactory = await ProvisioningContractFactory.deployed();
-            const transaction = await provisioningContractFactory.createProvisioningContract(accountAddress, fieldName, provisioningContractkey, relyingPartySendConfig);
-            console.log(`transaction = ${JSON.stringify(transaction)}, provisioningContractkey = "${provisioningContractkey}"`);
+            await provisioningContractFactory.createProvisioningContract(accountAddress, fieldName, provisioningContractkey, relyingPartySendConfig);
         });
         
         var provisioningContractAddress;
         it(`Should return created provisioning contract by key`, async () => {
             const provisioningContractFactory = await ProvisioningContractFactory.deployed();
             provisioningContractAddress =  await provisioningContractFactory.getProvisioningContract.call(provisioningContractkey, relyingPartySendConfig);
-            assert.notEqual(provisioningContractAddress, "0x0000000000000000000000000000000000000000");
+            assert.notEqual(provisioningContractAddress, emptyAddress);
         });
 
         it(`Should get isVerificationFinished = true`, async () => {

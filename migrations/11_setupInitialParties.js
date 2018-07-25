@@ -21,7 +21,7 @@ module.exports = function(deployer) {
 
         const veriffName = "veriff";
         currentSetup[veriffName] = await setupParty(kimlicTokenInstance, veriffName, veriffName + "p@ssw0rd");
-        await setupAPAccessToFieldVerification(veriffName, currentSetup[veriffName].address, ["documents.id_card"]);
+        await setupAPAccessToFieldVerification(veriffName, currentSetup[veriffName].address, ["documents.id_card", "documents.passport"]);
         
         const kimlicName = "kimlic";
         currentSetup[kimlicName] = await setupParty(kimlicTokenInstance, kimlicName, kimlicName + "p@ssw0rd");

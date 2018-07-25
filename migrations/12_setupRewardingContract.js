@@ -23,24 +23,24 @@ module.exports = function(deployer) {
         const config = getNetworkDeployedConfig(web3.version.network);
 
         const rewards = {
-            mielstone1Reward: 10,
-            mielstone2Reward: 15
+            milestone1Reward: 10,
+            milestone2Reward: 15
         }
 
-        await rewardingContract.setMilestone1Reward(rewards.mielstone1Reward);
-        await rewardingContract.setMilestone2Reward(rewards.mielstone2Reward);
+        await rewardingContract.setMilestone1Reward(rewards.milestone1Reward);
+        await rewardingContract.setMilestone2Reward(rewards.milestone2Reward);
         console.log(`rewards: ${JSON.stringify(rewards)}`);
 
         setValueByPath(config, deployedConfigPathConsts.rewardingContractConfig.rewards.path, rewards);
 
         const allowedFieldNames = getValueByPath(config, deployedConfigPathConsts.accountStorageAdapter.allowedFieldNames.path, []);
-        const mielstone2FieldNames = allowedFieldNames.filter((str)=>str.startsWith("documents"));
-        mielstone2FieldNames.forEach(async fieldName => {
+        const milestone2FieldNames = allowedFieldNames.filter((str)=>str.startsWith("documents"));
+        milestone2FieldNames.forEach(async fieldName => {
             await rewardingContract.addMielstone2FieldName(fieldName);
         });
 
-        console.log(`mielstone2Fields: ${JSON.stringify(mielstone2FieldNames)}`);
-        setValueByPath(config, deployedConfigPathConsts.rewardingContractConfig.mielstone2fieldNames.path, mielstone2FieldNames);
+        console.log(`milestone2Fields: ${JSON.stringify(milestone2FieldNames)}`);
+        setValueByPath(config, deployedConfigPathConsts.rewardingContractConfig.milestone2fieldNames.path, milestone2FieldNames);
 
         saveDeployedConfig();
     });
