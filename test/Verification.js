@@ -1,98 +1,148 @@
 /*jshint esversion: 6 *//*jshint esversion: 6 */
-let fs = require("fs");
 
-let VerificationContractFactory = artifacts.require("./VerificationContractFactory.sol");
-let BaseVerification = artifacts.require("./BaseVerification.sol");
-let AccountStorageAdapter = artifacts.require("./AccountStorageAdapter.sol");
+const VerificationContractFactory = artifacts.require("./VerificationContractFactory.sol");
+const BaseVerification = artifacts.require("./BaseVerification.sol");
+const AccountStorageAdapter = artifacts.require("./AccountStorageAdapter.sol");
+const AttestationPartyStorageAdapter = artifacts.require("./AttestationPartyStorageAdapter.sol");
+const KimlicToken = artifacts.require("./KimlicToken.sol");
 
-let { accountConsts, addAccountData, getAccountFieldLastMainData, getAccountLastDataIndex } = require("./Helpers/AccountHelper.js")
+const { addAccountData, getAccountFieldLastMainData, createAccountAndSet1EthToBalance, getFieldDetails } = require("./Helpers/AccountHelper.js");
+const { loadDeployedConfigIntoCache, getNetworkDeployedConfig, deployedConfigPathConsts } = require("../deployedConfigHelper");
+const { getValueByPath, combinePath, uuidv4, emptyAddress } = require("../commonLogic");
 
 
-contract("Verification", function(accounts) {
+
+contract("Verification", function() {
+    loadDeployedConfigIntoCache();
+    const deployedConfig = getNetworkDeployedConfig(web3.version.network);
+
+    const accountAllowedFieldNamesConfigPath = deployedConfigPathConsts.accountStorageAdapter.allowedFieldNames.path;
+    const accountAllowedFieldNamesConfig = getValueByPath(deployedConfig, accountAllowedFieldNamesConfigPath);
     
-    let accountAddress = accounts[0];
+    var accountAddress = "";
 
     it("init account", async () => {
-        let adapter = await AccountStorageAdapter.deployed();
-        await addAccountData(adapter, accountAddress, accountConsts.phoneValue + "VerificationTest", accountConsts.phoneFieldName);
-        await addAccountData(adapter, accountAddress, accountConsts.emailValue + "VerificationTest", accountConsts.emailFieldName);
-        //await addAccountData(adapter, accountAddress, accountConsts.identityValue + "VerificationTest", accountConsts.identityFieldName);
-        await addAccountData(adapter, accountAddress, accountConsts.documentValue + "VerificationTest", accountConsts.documentsFieldName);
-        //await addAccountData(adapter, accountAddress, accountConsts.addressValue + "VerificationTest", accountConsts.addressesFieldName);
+        const account = await createAccountAndSet1EthToBalance(web3);
+        accountAddress = account.accountAddress;
+
+        const adapter = await AccountStorageAdapter.deployed();
+        accountAllowedFieldNamesConfig.forEach(async (accountFieldName) => {
+            await addAccountData(adapter, accountAddress, accountFieldName + "VerificationTest", accountFieldName);
+        });
     });
 
-    let verificationTests = (factoryMethodName, fieldName, attestationPartyAddress, verificationContractkey, sendConfig) => {
+    const verificationTests = (fieldName, attestationPartyAddress) => {
+        const sendConfig = { "from": attestationPartyAddress };
+        const verificationContractkey = uuidv4();
+        let dataIndex = 0;
+        it(`Should have data in field ${fieldName}`, async () => {
+            const accountStorageAdapter = await AccountStorageAdapter.deployed();
+            dataIndex = await accountStorageAdapter.getFieldHistoryLength.call(accountAddress, fieldName);
+            assert.notEqual(dataIndex, "0");
+        });
+        
+        it(`Should not have verification contract for field ${fieldName}`, async () => {
+            const accountStorageAdapter = await AccountStorageAdapter.deployed();
+            const isContractExist = await accountStorageAdapter.getIsFieldVerificationContractExist
+                .call(accountAddress, fieldName, dataIndex, { from: accountAddress });
+            assert.equal(isContractExist, false);
+        });
+        
+        it(`Should have access ${fieldName} verification from attestation party`, async () => {
+            const attestationPartyStorageAdapter = await AttestationPartyStorageAdapter.deployed();
+            const isFieldVerificationAllowed = await attestationPartyStorageAdapter.getIsFieldVerificationAllowed.call(attestationPartyAddress, fieldName);
+            assert.equal(isFieldVerificationAllowed, true);
+        });
+
         it(`Should create ${fieldName} verification contract`, async () => {
-            let verificationContractFactory = await VerificationContractFactory.deployed();
-            await verificationContractFactory[factoryMethodName](accountAddress,
-                attestationPartyAddress, verificationContractkey, sendConfig);
+            const verificationContractFactory = await VerificationContractFactory.deployed();
+            await verificationContractFactory.createBaseVerificationContract(accountAddress,
+                attestationPartyAddress, verificationContractkey, fieldName, sendConfig);
         });
         
         var verificationContractAddress;
         it(`Should return created ${fieldName} verification contract by key ${verificationContractkey}`, async () => {
-            let verificationContractFactory = await VerificationContractFactory.deployed();
+            const verificationContractFactory = await VerificationContractFactory.deployed();
             verificationContractAddress =  await verificationContractFactory.getVerificationContract.call(verificationContractkey, sendConfig);
-            assert.notEqual(verificationContractAddress, "0x0000000000000000000000000000000000000000");
+            assert.notEqual(verificationContractAddress, emptyAddress);
         });
 
         it(`Should return field data to owner.`, async () => {
-            let verificationContract = await BaseVerification.at(verificationContractAddress);
-            let data = await verificationContract.getData.call({ "from": attestationPartyAddress });
+            const verificationContract = await BaseVerification.at(verificationContractAddress);
+            const data = await verificationContract.getData.call({ "from": attestationPartyAddress });
             
-            let adapter = await AccountStorageAdapter.deployed();
-            let accountData = await getAccountFieldLastMainData(adapter, accountAddress, fieldName);
+            const adapter = await AccountStorageAdapter.deployed();
+            const accountData = await getAccountFieldLastMainData(adapter, accountAddress, fieldName);
             assert.deepEqual(data, accountData);
         });
         
         it(`Should set verification ${fieldName} result`, async () => {
-            let verificationContract = await BaseVerification.at(verificationContractAddress);
-            await verificationContract.setVerificationResult(true, { "from": attestationPartyAddress });
+            const verificationContract = await BaseVerification.at(verificationContractAddress);
+            await verificationContract.finalizeVerification(true, { "from": attestationPartyAddress });
         });
         
-        it(`Should get verification status. Status must be "Verified"(1)`, async () => {
-            let verificationContract = await BaseVerification.at(verificationContractAddress);
-            let verificationStatus = await verificationContract.status.call();
-            assert.equal(verificationStatus, true);
+        it(`Should get verification status. Status must be "Verified"(2)`, async () => {
+            const verificationContract = await BaseVerification.at(verificationContractAddress);
+            const verificationStatus = await verificationContract.getStatus.call();
+            assert.equal(verificationStatus, 2);
+        });
+        it(`Should read account ${fieldName} full data`, async () => {
+            let adapter = await AccountStorageAdapter.deployed();
+            let detail = await getFieldDetails(adapter, accountAddress, fieldName);
         });
     };
 
+    const allowedFieldNamesConfig = getValueByPath(deployedConfig,
+        deployedConfigPathConsts.accountStorageAdapter.allowedFieldNames.path);
 
+    
+    const partiesConfig = getValueByPath(deployedConfig, deployedConfigPathConsts.partiesConfig.createdParties.path);
+    
+    const attestationPartyByFieldName = {};
 
-    let uuidv4 = () => {
-        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-            var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-            return v.toString(16);
+    Object.keys(partiesConfig).forEach(party => {
+        const path = combinePath(deployedConfigPathConsts.partiesConfig.createdParties.party.allowedFieldNames.pathTemplate, { partyName: party })
+        const partyAllowedFields = getValueByPath(deployedConfig, path, []);
+        partyAllowedFields.forEach(allowedFieldName => {
+            if (!attestationPartyByFieldName[allowedFieldName]) {
+                attestationPartyByFieldName[allowedFieldName] = [];
+            }
+            const attestationPartiesForField = attestationPartyByFieldName[allowedFieldName];
+            attestationPartiesForField.push(party);
         });
-    };
-
-    
-    let getPartiesConfig = () => {
-        let partiesConfigFileName = "PartiesConfig.json";
-        var partiesConfig = {};
-        if (fs.existsSync(partiesConfigFileName)) {
-            console.log(`Reading parties config from file "${partiesConfigFileName}"`);
-            partiesConfig = { ...partiesConfig, ...JSON.parse(fs.readFileSync(partiesConfigFileName))};
-        }
-        return partiesConfig;
-    };
-
-    let verificatorAddress = accounts[0];//TODO replace by real verificator address;
-
-    let config = getPartiesConfig();
-    let kimlicConfig = config["Kimlic"];
-    let veriffConfig = config["Veriff"];
-    let relyingPartyConfig = config["FirstRelyingParty"];
-    
-    it("Should unlock verificators accounts", async () => {
-        await web3.personal.unlockAccount(kimlicConfig.address, kimlicConfig.password);
-        await web3.personal.unlockAccount(veriffConfig.address, veriffConfig.password);
-        await web3.personal.unlockAccount(relyingPartyConfig.address, relyingPartyConfig.password);
     });
-    
-    verificationTests("createEmailVerification", accountConsts.emailFieldName, kimlicConfig.address, uuidv4(), { "from": kimlicConfig.address });
+    console.log(`attestation party by field name: ${JSON.stringify(attestationPartyByFieldName)}`);
 
-    verificationTests("createPhoneVerification", accountConsts.phoneFieldName, kimlicConfig.address, uuidv4(), { "from": kimlicConfig.address });
+    allowedFieldNamesConfig.forEach(fieldName => {
+        if (fieldName != "device") {
+            console.log(`fieldName: ${fieldName}`);
+            const apList = attestationPartyByFieldName[fieldName];
+            console.log(`attestation parties list: ${JSON.stringify(apList)}`);
+            if (apList && apList.length > 0) {
+                const apName = apList[0];
+                console.log(`apName: ${apName}`);
+                const path = combinePath(deployedConfigPathConsts.partiesConfig.createdParties.party.pathTemplate, { partyName: apName })
+                const partyConfig = getValueByPath(deployedConfig, path, {});
+                console.log(`partyConfig: ${JSON.stringify(partyConfig)}`);
+
+
+                it(`Should unlock attestation party. address ${partyConfig.address}, password: ${partyConfig.password}`, async () => {
+                    await web3.personal.unlockAccount(partyConfig.address, partyConfig.password, 100);
+                });
+                verificationTests(fieldName, partyConfig.address);
+            }
+            
+        }
+    });
+
     
-    verificationTests("createDocumentVerification", accountConsts.documentsFieldName, veriffConfig.address, uuidv4(), { "from": relyingPartyConfig.address });
-    
+    it(`Should take rewards for verified data`, async () => {
+        const kimlicToken = await KimlicToken.deployed();
+
+        const rewards = getValueByPath(deployedConfig, deployedConfigPathConsts.rewardingContractConfig.rewards.path, []);
+
+        const balance = await kimlicToken.balanceOf.call(accountAddress);
+        const rewardingAmount = Object.values(rewards).reduce((a, b) => a + b, 0);
+        assert.equal(balance, rewardingAmount.toString());
+    });
 });

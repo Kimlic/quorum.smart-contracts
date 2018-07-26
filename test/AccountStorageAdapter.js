@@ -1,15 +1,21 @@
 /*jshint esversion: 6 */
-let AccountStorageAdapter = artifacts.require("./AccountStorageAdapter.sol");
+const AccountStorageAdapter = artifacts.require("./AccountStorageAdapter.sol");
 
-let { accountConsts, addAccountData, getAccountFieldLastMainData, getAccountLastDataIndex } = require("./Helpers/AccountHelper.js")
+const { addAccountData, getAccountFieldLastMainData, getAccountLastDataIndex, createAccountAndSet1EthToBalance, getFieldDetails } = require("./Helpers/AccountHelper.js");
+const { getNetworkDeployedConfig, deployedConfigPathConsts } = require("../deployedConfigHelper");
+const { getValueByPath } = require("../commonLogic");
 
 
-contract("AccountStorageAdapter", function(accounts) {
-    let accountAddress = accounts[0];
-    console.log(`accountAddress: ${accountAddress}`);
 
+contract("AccountStorageAdapter", function() {
+    let accountAddress = "";
+    it("create account", async () => {
+        const account = await createAccountAndSet1EthToBalance(web3);
+        accountAddress = account.accountAddress;
+        console.log(`accountAddress: ${accountAddress}`);
+    });
     
-    let checkSetAccountData = (fieldData, fieldName, expectedFieldIndex) => {
+    let checkSetAccountField = (fieldData, fieldName, expectedFieldIndex) => {
         let addDataCaption = `Should add account data. Set account ${fieldName} = "${fieldData}".`;
         
         let readDataCaption = `Should read account ${fieldName} data. Must be equal to "${fieldData}".`;
@@ -32,22 +38,21 @@ contract("AccountStorageAdapter", function(accounts) {
             let newDataIndex = await getAccountLastDataIndex(adapter, accountAddress, fieldName);
             assert.equal(newDataIndex, expectedFieldIndex);
         });
+        it(`Should read account ${fieldName} full data`, async () => {
+            let adapter = await AccountStorageAdapter.deployed();
+            await getFieldDetails(adapter, accountAddress, fieldName);
+        });
     };
     
-    checkSetAccountData(accountConsts.identityValue, accountConsts.identityFieldName, 1);
-    checkSetAccountData(accountConsts.identityValue + "2", accountConsts.identityFieldName, 2);
-    
-    checkSetAccountData(accountConsts.emailValue, accountConsts.emailFieldName, 1);
-    checkSetAccountData(accountConsts.emailValue + "2", accountConsts.emailFieldName, 2);
-    
-    checkSetAccountData(accountConsts.phoneValue, accountConsts.phoneFieldName, 1);
-    checkSetAccountData(accountConsts.phoneValue + "2", accountConsts.phoneFieldName, 2);
-    
-    checkSetAccountData(accountConsts.deviceValue, accountConsts.deviceFieldName, 1);
-    
-    checkSetAccountData(accountConsts.addressValue, accountConsts.addressesFieldName, 1);
-    checkSetAccountData(accountConsts.addressValue + "2", accountConsts.addressesFieldName, 2);
-    
-    checkSetAccountData(accountConsts.documentValue, accountConsts.documentsFieldName, 1);
-    checkSetAccountData(accountConsts.documentValue + "2", accountConsts.documentsFieldName, 2);
+    const deployedConfig = getNetworkDeployedConfig(web3.version.network);
+
+    const allowedFieldNamesConfigPath = deployedConfigPathConsts.accountStorageAdapter.allowedFieldNames.path;
+    const allowedFieldNamesConfig = getValueByPath(deployedConfig, allowedFieldNamesConfigPath);
+
+    allowedFieldNamesConfig.forEach(fieldName => {
+        if (fieldName != "device") {
+            checkSetAccountField(fieldName, fieldName, 1);
+            checkSetAccountField(fieldName + "2", fieldName, 2);
+        }
+    });
 });

@@ -24,30 +24,31 @@ contract VerificationContractFactory is WithKimlicContext {
         return contracts[key];
     }
 
+    //obsolete method, use createBaseVerificationContract.
     function createEmailVerification(address account, address attestationPartyAddress, string key) public {
         createBaseVerificationContract(account, attestationPartyAddress, key, "email");
     }
 
+    //obsolete method, use createBaseVerificationContract.
     function createPhoneVerification(address account, address attestationPartyAddress, string key) public {
         createBaseVerificationContract(account, attestationPartyAddress, key, "phone");
     }
 
+    //obsolete method, use createBaseVerificationContract.
     function createDocumentVerification(address account, address attestationPartyAddress, string key) public {
         createBaseVerificationContract(account, attestationPartyAddress, key, "documents.id_card");
     }
-    //TODO add create methods for all account fields or make createBaseVerificationContract public and use it for all types.
-
-    /// private methods ///
-    function createBaseVerificationContract(address account, address attestationPartyAddress, string key, string accountFieldName) private {
+    
+    function createBaseVerificationContract(address account, address attestationPartyAddress, string key, string accountFieldName) public {
         KimlicContractsContext context = getContext();
 
         AccountStorageAdapter accountStorageAdapter = context.getAccountStorageAdapter();
         uint dataIndex = accountStorageAdapter.getFieldHistoryLength(account, accountFieldName);
         require(dataIndex > 0, "Data is empty");
 
-        address verificationContractAddress = context.getAccountStorageAdapter()
-            .getAccountDataVerificationContractAddress(account, accountFieldName, dataIndex);
-        require(verificationContractAddress == address(0), "Verification contract for this data already created");
+        bool verificationContractAlreadyExist = context.getAccountStorageAdapter()
+            .getIsFieldVerificationContractExist(account, accountFieldName, dataIndex);
+        require(!verificationContractAlreadyExist, "Verification contract for this data already created");
 
         require(
             context.getAttestationPartyStorageAdapter().getIsFieldVerificationAllowed(attestationPartyAddress, accountFieldName),
@@ -55,8 +56,7 @@ contract VerificationContractFactory is WithKimlicContext {
 
         uint rewardAmount = context.getVerificationPriceList().getPrice(accountFieldName);
 
-        BaseVerification createdContract = new BaseVerification(
-            _storage, rewardAmount, account, msg.sender, dataIndex, attestationPartyAddress, accountFieldName);
+        BaseVerification createdContract = new BaseVerification(_storage, rewardAmount, account, msg.sender, dataIndex, accountFieldName);
         createdContract.transferOwnership(attestationPartyAddress);
 
         address createdContractAddress = address(createdContract);
@@ -64,6 +64,6 @@ contract VerificationContractFactory is WithKimlicContext {
         contracts[key] = createdContractAddress;
         context.getKimlicToken().transferFrom(msg.sender, createdContractAddress, rewardAmount);
         
-        context.getAccountStorageAdapter().setAccountFieldVerificationContractAddress(account, accountFieldName, createdContractAddress);
+        context.getAccountStorageAdapter().setFieldVerificationContractAddress(account, accountFieldName, dataIndex, createdContractAddress);
     }
 }

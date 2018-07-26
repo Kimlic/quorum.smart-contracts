@@ -11,56 +11,93 @@ contract BaseVerification is Ownable, WithKimlicContext {
     /// public attributes ///
     string public accountFieldName;
     address public coOwner;
-    Status public status;
     uint public dataIndex;
-    address public attestationParty;
     address public accountAddress;
     uint public tokensUnlockAt;
     uint public verifiedAt;
+    uint public rewardAmount;
     
     /// enums ///
-    enum Status { Created, Verified, Unverified, Canceled }
+    enum Status { None, Created, Verified, Unverified, Canceled }
 
     /// private attributes ///
-    uint internal _rewardAmount;//TODO make it public or remove
+    Status public _status;
 
     /// constructors ///
-    constructor(
-        address contextStorage, uint rewardAmount, address account, address coOwnerAddress, uint index, address attestationPartyAddress,
-        string fieldName) public WithKimlicContext(contextStorage) Ownable() {
+    constructor(address contextStorage, uint reward, address account, address coOwnerAddress, uint index, string fieldName)
+        public WithKimlicContext(contextStorage) Ownable() {
 
         coOwner = coOwnerAddress;
         accountAddress = account;
         dataIndex = index;
-        attestationParty = attestationPartyAddress;
         accountFieldName = fieldName;
-        _rewardAmount = rewardAmount;
+        rewardAmount = reward;
+        _status = Status.Created;
     }
 
     /// public methods ///
-    function setVerificationResult(bool verificationResult) public onlyOwner() {
-        require(status == Status.Created);
+    function finalizeVerification(bool verificationResult) public onlyOwner() {
+        require(_status == Status.Created);
 
         KimlicContractsContext context = getContext();
         KimlicToken token = context.getKimlicToken();
-        require(token.balanceOf(address(this)) == _rewardAmount);
-        
-        status = verificationResult? Status.Verified: Status.Unverified;
+        require(token.balanceOf(address(this)) == rewardAmount);
 
-        token.transfer(owner, _rewardAmount);
+        token.transfer(owner, rewardAmount);
 
+        _status = verificationResult? Status.Verified: Status.Unverified;
         verifiedAt = block.timestamp;
+
+        if (verificationResult == true) {
+            context.getRewardingContract().checkMilestones(accountAddress, accountFieldName);
+        }
     }
 
     function getData() view public onlyOwner() returns (string data) {
-        return getContext().getAccountStorageAdapter().getAccountFieldMainData(accountAddress, accountFieldName, dataIndex);
+        return getContext().getAccountStorageAdapter().getFieldMainData(accountAddress, accountFieldName, dataIndex);
     }
 
     function withdraw() public onlyOwner() {
-        require(block.timestamp >= tokensUnlockAt && status == Status.Created);
+        require(block.timestamp >= tokensUnlockAt && _status == Status.Created);
+        KimlicContractsContext context = getContext();
 
-        status = Status.Canceled;
+        _status = Status.Canceled;
         KimlicToken kimlicToken = getContext().getKimlicToken();
         kimlicToken.transfer(owner, kimlicToken.balanceOf(address(this)));
+        
+        context.getAccountStorageAdapter().setFieldVerificationContractAddress(accountAddress, accountFieldName, dataIndex, address(0));
+    }
+
+    function getStatus() public view readStatusRestriction() returns(Status) {
+        return _status;
+    }
+
+    function getStatusName() public view readStatusRestriction() returns(string) {
+        if (_status == Status.None) {
+            return "None";
+        }
+        if (_status == Status.Created) {
+            return "Created";
+        }
+        if (_status == Status.Verified) {
+            return "Verified";
+        }
+        if (_status == Status.Unverified) {
+            return "Unverified";
+        }
+        if (_status == Status.Canceled) {
+            return "Canceled";
+        }
+    }
+
+    modifier readStatusRestriction() {
+        KimlicContractsContext context = getContext();
+        require(
+            context.getProvisioningContractFactory().createdContracts(msg.sender) || //TODO add additional check()
+            msg.sender == address(context.getAccountStorageAdapter()) || //TODO add additional check()
+            msg.sender == owner ||
+            msg.sender == address(context.getRewardingContract()) || //TODO add additional check()
+            msg.sender == context.owner());
+        _;
     }
 }

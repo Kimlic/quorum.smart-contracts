@@ -1,87 +1,124 @@
 /*jshint esversion: 6 *//*jshint esversion: 6 */
-var fs = require("fs");
+const VerificationContractFactory = artifacts.require("./VerificationContractFactory.sol");
+const BaseVerification = artifacts.require("./BaseVerification.sol");
+const AccountStorageAdapter = artifacts.require("./AccountStorageAdapter.sol");
+const ProvisioningContractFactory = artifacts.require("./ProvisioningContractFactory.sol");
+const ProvisioningContract = artifacts.require("./ProvisioningContract.sol");
 
-let VerificationContractFactory = artifacts.require("./VerificationContractFactory.sol");
-let BaseVerification = artifacts.require("./BaseVerification.sol");
-let AccountStorageAdapter = artifacts.require("./AccountStorageAdapter.sol");
-let ProvisioningContractFactory = artifacts.require("./ProvisioningContractFactory.sol");
-let ProvisioningContract = artifacts.require("./ProvisioningContract.sol");
-
-let { accountConsts, addAccountData, getAccountFieldLastMainData, getAccountFieldLastVerificationData, getAccountLastDataIndex } = require("./Helpers/AccountHelper.js")
+const { addAccountData, getAccountFieldLastMainData, 
+    getAccountFieldLastVerificationData, createAccountAndSet1EthToBalance } = require("./Helpers/AccountHelper.js");
+const { loadDeployedConfigIntoCache, getNetworkDeployedConfig, deployedConfigPathConsts } = require("../deployedConfigHelper");
+const { getValueByPath, combinePath, uuidv4, emptyAddress } = require("../commonLogic");
 
 
-contract("Provisioning", function(accounts) {
-    let uuidv4 = () => {
-        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-            var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-            return v.toString(16);
+contract("Provisioning", function() {
+    loadDeployedConfigIntoCache();
+    const deployedConfig = getNetworkDeployedConfig(web3.version.network);
+    var accountAddress = "";
+
+    it("init account", async () => {
+        const account = await createAccountAndSet1EthToBalance(web3);
+        accountAddress = account.accountAddress;
+        console.log(`accountAddress: ${accountAddress}`);
+    });
+
+    const testProvisioning = (fieldName, attestationPartyAddress) => {
+        const path = combinePath(deployedConfigPathConsts.partiesConfig.createdParties.party.pathTemplate, { partyName: "firstRelyingParty" });
+        const relyingPartyConfig = getValueByPath(deployedConfig, path, {});
+        relyingPartySendConfig = { from: relyingPartyConfig.address};
+        it("Should unlock relying party account", async () => {
+            await web3.personal.unlockAccount(relyingPartyConfig.address, relyingPartyConfig.password, 100);
         });
-    };
 
-    let getPartiesConfig = () => {
-        let partiesConfigFileName = "PartiesConfig.json";
-        var partiesConfig = {};
-        if (fs.existsSync(partiesConfigFileName)) {
-            console.log(`Reading parties config from file "${partiesConfigFileName}"`);
-            partiesConfig = { ...partiesConfig, ...JSON.parse(fs.readFileSync(partiesConfigFileName))};
-        }
-        return partiesConfig;
-    };
-    
-    let accountAddress = accounts[0];
+        const provisioningContractkey = uuidv4();
+        const verificationContractkey = uuidv4();
+        const attestationPartySendConfig = { from: attestationPartyAddress };
+        it(`Should init account with verified "${fieldName}" data`, async () => {
+            const adapter = await AccountStorageAdapter.deployed();
+            await addAccountData(adapter, accountAddress, fieldName + "ProvisioningTest", fieldName);
 
-    let config = getPartiesConfig();
-    let kimlicConfig = config["Kimlic"];
-    let relyingPartyConfig = config["FirstRelyingParty"];
-    let relyingPartySendConfig = { from: relyingPartyConfig.address };
-    let kimlicSendConfig = { from: kimlicConfig.address };
-    
-    it("Should unlock relying party account", async () => {
-        web3.personal.unlockAccount(kimlicConfig.address, kimlicConfig.password);
-        web3.personal.unlockAccount(relyingPartyConfig.address, relyingPartyConfig.password);
-    });
-    
-    let provisioningContractkey = uuidv4();
-    let verificationContractkey = uuidv4();
-    let fieldName = accountConsts.phoneFieldName;
-    it("init account with verified data", async () => {
-        let adapter = await AccountStorageAdapter.deployed();
-        await addAccountData(adapter, accountAddress, accountConsts.phoneValue + "ProvisioningTest", fieldName);
-
-        let verificationContractFactory = await VerificationContractFactory.deployed();
-        await verificationContractFactory.createPhoneVerification(accountAddress, kimlicConfig.address,
-            verificationContractkey, kimlicSendConfig);
-        let verificationContractAddress =  await verificationContractFactory.getVerificationContract.call(verificationContractkey, kimlicSendConfig);
-        let verificationContract = await BaseVerification.at(verificationContractAddress);
-        await verificationContract.setVerificationResult(true, kimlicSendConfig);
-    });
+            const verificationContractFactory = await VerificationContractFactory.deployed();
+            await verificationContractFactory.createBaseVerificationContract(accountAddress, attestationPartyAddress,
+                verificationContractkey, fieldName, relyingPartySendConfig);
+            const verificationContractAddress =  await verificationContractFactory.getVerificationContract.call(verificationContractkey, attestationPartySendConfig);
+            const verificationContract = await BaseVerification.at(verificationContractAddress);
+            await verificationContract.finalizeVerification(true, attestationPartySendConfig);
+        });
 
 
-    it(`Should create provisioning contract`, async () => {
-        let provisioningContractFactory = await ProvisioningContractFactory.deployed();
-        await provisioningContractFactory.createProvisioningContract(accountAddress, fieldName, provisioningContractkey, relyingPartySendConfig);
-    });
-    
-    var provisioningContractAddress;
-    it(`Should return created provisioning contract by key ${provisioningContractkey}`, async () => {
-        let provisioningContractFactory = await ProvisioningContractFactory.deployed();
-        provisioningContractAddress =  await provisioningContractFactory.getProvisioningContract.call(provisioningContractkey, relyingPartySendConfig);
-        assert.notEqual(provisioningContractAddress, "0x0000000000000000000000000000000000000000");
-    });
-
-    it(`Should set provisioning result`, async () => {
-        let provisioningContractFactory = await ProvisioningContract.at(provisioningContractAddress);
-        await provisioningContractFactory.setDataProvidedStatus(relyingPartySendConfig);
-    });
-
-    it(`Should return field data to owner.`, async () => {
-        let provisioningContractFactory = await ProvisioningContract.at(provisioningContractAddress);
-        let data = await provisioningContractFactory.getData.call(relyingPartySendConfig, relyingPartySendConfig);
+        it(`Should create provisioning "${fieldName}" contract`, async () => {
+            const provisioningContractFactory = await ProvisioningContractFactory.deployed();
+            await provisioningContractFactory.createProvisioningContract(accountAddress, fieldName, provisioningContractkey, relyingPartySendConfig);
+        });
         
-        let adapter = await AccountStorageAdapter.deployed();
-        let accountMainData = [ await getAccountFieldLastMainData(adapter, accountAddress, fieldName, kimlicSendConfig) ];
-        let accountVerificationData = await getAccountFieldLastVerificationData(adapter, accountAddress, fieldName, kimlicSendConfig);
-        let accountData = accountMainData.concat(accountVerificationData);
-        assert.deepEqual(data, accountData);
+        var provisioningContractAddress;
+        it(`Should return created provisioning contract by key`, async () => {
+            const provisioningContractFactory = await ProvisioningContractFactory.deployed();
+            provisioningContractAddress =  await provisioningContractFactory.getProvisioningContract.call(provisioningContractkey, relyingPartySendConfig);
+            assert.notEqual(provisioningContractAddress, emptyAddress);
+        });
+
+        it(`Should get isVerificationFinished = true`, async () => {
+            const provisioningContract = await ProvisioningContract.at(provisioningContractAddress);
+            const isVerificationFinished = await provisioningContract.isVerificationFinished.call(relyingPartySendConfig);
+            assert.equal(isVerificationFinished, true);
+        });
+
+        it(`Should set provisioning result`, async () => {
+            const provisioningContractFactory = await ProvisioningContract.at(provisioningContractAddress);
+            await provisioningContractFactory.finalizeProvisioning(relyingPartySendConfig);
+        });
+
+        it(`Should return field data to owner.`, async () => {
+            const provisioningContractFactory = await ProvisioningContract.at(provisioningContractAddress);
+            const data = await provisioningContractFactory.getData.call(relyingPartySendConfig, relyingPartySendConfig);
+            
+            const adapter = await AccountStorageAdapter.deployed();
+            const accountMainData = [ await getAccountFieldLastMainData(adapter, accountAddress, fieldName, attestationPartySendConfig) ];
+            const accountVerificationData = await getAccountFieldLastVerificationData(adapter, accountAddress, fieldName, attestationPartySendConfig);
+            const accountData = accountMainData.concat(accountVerificationData);
+            assert.deepEqual(data, accountData);
+        });
+    }
+    const allowedFieldNamesConfig = getValueByPath(deployedConfig,
+        deployedConfigPathConsts.accountStorageAdapter.allowedFieldNames.path);
+    
+    const partiesConfig = getValueByPath(deployedConfig, deployedConfigPathConsts.partiesConfig.createdParties.path);
+    
+    const attestationPartyByFieldName = {};
+
+    Object.keys(partiesConfig).forEach(party => {
+        const path = combinePath(deployedConfigPathConsts.partiesConfig.createdParties.party.allowedFieldNames.pathTemplate, { partyName: party })
+        const partyAllowedFields = getValueByPath(deployedConfig, path, []);
+        partyAllowedFields.forEach(allowedFieldName => {
+            if (!attestationPartyByFieldName[allowedFieldName]) {
+                attestationPartyByFieldName[allowedFieldName] = [];
+            }
+            const attestationPartiesForField = attestationPartyByFieldName[allowedFieldName];
+            attestationPartiesForField.push(party);
+        });
     });
+
+    allowedFieldNamesConfig.forEach(fieldName => {
+        if (fieldName != "device") {
+            console.log(`fieldName: ${fieldName}`);
+            const attestationPartyList = attestationPartyByFieldName[fieldName];
+            console.log(`attestation parties list: ${JSON.stringify(attestationPartyList)}`);
+            if (attestationPartyList && attestationPartyList.length > 0) {
+                const attestationPartyName = attestationPartyList[0];
+                console.log(`attestation party name: ${attestationPartyName}`);
+                const path = combinePath(deployedConfigPathConsts.partiesConfig.createdParties.party.pathTemplate, { partyName: attestationPartyName })
+                const partyConfig = getValueByPath(deployedConfig, path, {});
+                console.log(`partyConfig: ${JSON.stringify(partyConfig)}`);
+
+
+                it(`Should unlock attestation party. address ${partyConfig.address}, password: ${partyConfig.password}`, async () => {
+                    await web3.personal.unlockAccount(partyConfig.address, partyConfig.password, 100);
+                });
+                testProvisioning(fieldName, partyConfig.address);
+            }
+            
+        }
+    });
+    
 });

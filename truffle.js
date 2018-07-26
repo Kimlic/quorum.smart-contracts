@@ -23,7 +23,8 @@ module.exports = {
       gas: 4612388
     },
     dev: {
-      host: "40.115.43.126",
+      from: "0xb0ceb6f6170fd27fbaa78e59db5cc3f0163f3a16",
+      host: "40.118.41.103",
       port: 22000,
       network_id: "10",
       gasPrice: 0,
@@ -39,9 +40,10 @@ module.exports = {
         "chapter run clever race sure shoot solution aisle possible ridge flock august"
     },
     KIM1: {
+      from: "0xe0dfcd8ca47eec41d74d9e14760f9d5c5de78177",
       host: "127.0.0.1",
       port: 22000,
-      network_id: "10",
+      network_id: "*",
       gasPrice: 0,
       gas: 4612388
     },

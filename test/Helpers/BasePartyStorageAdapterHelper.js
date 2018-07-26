@@ -1,4 +1,8 @@
-let basePartyConsts = {
+
+const { createAccountAndSet1EthToBalance } = require("./AccountHelper.js");
+
+
+const basePartyConsts = {
     legalNameValue: "legalName",
     shortNameValue: "shortName",
     businessAreaValue: "businessArea",
@@ -7,126 +11,73 @@ let basePartyConsts = {
     dataPrivacyUrlValue: "dataPrivacyUrl"
 }
 
-let setLegalName = async (adapter, party, value) => {
-    await adapter.setLegalName(party, value);
-}
+const baseStorageAdapterTest = (storageAdapterGetMethod, values) => {
+    let accountAddress;
+    
+    it("init account", async () => {
+        const account = await createAccountAndSet1EthToBalance(web3);
+        accountAddress = account.accountAddress;
+    }); 
 
-let setShortName = async (adapter, party, value) => {
-    await adapter.setShortName(party, value);
-}
-
-let setBusinessArea = async (adapter, party, value) => {
-    await adapter.setBusinessArea(party, value);
-}
-
-let setLegalResidenceCountry = async (adapter, party, value) => {
-    await adapter.setLegalResidenceCountry(party, value);
-}
-
-let setWebsite = async (adapter, party, value) => {
-    await adapter.setWebsite(party, value);
-}
-
-let setDataPrivacyUrl = async (adapter, party, value) => {
-    await adapter.setDataPrivacyUrl(party, value);
-}
-
-let getLegalName = async (adapter, party) => {
-    await adapter.getLegalName(party);
-}
-
-let getShortName = async (adapter, party) => {
-    await adapter.getShortName(party);
-}
-
-let getBusinessArea = async (adapter, party) => {
-    await adapter.getBusinessArea(party);
-}
-
-let getLegalResidenceCountry = async (adapter, party) => {
-    await adapter.getLegalResidenceCountry(party);
-}
-
-let getWebsite = async (adapter, party) => {
-    await adapter.getWebsite(party);
-}
-
-let getDataPrivacyUrl = async (adapter, party) => {
-    await adapter.getDataPrivacyUrl(party);
-}
-
-let baseStorageAdapterTest = (storageAdapterGetMethod, address, values = basePartyConsts) => {
     it(`Should set LegalName. Value: "${values.legalNameValue}"`, async () => {
-        let adapter = await storageAdapterGetMethod();
-        await adapter.setLegalName(address, values.legalNameValue);
+        const adapter = await storageAdapterGetMethod();
+        await adapter.setLegalName(accountAddress, values.legalNameValue);
     });
     it(`Should set ShortName. Value: "${values.shortNameValue}"`, async () => {
-        let adapter = await storageAdapterGetMethod();
-        await adapter.setShortName(address, values.shortNameValue);
+        const adapter = await storageAdapterGetMethod();
+        await adapter.setShortName(accountAddress, values.shortNameValue);
     });
     it(`Should set BusinessArea. Value: "${values.businessAreaValue}"`, async () => {
-        let adapter = await storageAdapterGetMethod();
-        await adapter.setBusinessArea(address, values.businessAreaValue);
+        const adapter = await storageAdapterGetMethod();
+        await adapter.setBusinessArea(accountAddress, values.businessAreaValue);
     });
     it(`Should set LegalResidenceCountry. Value: "${values.legalResidenceCountryValue}"`, async () => {
-        let adapter = await storageAdapterGetMethod();
-        await adapter.setLegalResidenceCountry(address, values.legalResidenceCountryValue);
+        const adapter = await storageAdapterGetMethod();
+        await adapter.setLegalResidenceCountry(accountAddress, values.legalResidenceCountryValue);
     });
     it(`Should set Website. Value: "${values.websiteValue}"`, async () => {
-        let adapter = await storageAdapterGetMethod();
-        await adapter.setWebsite(address, values.websiteValue);
+        const adapter = await storageAdapterGetMethod();
+        await adapter.setWebsite(accountAddress, values.websiteValue);
     });
     it(`Should set DataPrivacyUrl. Value: "${values.dataPrivacyUrlValue}"`, async () => {
-        let adapter = await storageAdapterGetMethod();
-        await adapter.setDataPrivacyUrl(address, values.dataPrivacyUrlValue);
+        const adapter = await storageAdapterGetMethod();
+        await adapter.setDataPrivacyUrl(accountAddress, values.dataPrivacyUrlValue);
     });
 
     
     it(`Should get LegalName value. it must be equal to "${values.legalNameValue}"`, async () => {
-        let adapter = await storageAdapterGetMethod();
-        let value = await adapter.getLegalName.call(address);
+        const adapter = await storageAdapterGetMethod();
+        const value = await adapter.getLegalName.call(accountAddress);
         assert.equal(value, values.legalNameValue);
     });
     it(`Should get ShortName value. it must be equal to "${values.shortNameValue}"`, async () => {
-        let adapter = await storageAdapterGetMethod();
-        let value = await adapter.getShortName.call(address);
+        const adapter = await storageAdapterGetMethod();
+        const value = await adapter.getShortName.call(accountAddress);
         assert.equal(value, values.shortNameValue);
     });
     it(`Should get BusinessArea value. it must be equal to "${values.businessAreaValue}"`, async () => {
-        let adapter = await storageAdapterGetMethod();
-        let value = await adapter.getBusinessArea.call(address);
+        const adapter = await storageAdapterGetMethod();
+        const value = await adapter.getBusinessArea.call(accountAddress);
         assert.equal(value, values.businessAreaValue);
     });
     it(`Should get LegalResidenceCountry value. it must be equal to "${values.legalResidenceCountryValue}"`, async () => {
-        let adapter = await storageAdapterGetMethod();
-        let value = await adapter.getLegalResidenceCountry.call(address);
+        const adapter = await storageAdapterGetMethod();
+        const value = await adapter.getLegalResidenceCountry.call(accountAddress);
         assert.equal(value, values.legalResidenceCountryValue);
     });
     it(`Should get Website value. it must be equal to "${values.websiteValue}"`, async () => {
-        let adapter = await storageAdapterGetMethod();
-        let value = await adapter.getWebsite.call(address);
+        const adapter = await storageAdapterGetMethod();
+        const value = await adapter.getWebsite.call(accountAddress);
         assert.equal(value, values.websiteValue);
     });
     it(`Should get DataPrivacyUrl value. it must be equal to "${values.dataPrivacyUrlValue}"`, async () => {
-        let adapter = await storageAdapterGetMethod();
-        let value = await adapter.getDataPrivacyUrl.call(address);
+        const adapter = await storageAdapterGetMethod();
+        const value = await adapter.getDataPrivacyUrl.call(accountAddress);
         assert.equal(value, values.dataPrivacyUrlValue);
     });
 }
 
 module.exports = { 
     basePartyConsts,
-    setLegalName,
-    setShortName,
-    setBusinessArea,
-    setLegalResidenceCountry,
-    setWebsite,
-    setDataPrivacyUrl,
-    getLegalName,
-    getShortName,
-    getBusinessArea,
-    getLegalResidenceCountry,
-    getWebsite,
-    getDataPrivacyUrl,
     baseStorageAdapterTest
 };

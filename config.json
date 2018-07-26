@@ -1,7 +1,14 @@
 {
+	"default": {
+	},
 	"kubernetisNode": {
 		"addresses": {
-			"mainAccount": {
+		}
+	},
+	"KIM1": {
+		"addresses": {
+			"communityTokenWalletAddress": {
+
 			}
 		}
 	}
