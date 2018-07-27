@@ -81,6 +81,9 @@ const deployedConfigPathConsts = {//TODO move to config file?
         allowedFieldNames: {
             path: "accountStorageAdapter.allowedFieldNames"
         },
+        owner: {
+            path: "accountStorageAdapter.owner"
+        },
         path: "accountStorageAdapter"
     },
     provisioningContractFactory: {

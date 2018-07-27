@@ -25,11 +25,13 @@ contract AccountStorageAdapter is Ownable, WithKimlicContext {
 
     /// public methods ///
 
-    function addAllowedFieldName(string fieldName) public onlyOwner() {
+    function addAllowedFieldName(string fieldName) public {
+        require(msg.sender == owner || msg.sender == getContext().owner());
         allowedFieldNames[fieldName] = true;
     }
 
     function removeAllowedFieldName(string fieldName) public onlyOwner() {
+        require(msg.sender == owner || msg.sender == getContext().owner());
         delete allowedFieldNames[fieldName];
     }
 

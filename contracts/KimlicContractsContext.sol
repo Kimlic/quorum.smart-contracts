@@ -154,23 +154,23 @@ contract KimlicContractsContext is Ownable {
         _storage.setAddress(accountStorageKey, accountStorageAddress);
     }
     
-    function setRelyingPartyStorageAdapter(address relyingPartyStorageAdapterAddress) public {
+    function setRelyingPartyStorageAdapter(address relyingPartyStorageAdapterAddress) public  onlyOwner() {
         _storage.setAddress(relyingPartyStorageAdapterKey, relyingPartyStorageAdapterAddress);
     }
 
-    function setRelyingPartyStorage(address relyingPartyStorageAddress) public {
+    function setRelyingPartyStorage(address relyingPartyStorageAddress) public  onlyOwner() {
         _storage.setAddress(relyingPartyStorageKey, relyingPartyStorageAddress);
     }
 
-    function setAttestationPartyStorageAdapter(address attestationPartyStorageAdapterAddress) public {
+    function setAttestationPartyStorageAdapter(address attestationPartyStorageAdapterAddress) public  onlyOwner() {
         _storage.setAddress(attestationPartyStorageAdapterKey, attestationPartyStorageAdapterAddress);
     }
 
-    function setAttestationPartyStorage(address attestationPartyStorageAddress) public {
+    function setAttestationPartyStorage(address attestationPartyStorageAddress) public  onlyOwner() {
         _storage.setAddress(attestationPartyStorageKey, attestationPartyStorageAddress);
     }
 
-    function setKimlicWalletAddress(address kimlicWalletAddress) public {
+    function setKimlicWalletAddress(address kimlicWalletAddress) public  onlyOwner() {
         _storage.setAddress(kimlicWalletAddressKey, kimlicWalletAddress);
     }
 }

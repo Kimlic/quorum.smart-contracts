@@ -1,14 +1,12 @@
 const KimlicContractsContext = artifacts.require("./KimlicContractsContext.sol");
 
 const { loadDeployedConfigIntoCache, getNetworkDeployedConfig, deployedConfigPathConsts, saveDeployedConfig } = require("../deployedConfigHelper");
-const { setValueByPath, getFormatedConsoleLabel } = require("../commonLogic");
+const { setValueByPath, getFormatedConsoleLabel, createAccountAndSet1EthToBalance } = require("../commonLogic");
 
-
-var fs = require("fs");
 
 module.exports = async function(deployer) {
     console.log(getFormatedConsoleLabel("Create kimlic wallet address"));
-    deployer.then(() => {
+    deployer.then(async () => {
         loadDeployedConfigIntoCache();
 
         const deployedConfig = getNetworkDeployedConfig(web3.version.network);
@@ -16,8 +14,9 @@ module.exports = async function(deployer) {
         let password = "kimlicWalletp@ssw0rd";
         let address = web3.personal.newAccount(password);
         console.log(`kimlic wallet address: ${address}`);
-    
-        KimlicContractsContext
+
+        const kimlicContractsContext = await KimlicContractsContext.deployed();
+        await kimlicContractsContext.setKimlicWalletAddress(address);
     
         const kimlicWalletConfig = {address: address, password: password};
         const kimlicWalletConfigPath = deployedConfigPathConsts.kimlicWallet.path;
