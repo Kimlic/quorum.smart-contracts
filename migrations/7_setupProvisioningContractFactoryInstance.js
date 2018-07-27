@@ -3,30 +3,45 @@ const ProvisioningContractFactory = artifacts.require("./ProvisioningContractFac
 
 const { getFormatedConsoleLabel } = require("../commonLogic");
 const { saveDeployedConfig, getNetworkDeployedConfig, deployedConfigPathConsts } = require("../deployedConfigHelper");
-const { setValueByPath, getValueByPath } = require("../commonLogic");
+const { setValueByPath, getValueByPath, combinePath } = require("../commonLogic");
 
 module.exports = function(deployer, network, accounts) {
     console.log(getFormatedConsoleLabel("Setup provisioning contract factory instance:"));
 
     deployer.then(async () => {
         const deployedConfig = getNetworkDeployedConfig(web3.version.network);
-        const configPath = deployedConfigPathConsts.provisioningContractFactory.intersets.path;
-        let provisioningContractFactoryInterestsConfig = getValueByPath(deployedConfig, configPath);
 
-        const provisioningContractFactoryInstance = await ProvisioningContractFactory.deployed();
-        let interests = {
-            communityTokenWallet: 25,
-            coOwner: 25,
-            attestationParty: 25,
-            account: 25,
-        };
-        interests = { ...provisioningContractFactoryInterestsConfig, ...interests };
-        
-        console.log(JSON.stringify(interests, null, 4));
-        await provisioningContractFactoryInstance.setInterestsPercent(interests.communityTokenWallet,
-            interests.coOwner, interests.attestationParty, interests.account);
-        
-        setValueByPath(deployedConfig, configPath, interests);
+        const configPath = deployedConfigPathConsts.accountStorageAdapter.allowedFieldNames.path;
+        const accountFields = getValueByPath(deployedConfig, configPath);
+
+        accountFields.forEach(async (fieldName) => {
+            const provisioningContractFactoryInstance = await ProvisioningContractFactory.deployed();
+            let interests;
+            if (fieldName == "email" || fieldName == "phone") {
+                interests = {
+                    communityTokenWallet: 0,
+                    coOwner: 0,
+                    kimlicWallet: 80,
+                    account: 20,
+                };
+            }
+            else {
+                interests = {
+                    communityTokenWallet: 10,
+                    coOwner: 20,
+                    kimlicWallet: 50,
+                    account: 20,
+                };
+            }
+            
+            console.log(JSON.stringify(interests, null, 4));
+            await provisioningContractFactoryInstance.setInterestsPercent(fieldName, interests.communityTokenWallet,
+                interests.coOwner, interests.kimlicWallet, interests.account);
+
+            const path = deployedConfigPathConsts.provisioningContractFactory.accountField.intersets.pathTemplate;
+            const configPath = combinePath(path, { accountField: fieldName })
+            setValueByPath(deployedConfig, configPath, interests);
+        });
         saveDeployedConfig();
     });
 };

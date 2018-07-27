@@ -86,25 +86,28 @@ contract ProvisioningContract is Ownable, WithKimlicContext {
 
     function sendRewards() private {
         KimlicContractsContext context = getContext();
+        KimlicToken kimlicToken = context.getKimlicToken();
 
         address verificationContractAddress = context.getAccountStorageAdapter()
             .getFieldVerificationContractAddress(account, fieldName, index);
 
         BaseVerification verificationContract = BaseVerification(verificationContractAddress);
         address coOwner = verificationContract.coOwner();
-        address attestationParty = verificationContract.owner();
+        if (coOwner == owner) {
+            kimlicToken.transfer(owner, _reward);
+            return;
+        }
 
         ProvisioningContractFactory factory = context.getProvisioningContractFactory();
-        uint accountInterest = _reward * factory.accountInterestPercent() / 100;
-        uint coOwnerInterest = _reward * factory.coOwnerInterestPercent() / 100;
-        uint communityTokenWalletInterest = _reward * factory.communityTokenWalletInterestPercent() / 100;
-        uint attestationPartyInterest = _reward * factory.attestationPartyInterestPercent() / 100;
+        uint accountInterest = _reward * factory.getAccountInterestPercent(fieldName) / 100;
+        uint coOwnerInterest = _reward * factory.getCoOwnerInterestPercent(fieldName) / 100;
+        uint communityTokenWalletInterest = _reward * factory.getCommunityTokenWalletInterestPercent(fieldName) / 100;
+        uint kimlicWalletInterest = _reward * factory.getKimlicWalletInterestPercent(fieldName) / 100;
         
-        KimlicToken kimlicToken = context.getKimlicToken();
         kimlicToken.transfer(account, accountInterest);
         kimlicToken.transfer(coOwner, coOwnerInterest);
         kimlicToken.transfer(context.getCommunityTokenWalletAddress(), communityTokenWalletInterest);
-        kimlicToken.transfer(attestationParty, attestationPartyInterest);
+        kimlicToken.transfer(context.getKimlicWalletAddress(), kimlicWalletInterest);
     }
 
     function getStatusName() public view returns(string) {

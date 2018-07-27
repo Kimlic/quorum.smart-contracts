@@ -84,8 +84,11 @@ const deployedConfigPathConsts = {//TODO move to config file?
         path: "accountStorageAdapter"
     },
     provisioningContractFactory: {
-        intersets: {
-            path: "provisioningContractFactory.intersets"
+        accountField: {
+            intersets: {
+                pathTemplate: "provisioningContractFactory.{accountField}.intersets"
+            },
+            pathTemplate: "provisioningContractFactory.{accountField}"
         },
         path: "provisioningContractFactory"
     },
@@ -121,6 +124,9 @@ const deployedConfigPathConsts = {//TODO move to config file?
     },
     createdUsers: {
         path: "createdUsers"
+    },
+    kimlicWallet: {
+        path: "kimlicWallet"
     }
 };
 
