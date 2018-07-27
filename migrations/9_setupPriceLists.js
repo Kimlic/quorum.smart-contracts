@@ -67,10 +67,10 @@ module.exports = function(deployer) {
         console.log(getFormatedConsoleLabel(`setup ${contractCaption} instance`));
 
         accountFields.forEach(async (fieldName) => {
-            const price = priceLists[contractCaption][fieldName] * Math.pow(10, 18);//10^18 its token decimals
+            const price = priceLists[contractCaption][fieldName];
             console.log(`"${fieldName}" price = ${price} tokens`);
-            await instance.setPrice(fieldName, price);
-            currentSetup[fieldName] = price;
+            await instance.setPrice(fieldName, price * Math.pow(10, 18));//10^18 its token decimals
+            currentSetup[fieldName] = price * Math.pow(10, 18);//10^18 its token decimals
         });
     };
 };

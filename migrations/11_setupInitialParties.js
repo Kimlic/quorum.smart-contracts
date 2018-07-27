@@ -59,7 +59,8 @@ module.exports = function(deployer) {
         await kimlicTokenInstance.transfer(address, 10000 * Math.pow(10, 18));//10^18 its token decimals
         
         const balance = await kimlicTokenInstance.balanceOf.call(address);
-        console.log(`Balance of created account - "${balance}"`);
+        console.log(`Balance of created account - "${balance / Math.pow(10, 18)}"`);//10^18 its token decimals
+        
 
         console.log(`Approve to VerificationContractFactory spend "${name}" tokens`);
         await kimlicTokenInstance.approve(VerificationContractFactory.address, 10000 * Math.pow(10, 18), { from: address });//10^18 its token decimals
