@@ -6,9 +6,9 @@ const AccountStorageAdapter = artifacts.require("./AccountStorageAdapter.sol");
 const AttestationPartyStorageAdapter = artifacts.require("./AttestationPartyStorageAdapter.sol");
 const KimlicToken = artifacts.require("./KimlicToken.sol");
 
-const { addData, getFieldLastMainData, createAccountAndSet1EthToBalance, getFieldDetails } = require("./Helpers/AccountHelper.js");
+const { addData } = require("./Helpers/AccountHelper.js");
 const { loadDeployedConfigIntoCache, getNetworkDeployedConfig, deployedConfigPathConsts } = require("../deployedConfigHelper");
-const { getValueByPath, combinePath, uuidv4, emptyAddress } = require("../commonLogic");
+const { getValueByPath, combinePath, uuidv4, emptyAddress, createAccountAndSet1EthToBalance } = require("../commonLogic");
 
 
 

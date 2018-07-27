@@ -5,10 +5,9 @@ const AccountStorageAdapter = artifacts.require("./AccountStorageAdapter.sol");
 const ProvisioningContractFactory = artifacts.require("./ProvisioningContractFactory.sol");
 const ProvisioningContract = artifacts.require("./ProvisioningContract.sol");
 
-const { addData, getFieldLastMainData, 
-    getFieldLastVerificationData, createAccountAndSet1EthToBalance } = require("./Helpers/AccountHelper.js");
+const { addData} = require("./Helpers/AccountHelper.js");
 const { loadDeployedConfigIntoCache, getNetworkDeployedConfig, deployedConfigPathConsts } = require("../deployedConfigHelper");
-const { getValueByPath, combinePath, uuidv4, emptyAddress } = require("../commonLogic");
+const { getValueByPath, combinePath, uuidv4, emptyAddress, createAccountAndSet1EthToBalance } = require("../commonLogic");
 
 
 contract("Provisioning.Negative", function() {

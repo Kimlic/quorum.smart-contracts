@@ -1,9 +1,9 @@
 /*jshint esversion: 6 */
 const AccountStorageAdapter = artifacts.require("./AccountStorageAdapter.sol");
 
-const { addData, getFieldLastMainData, createAccountAndSet1EthToBalance, getFieldDetails } = require("./Helpers/AccountHelper.js");
+const { addData, getFieldLastMainData, getFieldDetails } = require("./Helpers/AccountHelper.js");
 const { getNetworkDeployedConfig, deployedConfigPathConsts } = require("../deployedConfigHelper");
-const { getValueByPath } = require("../commonLogic");
+const { getValueByPath, createAccountAndSet1EthToBalance } = require("../commonLogic");
 
 
 

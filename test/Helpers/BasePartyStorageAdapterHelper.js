@@ -1,5 +1,5 @@
 
-const { createAccountAndSet1EthToBalance } = require("./AccountHelper.js");
+const { createAccountAndSet1EthToBalance } = require("../../commonLogic");
 
 
 const basePartyConsts = {
