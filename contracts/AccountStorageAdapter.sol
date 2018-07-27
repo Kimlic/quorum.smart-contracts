@@ -126,7 +126,9 @@ contract AccountStorageAdapter is Ownable, WithKimlicContext {
     function getIsFieldVerificationContractExist(address accountAddress, string accountFieldName, uint index)
         //checkIsColmnNameAllowed(accountFieldName)
         //checkReadingDataRestrictions(accountAddress)// removed cause of same getFieldVerificationContractAddress restrictions
-        public view returns(bool result) {
+        external
+        view
+        returns(bool result) {
         
         address verificationContractAddress = getFieldVerificationContractAddress(accountAddress, accountFieldName, index);
         return verificationContractAddress != address(0);

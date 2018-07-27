@@ -1,6 +1,6 @@
 const AccountStorageAdapter = artifacts.require("./AccountStorageAdapter.sol");
 
-const { addAccountData } = require("../test/Helpers/AccountHelper.js");
+const { addData } = require("../test/Helpers/AccountHelper.js");
 const { loadDeployedConfigIntoCache, getNetworkDeployedConfig, deployedConfigPathConsts, saveDeployedConfig } = require("../deployedConfigHelper");
 const { getValueByPath } = require("../commonLogic");
 
@@ -26,7 +26,7 @@ module.exports = async function(callback) {
 
     await accountAllowedFieldNamesConfig.forEach(async fieldName => {
         const value = fieldName + "Value";
-        await addAccountData(adapter, address, fieldName, fieldName);
+        await addData(adapter, fieldName, fieldName, address);
         console.log(`set field "${fieldName}" with value ${value}`);
     });
 

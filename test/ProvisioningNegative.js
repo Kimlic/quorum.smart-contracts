@@ -5,34 +5,39 @@ const AccountStorageAdapter = artifacts.require("./AccountStorageAdapter.sol");
 const ProvisioningContractFactory = artifacts.require("./ProvisioningContractFactory.sol");
 const ProvisioningContract = artifacts.require("./ProvisioningContract.sol");
 
-const { addData, getFieldDetails, createAccountAndSet1EthToBalance } = require("./Helpers/AccountHelper.js");
+const { addData, getFieldLastMainData, 
+    getFieldLastVerificationData, createAccountAndSet1EthToBalance } = require("./Helpers/AccountHelper.js");
 const { loadDeployedConfigIntoCache, getNetworkDeployedConfig, deployedConfigPathConsts } = require("../deployedConfigHelper");
 const { getValueByPath, combinePath, uuidv4, emptyAddress } = require("../commonLogic");
 
 
-contract("Provisioning", function() {
+contract("Provisioning.Negative", function() {
     loadDeployedConfigIntoCache();
     const deployedConfig = getNetworkDeployedConfig(web3.version.network);
-    var accountAddress = "";
+    let accountAddress = "";
+    let secondAccountAddress = "";
 
-    it("init account", async () => {
+    before("create account", async () => {
         const account = await createAccountAndSet1EthToBalance(web3);
         accountAddress = account.accountAddress;
         console.log(`accountAddress: ${accountAddress}`);
+        const secondAccount = await createAccountAndSet1EthToBalance(web3);
+        secondAccountAddress = secondAccount.accountAddress;
+        console.log(`second account address: ${secondAccountAddress}`);
     });
 
     const testProvisioning = (fieldName, attestationPartyAddress) => {
         const path = combinePath(deployedConfigPathConsts.partiesConfig.createdParties.party.pathTemplate, { partyName: "firstRelyingParty" });
         const relyingPartyConfig = getValueByPath(deployedConfig, path, {});
         relyingPartySendConfig = { from: relyingPartyConfig.address};
-        it("Should unlock relying party account", async () => {
+        it("Unlock relying party account", async () => {
             await web3.personal.unlockAccount(relyingPartyConfig.address, relyingPartyConfig.password, 100);
         });
 
         const provisioningContractkey = uuidv4();
         const verificationContractkey = uuidv4();
         const attestationPartySendConfig = { from: attestationPartyAddress };
-        it(`Should init account with verified "${fieldName}" data`, async () => {
+        it(`Init account with verified "${fieldName}" data`, async () => {
             const adapter = await AccountStorageAdapter.deployed();
             await addData(adapter, fieldName + "ProvisioningTest", fieldName, accountAddress);
 
@@ -44,37 +49,56 @@ contract("Provisioning", function() {
             await verificationContract.finalizeVerification(true, attestationPartySendConfig);
         });
 
-
-        it(`Should create provisioning "${fieldName}" contract`, async () => {
+        it(`Should not create provisioning "${fieldName}" contract without filled data`, async () => {
             const provisioningContractFactory = await ProvisioningContractFactory.deployed();
-            await provisioningContractFactory.createProvisioningContract(accountAddress, fieldName, provisioningContractkey, relyingPartySendConfig);
+            try {
+                await provisioningContractFactory.createProvisioningContract(secondAccountAddress, fieldName, provisioningContractkey, relyingPartySendConfig);
+            } catch (error) {
+                return;
+            }
+            assert.fail('Expected throw not received');
         });
         
-        var provisioningContractAddress;
-        it(`Should return created provisioning contract by key`, async () => {
+        it(`Should not return created provisioning contract address by wrong key`, async () => {
             const provisioningContractFactory = await ProvisioningContractFactory.deployed();
+            const wrongProvisioningContractAddress =  await provisioningContractFactory.getProvisioningContract.call("wrong key", relyingPartySendConfig);
+            assert.equal(wrongProvisioningContractAddress, emptyAddress);
+        });
+
+        let provisioningContractAddress;
+        it(`Create provisioning "${fieldName}" contract`, async () => {
+            const provisioningContractFactory = await ProvisioningContractFactory.deployed();
+            await provisioningContractFactory.createProvisioningContract(accountAddress, fieldName, provisioningContractkey, relyingPartySendConfig);
             provisioningContractAddress =  await provisioningContractFactory.getProvisioningContract.call(provisioningContractkey, relyingPartySendConfig);
-            assert.notEqual(provisioningContractAddress, emptyAddress);
         });
 
-        it(`Should get isVerificationFinished = true`, async () => {
+        it(`Should not set provisioning result from not owner`, async () => {
             const provisioningContract = await ProvisioningContract.at(provisioningContractAddress);
-            const isVerificationFinished = await provisioningContract.isVerificationFinished.call(relyingPartySendConfig);
-            assert.equal(isVerificationFinished, true);
+            try {
+                await provisioningContract.finalizeProvisioning({ from: secondAccountAddress });
+            } catch (error) {
+                return;
+            }
+            assert.fail('Expected throw not received');
         });
 
-        it(`Should set provisioning result`, async () => {
+        it(`Should not return field data if not provisioning not finished.`, async () => {
+            const provisioningContract = await ProvisioningContract.at(provisioningContractAddress);
+            try {
+                await provisioningContract.getData.call(relyingPartySendConfig, relyingPartySendConfig);
+            } catch (error) {
+                return;
+            }
+        });
+
+        it(`Should not return field data if called from not owner.`, async () => {
             const provisioningContract = await ProvisioningContract.at(provisioningContractAddress);
             await provisioningContract.finalizeProvisioning(relyingPartySendConfig);
-        });
-
-        it(`Should return field details to owner.`, async () => {
-            const provisioningContract = await ProvisioningContract.at(provisioningContractAddress);
-            const data = await provisioningContract.getData.call(relyingPartySendConfig, relyingPartySendConfig);
-            
-            const adapter = await AccountStorageAdapter.deployed();
-            const accountMainDetails = await getFieldDetails(adapter, accountAddress, fieldName, accountAddress);
-            assert.deepEqual(data, accountMainDetails);
+            try {
+                await provisioningContract.getData.call(relyingPartySendConfig, { from: secondAccountAddress });
+            } catch (error) {
+                return;
+            }
         });
     }
     const allowedFieldNamesConfig = getValueByPath(deployedConfig,
@@ -110,7 +134,7 @@ contract("Provisioning", function() {
 
 
                 it(`Should unlock attestation party. address ${partyConfig.address}, password: ${partyConfig.password}`, async () => {
-                    await web3.personal.unlockAccount(partyConfig.address, partyConfig.password, 100);
+                    await web3.personal.unlockAccount(partyConfig.address, partyConfig.password, 1000);
                 });
                 testProvisioning(fieldName, partyConfig.address);
             }

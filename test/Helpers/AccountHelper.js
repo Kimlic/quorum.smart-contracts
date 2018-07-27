@@ -1,32 +1,26 @@
-const accountConsts = {
-    emailFieldName: "email",
-    phoneFieldName: "phone",
-    identityFieldName: "identity",
-    deviceFieldName: "device",
-    documentsFieldName: "documents.id_card",
-    addressesFieldName: "addresses.living",
-    emailValue: "email",
-    phoneValue: "phone",
-    identityValue: "identity",
-    deviceValue: "device",
-    documentValue: "documents",
-    addressValue: "addresses",
-}
 
-const addAccountData = async (adapter, address, fieldData, fieldName) => {
-    return adapter.setFieldMainData(fieldData, fieldName, { from: address });
+const addData = async (adapter, fieldData, fieldName, fromAddress) => {
+    return adapter.setFieldMainData(fieldData, fieldName, { from: fromAddress });
 };
 
-const getAccountFieldLastMainData = async (adapter, address, fieldName) => {
-    return adapter.getFieldLastMainData.call(address, fieldName, { from: address });
+const getFieldLastMainData = async (adapter, address, fieldName, fromAddress) => {
+    return adapter.getFieldLastMainData.call(address, fieldName, { from: fromAddress });
 };
 
-const getAccountFieldLastVerificationData = async (adapter, address, fieldName) => {
-    return adapter.getFieldLastVerificationData.call(address, fieldName, { from: address });
+const getFieldLastVerificationData = async (adapter, address, fieldName, fromAddress) => {
+    return adapter.getFieldLastVerificationData.call(address, fieldName, { from: fromAddress });
 };
 
-const getAccountLastDataIndex = async (adapter, address, fieldName) => {
-    return adapter.getFieldHistoryLength.call(address, fieldName, { from: address });
+const getFieldLastVerificationAddress = async (adapter, address, fieldName, fromAddress) => {
+    return adapter.getFieldLastVerificationAddress.call(address, fieldName, { from: fromAddress });
+};
+
+const getLastDataIndex = async (adapter, address, fieldName, fromAddress) => {
+    return adapter.getFieldHistoryLength.call(address, fieldName, { from: fromAddress });
+};
+
+let getFieldDetails = async function(adapter, address, fieldName) {
+    return adapter.getFieldDetails.call(address, fieldName, { from: address });
 };
 
 const createAccountAndSet1EthToBalance = async (web3) => {
@@ -37,10 +31,5 @@ const createAccountAndSet1EthToBalance = async (web3) => {
     return { accountAddress, accountPassword };
 }
 
-
-let getFieldDetails = async function(adapter, address, fieldName) {
-    return adapter.getFieldDetails.call(address, fieldName, { from: address });
-};
-
-module.exports = { accountConsts, addAccountData, getAccountFieldLastMainData,
-    getAccountFieldLastVerificationData, getAccountLastDataIndex, createAccountAndSet1EthToBalance, getFieldDetails };
+module.exports = { addData, getFieldLastMainData, getFieldLastVerificationData, getLastDataIndex,
+    createAccountAndSet1EthToBalance, getFieldDetails, getFieldLastVerificationAddress };

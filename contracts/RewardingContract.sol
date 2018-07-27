@@ -100,7 +100,7 @@ contract RewardingContract is Ownable, WithKimlicContext {
         return getContext().getAccountStorageAdapter().getRewardedAt(accountAddress, milestone) > 0;
     }
 
-    function isEqualStrings(string leftValue, string rightValue) private pure returns(bool isEqual){//TODO move to lib
+    function isEqualStrings(string leftValue, string rightValue) private pure returns(bool isEqual){
         isEqual = keccak256(bytes(leftValue)) == keccak256(bytes(rightValue));
     }
 

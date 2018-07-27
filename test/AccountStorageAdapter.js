@@ -1,7 +1,7 @@
 /*jshint esversion: 6 */
 const AccountStorageAdapter = artifacts.require("./AccountStorageAdapter.sol");
 
-const { addAccountData, getAccountFieldLastMainData, getAccountLastDataIndex, createAccountAndSet1EthToBalance, getFieldDetails } = require("./Helpers/AccountHelper.js");
+const { addData, getFieldLastMainData, getLastDataIndex, createAccountAndSet1EthToBalance, getFieldDetails } = require("./Helpers/AccountHelper.js");
 const { getNetworkDeployedConfig, deployedConfigPathConsts } = require("../deployedConfigHelper");
 const { getValueByPath } = require("../commonLogic");
 
@@ -24,23 +24,23 @@ contract("AccountStorageAdapter", function() {
         
         it(addDataCaption, async () => {
             let adapter = await AccountStorageAdapter.deployed();
-            await addAccountData(adapter, accountAddress, fieldData, fieldName);
+            await addData(adapter, fieldData, fieldName, accountAddress);
         });
 
         it(readDataCaption, async () => {
             let adapter = await AccountStorageAdapter.deployed();
-            let data = await getAccountFieldLastMainData(adapter, accountAddress, fieldName);
+            let data = await getFieldLastMainData(adapter, accountAddress, fieldName, accountAddress);
             assert.equal(data, fieldData);
         });
         
         it(dataIndexCaption, async () => {
             let adapter = await AccountStorageAdapter.deployed();
-            let newDataIndex = await getAccountLastDataIndex(adapter, accountAddress, fieldName);
+            let newDataIndex = await getLastDataIndex(adapter, accountAddress, fieldName, accountAddress);
             assert.equal(newDataIndex, expectedFieldIndex);
         });
         it(`Should read account ${fieldName} full data`, async () => {
             let adapter = await AccountStorageAdapter.deployed();
-            await getFieldDetails(adapter, accountAddress, fieldName);
+            await getFieldDetails(adapter, accountAddress, fieldName, accountAddress);
         });
     };
     
