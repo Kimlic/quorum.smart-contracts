@@ -130,6 +130,12 @@ const deployedConfigPathConsts = {//TODO move to config file?
     },
     kimlicWallet: {
         path: "kimlicWallet"
+    },
+    pricelistConfig: {
+        pathTemplate: "{pricelistName}Config",
+        prices: {
+            pathTemplate: "{pricelistName}Config.prices",
+        }
     }
 };
 

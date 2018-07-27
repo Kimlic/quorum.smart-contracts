@@ -22,9 +22,9 @@ module.exports = function(deployer) {
         
         web3.personal.unlockAccount(communityTokenWallet.address, communityTokenWallet.password, 100);
 
-        await kimlicTokenInstance.approve(RewardingContract.address, 1000000000, { from: communityTokenWallet.address });
-
-        kimlicTokenInstance.transfer(communityTokenWallet.address, 10000000);
+        await kimlicTokenInstance.approve(RewardingContract.address, 1000000000 * Math.pow(10, 18), { from: communityTokenWallet.address });
+        //10^18 its token decimals
+        kimlicTokenInstance.transfer(communityTokenWallet.address, 10000000 * Math.pow(10, 18));//10^18 its token decimals
 
         console.log(`allowance to spend communityTokenWallet tokens from RewardingContract: ${ 
             await kimlicTokenInstance.allowance.call(communityTokenWallet.address, RewardingContract.address)}`);

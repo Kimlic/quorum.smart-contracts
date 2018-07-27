@@ -9,7 +9,7 @@ contract KimlicToken is StandardToken {
     /// constructors ///
     constructor () public {
         
-        totalSupply_ = 150000000;
+        totalSupply_ = 150000000 ** decimals;
         balances[msg.sender] = totalSupply_;
     }
 
