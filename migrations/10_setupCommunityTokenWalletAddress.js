@@ -2,7 +2,7 @@
 const KimlicToken = artifacts.require("./KimlicToken.sol");
 const RewardingContract = artifacts.require("./RewardingContract.sol");
 
-const { getFormatedConsoleLabel } = require("./Helpers/MigrationHelper");
+const { getFormatedConsoleLabel } = require("../commonLogic");
 const { getNetworkDeployedConfig, deployedConfigPathConsts } = require("../deployedConfigHelper");
 const { getValueByPath } = require("../commonLogic");
 

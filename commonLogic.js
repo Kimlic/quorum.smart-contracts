@@ -51,4 +51,11 @@ let uuidv4 = () => {
 
 const emptyAddress = "0x0000000000000000000000000000000000000000";
 
-module.exports = { getValueByPath, setValueByPath, emptyAddress, combinePath, uuidv4 };
+
+
+const separationString = "=".repeat(10);
+const getFormatedConsoleLabel = function(unformatedLable){
+    return "\n" + separationString + " " + unformatedLable + " " + separationString + "\n";
+};
+
+module.exports = { getValueByPath, setValueByPath, emptyAddress, combinePath, uuidv4, getFormatedConsoleLabel };

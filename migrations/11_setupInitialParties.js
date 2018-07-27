@@ -4,7 +4,7 @@ const ProvisioningContractFactory = artifacts.require("./ProvisioningContractFac
 const AttestationPartyStorageAdapter = artifacts.require("./AttestationPartyStorageAdapter.sol");
 const KimlicToken = artifacts.require("./KimlicToken.sol");
 
-const { getFormatedConsoleLabel } = require("./Helpers/MigrationHelper");
+const { getFormatedConsoleLabel } = require("../commonLogic");
 const { saveDeployedConfig, getNetworkDeployedConfig, deployedConfigPathConsts } = require("../deployedConfigHelper");
 const { setValueByPath, getValueByPath, combinePath } = require("../commonLogic");
 

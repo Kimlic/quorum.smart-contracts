@@ -46,7 +46,7 @@ contract AccountStorageAdapter is Ownable, WithKimlicContext {
         view
         checkIsColmnNameAllowed(accountFieldName)
         checkReadingDataRestrictions(accountAddress)
-        returns(string data, BaseVerification.Status verificationStatus, address verificationContractAddress, uint256 verifiedAt) {
+        returns(string data, string verificationStatusName, address verificationContractAddress, uint256 verifiedAt) {
 
         AccountStorage accountStorage = getContext().getAccountStorage();
         uint index = getFieldHistoryLength(accountAddress, accountFieldName);
@@ -59,7 +59,7 @@ contract AccountStorageAdapter is Ownable, WithKimlicContext {
         if (verificationContractAddress != address(0)) {
             BaseVerification verificationContract = BaseVerification(verificationContractAddress);
             
-            verificationStatus = verificationContract.getStatus();
+            verificationStatusName = verificationContract.getStatusName();
             verifiedAt = verificationContract.verifiedAt();
         }
     }

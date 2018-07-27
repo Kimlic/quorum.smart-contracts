@@ -1,7 +1,7 @@
 /*jshint esversion: 6 */
 const ProvisioningContractFactory = artifacts.require("./ProvisioningContractFactory.sol");
 
-const { getFormatedConsoleLabel } = require("./Helpers/MigrationHelper");
+const { getFormatedConsoleLabel } = require("../commonLogic");
 const { saveDeployedConfig, getNetworkDeployedConfig, deployedConfigPathConsts } = require("../deployedConfigHelper");
 const { setValueByPath, getValueByPath } = require("../commonLogic");
 

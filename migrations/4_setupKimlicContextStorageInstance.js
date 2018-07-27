@@ -3,7 +3,7 @@
 let KimlicContextStorage = artifacts.require("./KimlicContextStorage.sol");
 let KimlicContractsContext = artifacts.require("./KimlicContractsContext.sol");
 
-let { getFormatedConsoleLabel } = require("./Helpers/MigrationHelper");
+let { getFormatedConsoleLabel } = require("../commonLogic");
 
 module.exports = function(deployer) {
     console.log(getFormatedConsoleLabel("Setup kimlic context storage instance:"));

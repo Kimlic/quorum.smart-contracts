@@ -1,7 +1,7 @@
 /*jshint esversion: 6 */
 
 const AccountStorageAdapter = artifacts.require("./AccountStorageAdapter.sol");
-const { getFormatedConsoleLabel } = require("./Helpers/MigrationHelper");
+const { getFormatedConsoleLabel } = require("../commonLogic");
 const { saveDeployedConfig, getNetworkDeployedConfig, deployedConfigPathConsts } = require("../deployedConfigHelper");
 const { setValueByPath } = require("../commonLogic");
 

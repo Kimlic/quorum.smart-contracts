@@ -12,7 +12,7 @@ const RelyingPartyStorage = artifacts.require("./RelyingPartyStorage.sol");
 const AttestationPartyStorageAdapter = artifacts.require("./AttestationPartyStorageAdapter.sol");
 const AttestationPartyStorage = artifacts.require("./AttestationPartyStorage.sol");
 
-const { getFormatedConsoleLabel } = require("./Helpers/MigrationHelper");
+const { getFormatedConsoleLabel } = require("../commonLogic");
 const { deployedConfigPathConsts, saveDeployedConfig, getNetworkDeployedConfig } = require("../deployedConfigHelper");
 const { setValueByPath } = require("../commonLogic");
 

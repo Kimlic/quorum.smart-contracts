@@ -4,7 +4,7 @@ let KimlicContractsContext = artifacts.require("./KimlicContractsContext.sol");
 let KimlicContextStorage = artifacts.require("./KimlicContextStorage.sol");
 let PriceList = artifacts.require("./PriceList.sol");
 
-let { getFormatedConsoleLabel, emptyAddress } = require("./Helpers/MigrationHelper");
+let { getFormatedConsoleLabel, emptyAddress } = require("../commonLogic");
 const { saveDeployedConfig, getNetworkDeployedConfig, deployedConfigPathConsts } = require("../deployedConfigHelper");
 const { getValueByPath } = require("../commonLogic");
 

@@ -5,7 +5,7 @@ const AccountStorageAdapter = artifacts.require("./AccountStorageAdapter.sol");
 const ProvisioningContractFactory = artifacts.require("./ProvisioningContractFactory.sol");
 const ProvisioningContract = artifacts.require("./ProvisioningContract.sol");
 
-const { addData, getFieldDetails, createAccountAndSet1EthToBalance } = require("./Helpers/AccountHelper.js");
+const { addData, getFieldLastMainData, getFieldLastVerificationData, createAccountAndSet1EthToBalance } = require("./Helpers/AccountHelper.js");
 const { loadDeployedConfigIntoCache, getNetworkDeployedConfig, deployedConfigPathConsts } = require("../deployedConfigHelper");
 const { getValueByPath, combinePath, uuidv4, emptyAddress } = require("../commonLogic");
 
@@ -73,8 +73,10 @@ contract("Provisioning", function() {
             const data = await provisioningContract.getData.call(relyingPartySendConfig, relyingPartySendConfig);
             
             const adapter = await AccountStorageAdapter.deployed();
-            const accountMainDetails = await getFieldDetails(adapter, accountAddress, fieldName, accountAddress);
-            assert.deepEqual(data, accountMainDetails);
+            const accountMainData = [ await getFieldLastMainData(adapter, accountAddress, fieldName, accountAddress) ];
+            const accountVerificationData = await getFieldLastVerificationData(adapter, accountAddress, fieldName, accountAddress);
+            const accountData = accountMainData.concat(accountVerificationData);
+            assert.deepEqual(data, accountData);
         });
     }
     const allowedFieldNamesConfig = getValueByPath(deployedConfig,
