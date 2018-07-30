@@ -25,28 +25,28 @@ contract BasePartyStorageAdapter is WithKimlicContext {
     /// public methods ///
 
     /* Setters */
-    function setLegalName(address party, string value) public setAccessRestriction(party) {
-        setStringValue(party, value, legalNameKey);
+    function setLegalName(string value) public {
+        setStringValue(msg.sender, value, legalNameKey);
     }
     
-    function setShortName(address party, string value) public setAccessRestriction(party) {
-        setStringValue(party, value, shortNameKey);
+    function setShortName(string value) public {
+        setStringValue(msg.sender, value, shortNameKey);
     }
     
-    function setBusinessArea(address party, string value) public setAccessRestriction(party) {
-        setStringValue(party, value, businessAreaKey);
+    function setBusinessArea(string value) public {
+        setStringValue(msg.sender, value, businessAreaKey);
     }
     
-    function setLegalResidenceCountry(address party, string value) public setAccessRestriction(party) {
-        setStringValue(party, value, legalResidenceCountryKey);
+    function setLegalResidenceCountry(string value) public {
+        setStringValue(msg.sender, value, legalResidenceCountryKey);
     }
     
-    function setWebsite(address party, string value) public setAccessRestriction(party) {
-        setStringValue(party, value, websiteKey);
+    function setWebsite(string value) public {
+        setStringValue(msg.sender, value, websiteKey);
     }
     
-    function setDataPrivacyUrl(address party, string value) public setAccessRestriction(party) {
-        setStringValue(party, value, dataPrivacyUrlKey);
+    function setDataPrivacyUrl(string value) public {
+        setStringValue(msg.sender, value, dataPrivacyUrlKey);
     }
 
     /* Getters */
@@ -88,14 +88,6 @@ contract BasePartyStorageAdapter is WithKimlicContext {
     /// internal methods ///
     function getStorage() view internal returns (BaseStorage);
 
-    /// Modifiers ///
-    modifier setAccessRestriction(address party) {
-        KimlicContractsContext context = getContext();
-        require(
-            msg.sender == party || 
-            msg.sender == context.owner());
-        _;
-    }
 
     modifier getAccessRestriction(address party) {
         _;

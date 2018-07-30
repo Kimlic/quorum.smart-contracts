@@ -12,9 +12,9 @@ const RelyingPartyStorage = artifacts.require("./RelyingPartyStorage.sol");
 const AttestationPartyStorageAdapter = artifacts.require("./AttestationPartyStorageAdapter.sol");
 const AttestationPartyStorage = artifacts.require("./AttestationPartyStorage.sol");
 
-const { getFormatedConsoleLabel } = require("./Helpers/MigrationHelper");
+const { getFormatedConsoleLabel } = require("../commonLogic");
 const { deployedConfigPathConsts, saveDeployedConfig, getNetworkDeployedConfig } = require("../deployedConfigHelper");
-const { setValueByPath } = require("../commonLogic");
+const { setValueByPath, createAccountAndSet1EthToBalance, uuidv4 } = require("../commonLogic");
 
 
 module.exports = function(deployer) {
@@ -36,9 +36,12 @@ module.exports = function(deployer) {
         console.log(`AccountStorage deployed at address ${AccountStorage.address}`);
         setValueByPath(deployedConfig, contractPathConsts.accountStorageAddress.path, AccountStorage.address);
 
-        await deployer.deploy(AccountStorageAdapter, KimlicContextStorage.address);
+        const accountStorageAdapterOwner = await createAccountAndSet1EthToBalance(web3, uuidv4());
+        await deployer.deploy(AccountStorageAdapter, KimlicContextStorage.address, { from: accountStorageAdapterOwner.accountAddress });
         console.log(`AccountStorageAdapter deployed at address ${AccountStorageAdapter.address}`);
         setValueByPath(deployedConfig, contractPathConsts.accountStorageAdapterAddress.path, AccountStorageAdapter.address);
+
+        setValueByPath(deployedConfig, deployedConfigPathConsts.accountStorageAdapter.owner.path, accountStorageAdapterOwner);
 
         await deployer.deploy(RelyingPartyStorageAdapter, KimlicContextStorage.address);
         console.log(`RelyingPartyStorageAdapter deployed at address ${RelyingPartyStorageAdapter.address}`);

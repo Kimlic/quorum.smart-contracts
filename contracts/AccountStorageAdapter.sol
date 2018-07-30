@@ -25,11 +25,13 @@ contract AccountStorageAdapter is Ownable, WithKimlicContext {
 
     /// public methods ///
 
-    function addAllowedFieldName(string fieldName) public onlyOwner() {
+    function addAllowedFieldName(string fieldName) public {
+        require(msg.sender == owner || msg.sender == getContext().owner());
         allowedFieldNames[fieldName] = true;
     }
 
     function removeAllowedFieldName(string fieldName) public onlyOwner() {
+        require(msg.sender == owner || msg.sender == getContext().owner());
         delete allowedFieldNames[fieldName];
     }
 
@@ -46,7 +48,7 @@ contract AccountStorageAdapter is Ownable, WithKimlicContext {
         view
         checkIsColmnNameAllowed(accountFieldName)
         checkReadingDataRestrictions(accountAddress)
-        returns(string data, BaseVerification.Status verificationStatus, address verificationContractAddress, uint256 verifiedAt) {
+        returns(string data, string verificationStatusName, address verificationContractAddress, uint256 verifiedAt) {
 
         AccountStorage accountStorage = getContext().getAccountStorage();
         uint index = getFieldHistoryLength(accountAddress, accountFieldName);
@@ -59,7 +61,7 @@ contract AccountStorageAdapter is Ownable, WithKimlicContext {
         if (verificationContractAddress != address(0)) {
             BaseVerification verificationContract = BaseVerification(verificationContractAddress);
             
-            verificationStatus = verificationContract.getStatus();
+            verificationStatusName = verificationContract.getStatusName();
             verifiedAt = verificationContract.verifiedAt();
         }
     }
@@ -126,7 +128,9 @@ contract AccountStorageAdapter is Ownable, WithKimlicContext {
     function getIsFieldVerificationContractExist(address accountAddress, string accountFieldName, uint index)
         //checkIsColmnNameAllowed(accountFieldName)
         //checkReadingDataRestrictions(accountAddress)// removed cause of same getFieldVerificationContractAddress restrictions
-        public view returns(bool result) {
+        external
+        view
+        returns(bool result) {
         
         address verificationContractAddress = getFieldVerificationContractAddress(accountAddress, accountFieldName, index);
         return verificationContractAddress != address(0);

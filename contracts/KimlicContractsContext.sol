@@ -34,6 +34,7 @@ contract KimlicContractsContext is Ownable {
     bytes32 private relyingPartyStorageKey;
     bytes32 private attestationPartyStorageAdapterKey;
     bytes32 private attestationPartyStorageKey;
+    bytes32 private kimlicWalletAddressKey;
     KimlicContextStorage internal _storage;
 
     /// constructors ///
@@ -53,6 +54,7 @@ contract KimlicContractsContext is Ownable {
         relyingPartyStorageKey = keccak256(abi.encode("relyingPartyStorage"));
         attestationPartyStorageAdapterKey = keccak256(abi.encode("attestationPartyStorageAdapter"));
         attestationPartyStorageKey = keccak256(abi.encode("attestationPartyStorage"));
+        kimlicWalletAddressKey = keccak256(abi.encode("kimlicWalletAddress"));
     }
 
     /// public methods ///
@@ -110,6 +112,10 @@ contract KimlicContractsContext is Ownable {
         attestationPartyStorage = AttestationPartyStorage(_storage.getAddress(attestationPartyStorageKey));
     }
 
+    function getKimlicWalletAddress() public view returns(address kimlicWalletAddress) {
+        kimlicWalletAddress = _storage.getAddress(kimlicWalletAddressKey);
+    }
+
 
     /* Setters */
     function setAccountStorageAdapter(address accountStorageAdapterAddress) public onlyOwner() {
@@ -148,19 +154,23 @@ contract KimlicContractsContext is Ownable {
         _storage.setAddress(accountStorageKey, accountStorageAddress);
     }
     
-    function setRelyingPartyStorageAdapter(address relyingPartyStorageAdapterAddress) public {
+    function setRelyingPartyStorageAdapter(address relyingPartyStorageAdapterAddress) public  onlyOwner() {
         _storage.setAddress(relyingPartyStorageAdapterKey, relyingPartyStorageAdapterAddress);
     }
 
-    function setRelyingPartyStorage(address relyingPartyStorageAddress) public {
+    function setRelyingPartyStorage(address relyingPartyStorageAddress) public  onlyOwner() {
         _storage.setAddress(relyingPartyStorageKey, relyingPartyStorageAddress);
     }
 
-    function setAttestationPartyStorageAdapter(address attestationPartyStorageAdapterAddress) public {
+    function setAttestationPartyStorageAdapter(address attestationPartyStorageAdapterAddress) public  onlyOwner() {
         _storage.setAddress(attestationPartyStorageAdapterKey, attestationPartyStorageAdapterAddress);
     }
 
-    function setAttestationPartyStorage(address attestationPartyStorageAddress) public {
+    function setAttestationPartyStorage(address attestationPartyStorageAddress) public  onlyOwner() {
         _storage.setAddress(attestationPartyStorageKey, attestationPartyStorageAddress);
+    }
+
+    function setKimlicWalletAddress(address kimlicWalletAddress) public  onlyOwner() {
+        _storage.setAddress(kimlicWalletAddressKey, kimlicWalletAddress);
     }
 }

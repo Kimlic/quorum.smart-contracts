@@ -1,5 +1,5 @@
 
-const { createAccountAndSet1EthToBalance } = require("./AccountHelper.js");
+const { createAccountAndSet1EthToBalance } = require("../../commonLogic");
 
 
 const basePartyConsts = {
@@ -21,27 +21,27 @@ const baseStorageAdapterTest = (storageAdapterGetMethod, values) => {
 
     it(`Should set LegalName. Value: "${values.legalNameValue}"`, async () => {
         const adapter = await storageAdapterGetMethod();
-        await adapter.setLegalName(accountAddress, values.legalNameValue);
+        await adapter.setLegalName(values.legalNameValue, { from: accountAddress });
     });
     it(`Should set ShortName. Value: "${values.shortNameValue}"`, async () => {
         const adapter = await storageAdapterGetMethod();
-        await adapter.setShortName(accountAddress, values.shortNameValue);
+        await adapter.setShortName(values.shortNameValue, { from: accountAddress });
     });
     it(`Should set BusinessArea. Value: "${values.businessAreaValue}"`, async () => {
         const adapter = await storageAdapterGetMethod();
-        await adapter.setBusinessArea(accountAddress, values.businessAreaValue);
+        await adapter.setBusinessArea(values.businessAreaValue, { from: accountAddress });
     });
     it(`Should set LegalResidenceCountry. Value: "${values.legalResidenceCountryValue}"`, async () => {
         const adapter = await storageAdapterGetMethod();
-        await adapter.setLegalResidenceCountry(accountAddress, values.legalResidenceCountryValue);
+        await adapter.setLegalResidenceCountry(values.legalResidenceCountryValue, { from: accountAddress });
     });
     it(`Should set Website. Value: "${values.websiteValue}"`, async () => {
         const adapter = await storageAdapterGetMethod();
-        await adapter.setWebsite(accountAddress, values.websiteValue);
+        await adapter.setWebsite(values.websiteValue, { from: accountAddress });
     });
     it(`Should set DataPrivacyUrl. Value: "${values.dataPrivacyUrlValue}"`, async () => {
         const adapter = await storageAdapterGetMethod();
-        await adapter.setDataPrivacyUrl(accountAddress, values.dataPrivacyUrlValue);
+        await adapter.setDataPrivacyUrl(values.dataPrivacyUrlValue, { from: accountAddress });
     });
 
     

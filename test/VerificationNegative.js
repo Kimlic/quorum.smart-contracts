@@ -6,13 +6,13 @@ const AccountStorageAdapter = artifacts.require("./AccountStorageAdapter.sol");
 const AttestationPartyStorageAdapter = artifacts.require("./AttestationPartyStorageAdapter.sol");
 const KimlicToken = artifacts.require("./KimlicToken.sol");
 
-const { addData, getFieldLastMainData, getFieldDetails } = require("./Helpers/AccountHelper.js");
+const { addData } = require("./Helpers/AccountHelper.js");
 const { loadDeployedConfigIntoCache, getNetworkDeployedConfig, deployedConfigPathConsts } = require("../deployedConfigHelper");
 const { getValueByPath, combinePath, uuidv4, emptyAddress, createAccountAndSet1EthToBalance } = require("../commonLogic");
 
 
 
-contract("Verification", function() {
+contract("Verification.Negative", function() {
     loadDeployedConfigIntoCache();
     const deployedConfig = getNetworkDeployedConfig(web3.version.network);
 
@@ -20,10 +20,16 @@ contract("Verification", function() {
     const accountAllowedFieldNamesConfig = getValueByPath(deployedConfig, accountAllowedFieldNamesConfigPath);
     
     let accountAddress = "";
+    let secondAccountAddress = "";
 
     it("init account", async () => {
         const account = await createAccountAndSet1EthToBalance(web3);
         accountAddress = account.accountAddress;
+        console.log(`account address: ${accountAddress}`);
+
+        const secondAccount = await createAccountAndSet1EthToBalance(web3);
+        secondAccountAddress = secondAccount.accountAddress;
+        console.log(`second account address: ${secondAccountAddress}`);
 
         const adapter = await AccountStorageAdapter.deployed();
         accountAllowedFieldNamesConfig.forEach(async (accountFieldName) => {
@@ -34,24 +40,26 @@ contract("Verification", function() {
     const verificationTests = (fieldName, attestationPartyAddress) => {
         const sendConfig = { "from": attestationPartyAddress };
         const verificationContractkey = uuidv4();
-        let dataIndex = 0;
-        it(`Should have data in field ${fieldName}`, async () => {
-            const accountStorageAdapter = await AccountStorageAdapter.deployed();
-            dataIndex = await accountStorageAdapter.getFieldHistoryLength.call(accountAddress, fieldName);
-            assert.notEqual(dataIndex, "0");
+        it(`Should not create verification contract for ${fieldName} without initialized data`, async () => {
+            const verificationContractFactory = await VerificationContractFactory.deployed();
+            try {
+                await verificationContractFactory.createBaseVerificationContract(secondAccountAddress,
+                    attestationPartyAddress, verificationContractkey, fieldName, sendConfig);
+            } catch (error) {
+                return;
+            }
+            assert.fail('Expected throw not received');
         });
         
-        it(`Should not have verification contract for field ${fieldName}`, async () => {
-            const accountStorageAdapter = await AccountStorageAdapter.deployed();
-            const isContractExist = await accountStorageAdapter.getIsFieldVerificationContractExist
-                .call(accountAddress, fieldName, dataIndex, { from: accountAddress });
-            assert.equal(isContractExist, false);
-        });
-        
-        it(`Should have access ${fieldName} verification from attestation party`, async () => {
-            const attestationPartyStorageAdapter = await AttestationPartyStorageAdapter.deployed();
-            const isFieldVerificationAllowed = await attestationPartyStorageAdapter.getIsFieldVerificationAllowed.call(attestationPartyAddress, fieldName);
-            assert.equal(isFieldVerificationAllowed, true);
+        it(`Should not create verification contract for ${fieldName} with wrong attestation party address`, async () => {
+            const verificationContractFactory = await VerificationContractFactory.deployed();
+            try {
+                await verificationContractFactory.createBaseVerificationContract(secondAccountAddress,
+                    attestationPartyAddress, verificationContractkey, fieldName, sendConfig);
+            } catch (error) {
+                return;
+            }
+            assert.fail('Expected throw not received');
         });
 
         it(`Should create ${fieldName} verification contract`, async () => {
@@ -59,36 +67,68 @@ contract("Verification", function() {
             await verificationContractFactory.createBaseVerificationContract(accountAddress,
                 attestationPartyAddress, verificationContractkey, fieldName, sendConfig);
         });
-        
-        var verificationContractAddress;
-        it(`Should return created ${fieldName} verification contract by key ${verificationContractkey}`, async () => {
+
+        it(`Should not create verification contract for ${fieldName} with already created verifiaction contract`, async () => {
             const verificationContractFactory = await VerificationContractFactory.deployed();
-            verificationContractAddress =  await verificationContractFactory.getVerificationContract.call(verificationContractkey, sendConfig);
-            assert.notEqual(verificationContractAddress, emptyAddress);
+            try {
+                await verificationContractFactory.createBaseVerificationContract(accountAddress, attestationPartyAddress,
+                    verificationContractkey, fieldName, sendConfig);
+            } catch (error) {
+                return;
+            }
+            assert.fail('Expected throw not received');
+        });
+        
+        it(`Should not return created ${fieldName} verification contract by wrong key`, async () => {
+            const verificationContractFactory = await VerificationContractFactory.deployed();
+            try {
+                verificationContractAddress =  await verificationContractFactory.getVerificationContract.call("wrong key", sendConfig);
+            } catch (error) {
+                return;
+            }
+            assert.equal(verificationContractAddress, emptyAddress);
         });
 
-        it(`Should return field data to owner.`, async () => {
+
+        it(`Should not return field data to other accounts`, async () => {
+            const verificationContractFactory = await VerificationContractFactory.deployed();
+            verificationContractAddress =  await verificationContractFactory.getVerificationContract.call(verificationContractkey, sendConfig);
             const verificationContract = await BaseVerification.at(verificationContractAddress);
-            const data = await verificationContract.getData.call({ "from": attestationPartyAddress });
+            try {
+                await verificationContract.getData.call({ "from": secondAccountAddress });
+            } catch (error) {
+                return;
+            }
+            assert.fail('Expected throw not received');
+        });
+        
+        it(`Should not get verification status name from other accounts`, async () => {
+            const verificationContractFactory = await VerificationContractFactory.deployed();
+            verificationContractAddress =  await verificationContractFactory.getVerificationContract.call(verificationContractkey, sendConfig);
+            const verificationContract = await BaseVerification.at(verificationContractAddress);
+            try {
+                const status = await verificationContract.getStatusName.call({ "from": secondAccountAddress });
+                console.log(`status: ${status}`);
+            } catch (error) {
+                return;
+            }
+            assert.fail('Expected throw not received');
+        });
+        
+        it(`Should not get verification status from other accounts`, async () => {
+            const verificationContractFactory = await VerificationContractFactory.deployed();
+            verificationContractAddress =  await verificationContractFactory.getVerificationContract.call(verificationContractkey, sendConfig);
+            const verificationContract = await BaseVerification.at(verificationContractAddress);
+            let status = 0;
+            try {
+                status = await verificationContract.getStatus.call({ "from": secondAccountAddress });
+            } catch (error) {
+                return;
+            }
+            if (status != "0") {//Quorum bug? somehow method return data but it returns "0" because of restrictions
+                assert.fail('Expected throw not received');
+            }
             
-            const adapter = await AccountStorageAdapter.deployed();
-            const accountData = await getFieldLastMainData(adapter, accountAddress, fieldName, accountAddress);
-            assert.deepEqual(data, accountData);
-        });
-        
-        it(`Should set verification ${fieldName} result`, async () => {
-            const verificationContract = await BaseVerification.at(verificationContractAddress);
-            await verificationContract.finalizeVerification(true, { "from": attestationPartyAddress });
-        });
-        
-        it(`Should get verification status. Status must be "Verified"(2)`, async () => {
-            const verificationContract = await BaseVerification.at(verificationContractAddress);
-            const verificationStatus = await verificationContract.getStatus.call({ "from": attestationPartyAddress });
-            assert.equal(verificationStatus, 2);
-        });
-        it(`Should read account ${fieldName} full data`, async () => {
-            let adapter = await AccountStorageAdapter.deployed();
-            detail = await getFieldDetails(adapter, accountAddress, fieldName, accountAddress);
         });
     };
 
@@ -133,16 +173,5 @@ contract("Verification", function() {
             }
             
         }
-    });
-
-    
-    it(`Should take rewards for verified data`, async () => {
-        const kimlicToken = await KimlicToken.deployed();
-
-        const rewards = getValueByPath(deployedConfig, deployedConfigPathConsts.rewardingContractConfig.rewards.path, []);
-
-        const balance = await kimlicToken.balanceOf.call(accountAddress);
-        const rewardingAmount = Object.values(rewards).reduce((a, b) => a + b, 0);
-        assert.equal(balance, rewardingAmount.toString());
     });
 });

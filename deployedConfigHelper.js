@@ -81,11 +81,17 @@ const deployedConfigPathConsts = {//TODO move to config file?
         allowedFieldNames: {
             path: "accountStorageAdapter.allowedFieldNames"
         },
+        owner: {
+            path: "accountStorageAdapter.owner"
+        },
         path: "accountStorageAdapter"
     },
     provisioningContractFactory: {
-        intersets: {
-            path: "provisioningContractFactory.intersets"
+        accountField: {
+            intersets: {
+                pathTemplate: "provisioningContractFactory.{accountField}.intersets"
+            },
+            pathTemplate: "provisioningContractFactory.{accountField}"
         },
         path: "provisioningContractFactory"
     },
@@ -121,6 +127,15 @@ const deployedConfigPathConsts = {//TODO move to config file?
     },
     createdUsers: {
         path: "createdUsers"
+    },
+    kimlicWallet: {
+        path: "kimlicWallet"
+    },
+    pricelistConfig: {
+        pathTemplate: "{pricelistName}Config",
+        prices: {
+            pathTemplate: "{pricelistName}Config.prices",
+        }
     }
 };
 
