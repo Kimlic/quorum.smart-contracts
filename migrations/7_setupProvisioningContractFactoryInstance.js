@@ -5,7 +5,7 @@ const { getFormatedConsoleLabel } = require("../commonLogic");
 const { saveDeployedConfig, getNetworkDeployedConfig, deployedConfigPathConsts } = require("../deployedConfigHelper");
 const { setValueByPath, getValueByPath, combinePath } = require("../commonLogic");
 
-module.exports = function(deployer, network, accounts) {
+module.exports = function(deployer) {
     console.log(getFormatedConsoleLabel("Setup provisioning contract factory instance:"));
 
     deployer.then(async () => {

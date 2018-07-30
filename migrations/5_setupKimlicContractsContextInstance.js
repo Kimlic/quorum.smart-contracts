@@ -17,7 +17,7 @@ const { getFormatedConsoleLabel } = require("../commonLogic");
 const { saveDeployedConfig, getNetworkDeployedConfig, deployedConfigPathConsts } = require("../deployedConfigHelper");
 const { setValueByPath } = require("../commonLogic");
 
-module.exports = function(deployer, network, accounts) {
+module.exports = function(deployer) {
     console.log(getFormatedConsoleLabel("Setup kimlic contracts context instance:"));
     deployer.then(async () => {
         
