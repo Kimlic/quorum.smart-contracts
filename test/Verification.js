@@ -38,7 +38,10 @@ contract("Verification", function() {
         const initContractCreator = (creatorName) => {
             const path = combinePath(deployedConfigPathConsts.partiesConfig.createdParties.party.pathTemplate, { partyName: creatorName });
             contractCreatorConfig = getValueByPath(deployedConfig, path, {});
-            contractCreatorSendConfig = { from: contractCreatorConfig.address};
+            contractCreatorSendConfig = { from: contractCreatorConfig.address };
+            it(`Should unlock coOwner`, async () => {
+                await web3.personal.unlockAccount(contractCreatorConfig.address, contractCreatorConfig.password, 100);
+            });
         };
 
         if (fieldName == "email" || fieldName == "phone") {

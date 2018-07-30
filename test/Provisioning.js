@@ -4,6 +4,7 @@ const BaseVerification = artifacts.require("./BaseVerification.sol");
 const AccountStorageAdapter = artifacts.require("./AccountStorageAdapter.sol");
 const ProvisioningContractFactory = artifacts.require("./ProvisioningContractFactory.sol");
 const ProvisioningContract = artifacts.require("./ProvisioningContract.sol");
+const KimlicToken = artifacts.require("./KimlicToken.sol");
 
 const { addData, getFieldLastMainData, getFieldLastVerificationData } = require("./Helpers/AccountHelper.js");
 const { loadDeployedConfigIntoCache, getNetworkDeployedConfig, deployedConfigPathConsts } = require("../deployedConfigHelper");
@@ -44,10 +45,16 @@ contract("Provisioning", function() {
             await verificationContract.finalizeVerification(true, attestationPartySendConfig);
         });
 
-
+        let beforeCreateBalance;
+        let afterCreateBalance;
         it(`Should create provisioning "${fieldName}" contract`, async () => {
+            const kimlicToken = await KimlicToken.deployed();
+            beforeCreateBalance = new web3.BigNumber(await kimlicToken.balanceOf.call(relyingPartyConfig.address));
+
             const provisioningContractFactory = await ProvisioningContractFactory.deployed();
             await provisioningContractFactory.createProvisioningContract(accountAddress, fieldName, provisioningContractkey, relyingPartySendConfig);
+
+            afterCreateBalance = new web3.BigNumber(await kimlicToken.balanceOf.call(relyingPartyConfig.address));
         });
         
         var provisioningContractAddress;
@@ -57,15 +64,30 @@ contract("Provisioning", function() {
             assert.notEqual(provisioningContractAddress, emptyAddress);
         });
 
+        let reward;
+        it(`Should reduce relying party balnce while create contract`, async () => {
+            const provisioningContract = await ProvisioningContract.at(provisioningContractAddress);
+            reward = new web3.BigNumber(await provisioningContract.rewardAmount.call());
+            const balancesDiff = beforeCreateBalance.sub(afterCreateBalance);
+            assert.equal(balancesDiff.toString(), reward.toString());
+        });
+
         it(`Should get isVerificationFinished = true`, async () => {
             const provisioningContract = await ProvisioningContract.at(provisioningContractAddress);
             const isVerificationFinished = await provisioningContract.isVerificationFinished.call(relyingPartySendConfig);
             assert.equal(isVerificationFinished, true);
         });
 
-        it(`Should set provisioning result`, async () => {
+        it(`Should set finalize provisioning`, async () => {
             const provisioningContract = await ProvisioningContract.at(provisioningContractAddress);
             await provisioningContract.finalizeProvisioning(relyingPartySendConfig);
+        });
+
+        
+        it(`Should send tokens back to RP`, async () => {
+            const kimlicToken = await KimlicToken.deployed();
+            let afterFinishBalance = new web3.BigNumber(await kimlicToken.balanceOf.call(relyingPartyConfig.address));
+            assert.equal(afterFinishBalance.toString(), beforeCreateBalance.toString());
         });
 
         it(`Should return field details to owner.`, async () => {
