@@ -73,6 +73,7 @@ module.exports = function(deployer) {
 
         await deployer.deploy(RewardingContract, KimlicContextStorage.address);
         console.log(`RewardingContract deployed at address ${RewardingContract.address}`);
+
         setValueByPath(deployedConfig, contractPathConsts.rewardingContractAddress.path, RewardingContract.address);
 
         saveDeployedConfig();
