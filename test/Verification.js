@@ -7,13 +7,12 @@ const AttestationPartyStorageAdapter = artifacts.require("./AttestationPartyStor
 const KimlicToken = artifacts.require("./KimlicToken.sol");
 
 const { addData, getFieldLastMainData, getFieldDetails } = require("./Helpers/AccountHelper.js");
-const { loadDeployedConfigIntoCache, getNetworkDeployedConfig, deployedConfigPathConsts } = require("../deployedConfigHelper");
+const { getNetworkDeployedConfig, deployedConfigPathConsts } = require("../deployedConfigHelper");
 const { getValueByPath, combinePath, uuidv4, emptyAddress, createAccountAndSet1EthToBalance } = require("../commonLogic");
 
 
 
 contract("Verification", function() {
-    loadDeployedConfigIntoCache();
     const deployedConfig = getNetworkDeployedConfig(web3.version.network);
 
     const accountAllowedFieldNamesConfigPath = deployedConfigPathConsts.accountStorageAdapter.allowedFieldNames.path;
@@ -22,7 +21,7 @@ contract("Verification", function() {
     let accountAddress = "";
 
     it("init account", async () => {
-        const account = await createAccountAndSet1EthToBalance(web3);
+        const account = await createAccountAndSet1EthToBalance(web3, deployedConfig.deployerAddress);
         accountAddress = account.accountAddress;
 
         const adapter = await AccountStorageAdapter.deployed();

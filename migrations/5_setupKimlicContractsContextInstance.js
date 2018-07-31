@@ -20,13 +20,13 @@ const { setValueByPath } = require("../commonLogic");
 module.exports = function(deployer) {
     console.log(getFormatedConsoleLabel("Setup kimlic contracts context instance:"));
     deployer.then(async () => {
+        const deployedConfig = getNetworkDeployedConfig(web3.version.network);
         
         const communityTokenWalletPassword = "p@ssw0rd";
         const communityTokenWalletAddress = web3.personal.newAccount(communityTokenWalletPassword);
         web3.personal.unlockAccount(communityTokenWalletAddress, communityTokenWalletPassword, 100);
-        await web3.eth.sendTransaction({"from": web3.eth.coinbase, "to": communityTokenWalletAddress, "value": 1000000000000000000});//1 eth
+        await web3.eth.sendTransaction({"from": deployedConfig.deployerAddress, "to": communityTokenWalletAddress, "value": 1000000000000000000});//1 eth
 
-        const deployedConfig = getNetworkDeployedConfig(web3.version.network);
         setValueByPath(deployedConfig, deployedConfigPathConsts.communityTokenWallet.path, {
             address: communityTokenWalletAddress, password: communityTokenWalletPassword
         });

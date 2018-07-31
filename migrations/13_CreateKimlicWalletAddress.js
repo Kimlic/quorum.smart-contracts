@@ -1,13 +1,12 @@
 const KimlicContractsContext = artifacts.require("./KimlicContractsContext.sol");
 
-const { loadDeployedConfigIntoCache, getNetworkDeployedConfig, deployedConfigPathConsts, saveDeployedConfig } = require("../deployedConfigHelper");
+const { getNetworkDeployedConfig, deployedConfigPathConsts, saveDeployedConfig } = require("../deployedConfigHelper");
 const { setValueByPath, getFormatedConsoleLabel } = require("../commonLogic");
 
 
 module.exports = async function(deployer) {
     console.log(getFormatedConsoleLabel("Create kimlic wallet address"));
     deployer.then(async () => {
-        loadDeployedConfigIntoCache();
 
         const deployedConfig = getNetworkDeployedConfig(web3.version.network);
 

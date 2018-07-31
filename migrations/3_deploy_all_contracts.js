@@ -36,7 +36,7 @@ module.exports = function(deployer) {
         console.log(`AccountStorage deployed at address ${AccountStorage.address}`);
         setValueByPath(deployedConfig, contractPathConsts.accountStorageAddress.path, AccountStorage.address);
 
-        const accountStorageAdapterOwner = await createAccountAndSet1EthToBalance(web3, uuidv4());
+        const accountStorageAdapterOwner = await createAccountAndSet1EthToBalance(web3, deployedConfig.deployerAddress, uuidv4());
         await deployer.deploy(AccountStorageAdapter, KimlicContextStorage.address, { from: accountStorageAdapterOwner.accountAddress });
         console.log(`AccountStorageAdapter deployed at address ${AccountStorageAdapter.address}`);
         setValueByPath(deployedConfig, contractPathConsts.accountStorageAdapterAddress.path, AccountStorageAdapter.address);
