@@ -3,17 +3,14 @@
 const VerificationContractFactory = artifacts.require("./VerificationContractFactory.sol");
 const BaseVerification = artifacts.require("./BaseVerification.sol");
 const AccountStorageAdapter = artifacts.require("./AccountStorageAdapter.sol");
-const AttestationPartyStorageAdapter = artifacts.require("./AttestationPartyStorageAdapter.sol");
-const KimlicToken = artifacts.require("./KimlicToken.sol");
 
 const { addData } = require("./Helpers/AccountHelper.js");
-const { loadDeployedConfigIntoCache, getNetworkDeployedConfig, deployedConfigPathConsts } = require("../deployedConfigHelper");
+const { getNetworkDeployedConfig, deployedConfigPathConsts } = require("../deployedConfigHelper");
 const { getValueByPath, combinePath, uuidv4, emptyAddress, createAccountAndSet1EthToBalance } = require("../commonLogic");
 
 
 
 contract("Verification.Negative", function() {
-    loadDeployedConfigIntoCache();
     const deployedConfig = getNetworkDeployedConfig(web3.version.network);
 
     const accountAllowedFieldNamesConfigPath = deployedConfigPathConsts.accountStorageAdapter.allowedFieldNames.path;
@@ -23,11 +20,11 @@ contract("Verification.Negative", function() {
     let secondAccountAddress = "";
 
     it("init account", async () => {
-        const account = await createAccountAndSet1EthToBalance(web3);
+        const account = await createAccountAndSet1EthToBalance(web3, deployedConfig.deployerAddress);
         accountAddress = account.accountAddress;
         console.log(`account address: ${accountAddress}`);
 
-        const secondAccount = await createAccountAndSet1EthToBalance(web3);
+        const secondAccount = await createAccountAndSet1EthToBalance(web3, deployedConfig.deployerAddress);
         secondAccountAddress = secondAccount.accountAddress;
         console.log(`second account address: ${secondAccountAddress}`);
 

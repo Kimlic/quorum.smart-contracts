@@ -1,14 +1,13 @@
 const AccountStorageAdapter = artifacts.require("./AccountStorageAdapter.sol");
 
 const { addData } = require("../test/Helpers/AccountHelper.js");
-const { loadDeployedConfigIntoCache, getNetworkDeployedConfig, deployedConfigPathConsts, saveDeployedConfig } = require("../deployedConfigHelper");
+const { getNetworkDeployedConfig, deployedConfigPathConsts, saveDeployedConfig } = require("../deployedConfigHelper");
 const { getValueByPath } = require("../commonLogic");
 
 
 var fs = require("fs");
 
 module.exports = async function(callback) {
-    loadDeployedConfigIntoCache();
     const deployedConfig = getNetworkDeployedConfig(web3.version.network);
     const accountAllowedFieldNamesConfigPath = deployedConfigPathConsts.accountStorageAdapter.allowedFieldNames.path;
     const accountAllowedFieldNamesConfig = getValueByPath(deployedConfig, accountAllowedFieldNamesConfigPath, []);

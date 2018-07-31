@@ -6,21 +6,20 @@ const ProvisioningContractFactory = artifacts.require("./ProvisioningContractFac
 const ProvisioningContract = artifacts.require("./ProvisioningContract.sol");
 
 const { addData} = require("./Helpers/AccountHelper.js");
-const { loadDeployedConfigIntoCache, getNetworkDeployedConfig, deployedConfigPathConsts } = require("../deployedConfigHelper");
+const { getNetworkDeployedConfig, deployedConfigPathConsts } = require("../deployedConfigHelper");
 const { getValueByPath, combinePath, uuidv4, emptyAddress, createAccountAndSet1EthToBalance } = require("../commonLogic");
 
 
 contract("Provisioning.Negative", function() {
-    loadDeployedConfigIntoCache();
     const deployedConfig = getNetworkDeployedConfig(web3.version.network);
     let accountAddress = "";
     let secondAccountAddress = "";
 
     before("create account", async () => {
-        const account = await createAccountAndSet1EthToBalance(web3);
+        const account = await createAccountAndSet1EthToBalance(web3, deployedConfig.deployerAddress);
         accountAddress = account.accountAddress;
         console.log(`accountAddress: ${accountAddress}`);
-        const secondAccount = await createAccountAndSet1EthToBalance(web3);
+        const secondAccount = await createAccountAndSet1EthToBalance(web3, deployedConfig.deployerAddress);
         secondAccountAddress = secondAccount.accountAddress;
         console.log(`second account address: ${secondAccountAddress}`);
     });

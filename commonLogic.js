@@ -56,10 +56,11 @@ const getFormatedConsoleLabel = function(unformatedLable){
     return "\n" + separationString + " " + unformatedLable + " " + separationString + "\n";
 };
 
-const createAccountAndSet1EthToBalance = async (web3, accountPassword = "p@ssw0rd") => {
+const createAccountAndSet1EthToBalance = async (web3, coinbase, accountPassword = "p@ssw0rd") => {
     const accountAddress = await web3.personal.newAccount(accountPassword);
     await web3.personal.unlockAccount(accountAddress, accountPassword, 1000);
-    await web3.eth.sendTransaction({"from": web3.eth.coinbase, "to": accountAddress, "value": 1000000000000000000});//1 eth
+    await web3.eth.sendTransaction({"from": coinbase, "to": accountAddress, "value": 1000000000000000000});//1 eth
     return { accountAddress, accountPassword };
 }
+
 module.exports = { getValueByPath, setValueByPath, emptyAddress, combinePath, uuidv4, getFormatedConsoleLabel, createAccountAndSet1EthToBalance };

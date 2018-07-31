@@ -16,11 +16,9 @@ contract ProvisioningContract is Ownable, WithKimlicContext {
     address public account;
     Status public status;
     uint public tokensUnlockAt;
-    string private fieldName;
-    uint private index;
-
-    /// private attributes ///
-    uint private _reward;
+    string public fieldName;
+    uint public index;
+    uint public rewardAmount;
     /// enums ///
     enum Status { None, Created, DataProvided, Canceled }
 
@@ -37,7 +35,7 @@ contract ProvisioningContract is Ownable, WithKimlicContext {
         tokensUnlockAt = block.timestamp + factory.tokensLockPeriod() * 1 hours;
         
         account = accountAddress;
-        _reward = reward;
+        rewardAmount = reward;
         fieldName = accountFieldName;
         index = fieldIndex;
     }
@@ -94,15 +92,15 @@ contract ProvisioningContract is Ownable, WithKimlicContext {
         BaseVerification verificationContract = BaseVerification(verificationContractAddress);
         address coOwner = verificationContract.coOwner();
         if (coOwner == owner) {
-            kimlicToken.transfer(owner, _reward);
+            kimlicToken.transfer(owner, rewardAmount);
             return;
         }
 
         ProvisioningContractFactory factory = context.getProvisioningContractFactory();
-        uint accountInterest = _reward * factory.getAccountInterestPercent(fieldName) / 100;
-        uint coOwnerInterest = _reward * factory.getCoOwnerInterestPercent(fieldName) / 100;
-        uint communityTokenWalletInterest = _reward * factory.getCommunityTokenWalletInterestPercent(fieldName) / 100;
-        uint kimlicWalletInterest = _reward * factory.getKimlicWalletInterestPercent(fieldName) / 100;
+        uint accountInterest = rewardAmount * factory.getAccountInterestPercent(fieldName) / 100;
+        uint coOwnerInterest = rewardAmount * factory.getCoOwnerInterestPercent(fieldName) / 100;
+        uint communityTokenWalletInterest = rewardAmount * factory.getCommunityTokenWalletInterestPercent(fieldName) / 100;
+        uint kimlicWalletInterest = rewardAmount * factory.getKimlicWalletInterestPercent(fieldName) / 100;
         
         kimlicToken.transfer(account, accountInterest);
         kimlicToken.transfer(coOwner, coOwnerInterest);

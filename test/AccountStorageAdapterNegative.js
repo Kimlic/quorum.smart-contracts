@@ -8,13 +8,14 @@ const { getValueByPath, createAccountAndSet1EthToBalance } = require("../commonL
 
 
 contract("AccountStorageAdapter.Negative", function() {
+    const deployedConfig = getNetworkDeployedConfig(web3.version.network);
     let accountAddress = "";
     let secondAccountAddress = "";
     before("create account", async () => {
-        const account = await createAccountAndSet1EthToBalance(web3);
+        const account = await createAccountAndSet1EthToBalance(web3, deployedConfig.deployerAddress);
         accountAddress = account.accountAddress;
         console.log(`accountAddress: ${accountAddress}`);
-        const secondAccount = await createAccountAndSet1EthToBalance(web3);
+        const secondAccount = await createAccountAndSet1EthToBalance(web3, deployedConfig.deployerAddress);
         secondAccountAddress = secondAccount.accountAddress;
         console.log(`second account address: ${secondAccountAddress}`);
     });
@@ -42,7 +43,6 @@ contract("AccountStorageAdapter.Negative", function() {
         });
     };
     
-    const deployedConfig = getNetworkDeployedConfig(web3.version.network);
 
     const allowedFieldNamesConfigPath = deployedConfigPathConsts.accountStorageAdapter.allowedFieldNames.path;
     const allowedFieldNamesConfig = getValueByPath(deployedConfig, allowedFieldNamesConfigPath);

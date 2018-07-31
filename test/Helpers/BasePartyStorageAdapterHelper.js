@@ -1,4 +1,7 @@
 
+
+const { getNetworkDeployedConfig } = require("../../deployedConfigHelper");
+
 const { createAccountAndSet1EthToBalance } = require("../../commonLogic");
 
 
@@ -11,11 +14,12 @@ const basePartyConsts = {
     dataPrivacyUrlValue: "dataPrivacyUrl"
 }
 
-const baseStorageAdapterTest = (storageAdapterGetMethod, values) => {
+const baseStorageAdapterTest = (storageAdapterGetMethod, values, ) => {
+    const deployedConfig = getNetworkDeployedConfig(web3.version.network);
     let accountAddress;
     
     it("init account", async () => {
-        const account = await createAccountAndSet1EthToBalance(web3);
+        const account = await createAccountAndSet1EthToBalance(web3, deployedConfig.deployerAddress);
         accountAddress = account.accountAddress;
     }); 
 

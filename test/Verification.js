@@ -7,13 +7,12 @@ const AttestationPartyStorageAdapter = artifacts.require("./AttestationPartyStor
 const KimlicToken = artifacts.require("./KimlicToken.sol");
 
 const { addData, getFieldLastMainData, getFieldDetails } = require("./Helpers/AccountHelper.js");
-const { loadDeployedConfigIntoCache, getNetworkDeployedConfig, deployedConfigPathConsts } = require("../deployedConfigHelper");
+const { getNetworkDeployedConfig, deployedConfigPathConsts } = require("../deployedConfigHelper");
 const { getValueByPath, combinePath, uuidv4, emptyAddress, createAccountAndSet1EthToBalance } = require("../commonLogic");
 
 
 
 contract("Verification", function() {
-    loadDeployedConfigIntoCache();
     const deployedConfig = getNetworkDeployedConfig(web3.version.network);
 
     const accountAllowedFieldNamesConfigPath = deployedConfigPathConsts.accountStorageAdapter.allowedFieldNames.path;
@@ -22,7 +21,7 @@ contract("Verification", function() {
     let accountAddress = "";
 
     it("init account", async () => {
-        const account = await createAccountAndSet1EthToBalance(web3);
+        const account = await createAccountAndSet1EthToBalance(web3, deployedConfig.deployerAddress);
         accountAddress = account.accountAddress;
 
         const adapter = await AccountStorageAdapter.deployed();
@@ -32,6 +31,24 @@ contract("Verification", function() {
     });
 
     const verificationTests = (fieldName, attestationPartyAddress) => {
+        let contractCreatorConfig;
+        let contractCreatorSendConfig;
+        
+        const initContractCreator = (creatorName) => {
+            const path = combinePath(deployedConfigPathConsts.partiesConfig.createdParties.party.pathTemplate, { partyName: creatorName });
+            contractCreatorConfig = getValueByPath(deployedConfig, path, {});
+            contractCreatorSendConfig = { from: contractCreatorConfig.address };
+            it(`Should unlock coOwner`, async () => {
+                await web3.personal.unlockAccount(contractCreatorConfig.address, contractCreatorConfig.password, 100);
+            });
+        };
+
+        if (fieldName == "email" || fieldName == "phone") {
+            initContractCreator("kimlic");
+        } else {
+            initContractCreator("firstRelyingParty");
+        }
+
         const sendConfig = { "from": attestationPartyAddress };
         const verificationContractkey = uuidv4();
         let dataIndex = 0;
@@ -54,10 +71,17 @@ contract("Verification", function() {
             assert.equal(isFieldVerificationAllowed, true);
         });
 
+        let beforeCreateBalance;
+        let afterCreateBalance;
         it(`Should create ${fieldName} verification contract`, async () => {
             const verificationContractFactory = await VerificationContractFactory.deployed();
+            const kimlicToken = await KimlicToken.deployed();
+            beforeCreateBalance = new web3.BigNumber(await kimlicToken.balanceOf.call(contractCreatorConfig.address));
+
             await verificationContractFactory.createBaseVerificationContract(accountAddress,
-                attestationPartyAddress, verificationContractkey, fieldName, sendConfig);
+                attestationPartyAddress, verificationContractkey, fieldName, contractCreatorSendConfig);
+
+            afterCreateBalance = new web3.BigNumber(await kimlicToken.balanceOf.call(contractCreatorConfig.address));
         });
         
         var verificationContractAddress;
@@ -65,6 +89,14 @@ contract("Verification", function() {
             const verificationContractFactory = await VerificationContractFactory.deployed();
             verificationContractAddress =  await verificationContractFactory.getVerificationContract.call(verificationContractkey, sendConfig);
             assert.notEqual(verificationContractAddress, emptyAddress);
+        });
+
+        let reward;
+        it(`Should reduce relying party balnce while create contract`, async () => {
+            const verificationContract = await BaseVerification.at(verificationContractAddress);
+            reward = new web3.BigNumber(await verificationContract.rewardAmount.call());
+            const balancesDiff = beforeCreateBalance.sub(afterCreateBalance);
+            assert.equal(balancesDiff.toString(), reward.toString());
         });
 
         it(`Should return field data to owner.`, async () => {
@@ -75,10 +107,21 @@ contract("Verification", function() {
             const accountData = await getFieldLastMainData(adapter, accountAddress, fieldName, accountAddress);
             assert.deepEqual(data, accountData);
         });
-        
+
+        let beforeVerificaitonFinishAPBalance;
+        let afterVerificaitonFinishAPBalance;
         it(`Should set verification ${fieldName} result`, async () => {
+            const kimlicToken = await KimlicToken.deployed();
+
+            beforeVerificaitonFinishAPBalance = new web3.BigNumber(await kimlicToken.balanceOf.call(attestationPartyAddress));
             const verificationContract = await BaseVerification.at(verificationContractAddress);
             await verificationContract.finalizeVerification(true, { "from": attestationPartyAddress });
+            afterVerificaitonFinishAPBalance = new web3.BigNumber(await kimlicToken.balanceOf.call(attestationPartyAddress));
+        });
+
+        it(`Should send reward to AP`, async () => {
+            const balancesDiff = afterVerificaitonFinishAPBalance.sub(beforeVerificaitonFinishAPBalance);
+            assert.equal(balancesDiff.toString(), reward.toString());
         });
         
         it(`Should get verification status. Status must be "Verified"(2)`, async () => {

@@ -52,7 +52,7 @@ module.exports = function(deployer) {
         web3.personal.unlockAccount(address, password, 100);
 
         console.log("Sending eth to created address");
-        web3.eth.sendTransaction({from: web3.eth.coinbase, to: address, value: "0xDE0B6B3A7640000"});//1 eth
+        web3.eth.sendTransaction({from: deployedConfig.deployerAddress, to: address, value: "0xDE0B6B3A7640000"});//1 eth
         
 
         console.log(`Send tokens to "${name}" account`);
