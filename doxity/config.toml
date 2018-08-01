@@ -1,11 +1,11 @@
-linkPrefix = "quorum.smart-contracts"
+linkPrefix = ""
 name = "quorum.smart-contracts"
 license = "ISC"
 version = "0.1.0"
 description = "Kimlic smart contracts"
 homepage = "https://github.com/Kimlic/quorum.smart-contracts#readme"
 author = ""
-buildTime = 2018-08-01T09:16:08.985Z
+buildTime = 2018-08-01T16:20:09.481Z
 target = "doxity"
 src = "contracts/*"
 dir = "pages/docs"

@@ -16,6 +16,9 @@ config/test/contracts.json
 bin
 dist
 
+# doxity
+doxity-tmp*
+
 build
 .jshintrc
 PartiesConfig.json
