@@ -2,9 +2,8 @@
 const KimlicToken = artifacts.require("./KimlicToken.sol");
 const RewardingContract = artifacts.require("./RewardingContract.sol");
 
-const { getFormatedConsoleLabel } = require("../commonLogic");
+const { getFormatedConsoleLabel, getValueByPath } = require("../commonLogic/commonLogic");
 const { getNetworkDeployedConfig, deployedConfigPathConsts } = require("../deployedConfigHelper");
-const { getValueByPath } = require("../commonLogic");
 
 module.exports = function(deployer) {
     console.log(getFormatedConsoleLabel("setup community token wallet address"));

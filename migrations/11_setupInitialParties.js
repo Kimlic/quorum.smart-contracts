@@ -5,9 +5,8 @@ const ProvisioningContractFactory = artifacts.require("./ProvisioningContractFac
 const AttestationPartyStorageAdapter = artifacts.require("./AttestationPartyStorageAdapter.sol");
 
 const { setupAPAccessToFieldVerification, setupParty } = require("./Helpers/PartyCreatingHelper");
-const { getFormatedConsoleLabel } = require("../commonLogic");
+const { getFormatedConsoleLabel, getValueByPath } = require("../commonLogic/commonLogic");
 const { saveDeployedConfig, getNetworkDeployedConfig, deployedConfigPathConsts } = require("../deployedConfigHelper");
-const { getValueByPath } = require("../commonLogic");
 
 
 

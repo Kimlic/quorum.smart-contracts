@@ -13,9 +13,8 @@ const RelyingPartyStorage = artifacts.require("./RelyingPartyStorage.sol");
 const AttestationPartyStorageAdapter = artifacts.require("./AttestationPartyStorageAdapter.sol");
 const AttestationPartyStorage = artifacts.require("./AttestationPartyStorage.sol");
 
-const { getFormatedConsoleLabel } = require("../commonLogic");
+const { getFormatedConsoleLabel, setValueByPath } = require("../commonLogic/commonLogic");
 const { saveDeployedConfig, getNetworkDeployedConfig, deployedConfigPathConsts } = require("../deployedConfigHelper");
-const { setValueByPath } = require("../commonLogic");
 
 module.exports = function(deployer) {
     console.log(getFormatedConsoleLabel("Setup kimlic contracts context instance:"));

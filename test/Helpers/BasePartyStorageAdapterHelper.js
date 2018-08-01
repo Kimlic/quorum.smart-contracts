@@ -2,7 +2,7 @@
 
 const { getNetworkDeployedConfig } = require("../../deployedConfigHelper");
 
-const { createAccountAndSet1EthToBalance } = require("../../commonLogic");
+const { createAccountAndSet1EthToBalance } = require("../../commonLogic/commonEthereumLogic");
 
 
 const basePartyConsts = {

@@ -8,7 +8,8 @@ const KimlicToken = artifacts.require("./KimlicToken.sol");
 
 const { addData, getFieldLastMainData, getFieldLastVerificationData } = require("./Helpers/AccountHelper.js");
 const { getNetworkDeployedConfig, deployedConfigPathConsts } = require("../deployedConfigHelper");
-const { getValueByPath, combinePath, uuidv4, emptyAddress, createAccountAndSet1EthToBalance } = require("../commonLogic");
+const { getValueByPath, combinePath, uuidv4 } = require("../commonLogic/commonLogic");
+const { emptyAddress, createAccountAndSet1EthToBalance } = require("../commonLogic/commonEthereumLogic");
 
 
 contract("Provisioning", function() {

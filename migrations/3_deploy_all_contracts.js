@@ -12,9 +12,9 @@ const RelyingPartyStorage = artifacts.require("./RelyingPartyStorage.sol");
 const AttestationPartyStorageAdapter = artifacts.require("./AttestationPartyStorageAdapter.sol");
 const AttestationPartyStorage = artifacts.require("./AttestationPartyStorage.sol");
 
-const { getFormatedConsoleLabel } = require("../commonLogic");
+const { getFormatedConsoleLabel, setValueByPath, uuidv4 } = require("../commonLogic/commonLogic");
 const { deployedConfigPathConsts, saveDeployedConfig, getNetworkDeployedConfig } = require("../deployedConfigHelper");
-const { setValueByPath, createAccountAndSet1EthToBalance, uuidv4 } = require("../commonLogic");
+const { createAccountAndSet1EthToBalance } = require("../commonLogic/commonEthereumLogic");
 
 
 module.exports = function(deployer) {

@@ -3,7 +3,8 @@ const AccountStorageAdapter = artifacts.require("./AccountStorageAdapter.sol");
 
 const { addData, getFieldLastMainData, getFieldDetails } = require("./Helpers/AccountHelper.js");
 const { getNetworkDeployedConfig, deployedConfigPathConsts } = require("../deployedConfigHelper");
-const { getValueByPath, createAccountAndSet1EthToBalance } = require("../commonLogic");
+const { getValueByPath } = require("../commonLogic/commonLogic");
+const { createAccountAndSet1EthToBalance } = require("../commonLogic/commonEthereumLogic");
 
 
 
