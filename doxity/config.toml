@@ -1,0 +1,15 @@
+linkPrefix = "/quorum.smart-contracts"
+name = "quorum.smart-contracts"
+license = "ISC"
+version = "0.1.0"
+description = "Kimlic smart contracts"
+homepage = "https://github.com/Kimlic/quorum.smart-contracts#readme"
+author = ""
+buildTime = 2018-08-02T05:06:09.388Z
+target = "doxity"
+src = "contracts/*"
+dir = "pages/docs"
+source = "https://github.com/DigixGlobal/doxity-gatsby-starter-project/archive/a4886b7a7a04c018ac04fed3125d7d4785e74bed.tar.gz"
+out = "docs"
+
+[interaction]
