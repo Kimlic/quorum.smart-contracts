@@ -25,52 +25,52 @@ contract BasePartyStorageAdapter is WithKimlicContext {
     /// public methods ///
 
     /* Setters */
-    function setLegalName(string value) public {
-        setStringValue(msg.sender, value, legalNameKey);
+    function setLegalName(address party, string value) public setterAccessRestriction(party) {
+        setStringValue(party, value, legalNameKey);
     }
     
-    function setShortName(string value) public {
-        setStringValue(msg.sender, value, shortNameKey);
+    function setShortName(address party, string value) public setterAccessRestriction(party) {
+        setStringValue(party, value, shortNameKey);
     }
     
-    function setBusinessArea(string value) public {
-        setStringValue(msg.sender, value, businessAreaKey);
+    function setBusinessArea(address party, string value) public setterAccessRestriction(party) {
+        setStringValue(party, value, businessAreaKey);
     }
     
-    function setLegalResidenceCountry(string value) public {
-        setStringValue(msg.sender, value, legalResidenceCountryKey);
+    function setLegalResidenceCountry(address party, string value) public setterAccessRestriction(party) {
+        setStringValue(party, value, legalResidenceCountryKey);
     }
     
-    function setWebsite(string value) public {
-        setStringValue(msg.sender, value, websiteKey);
+    function setWebsite(address party, string value) public setterAccessRestriction(party) {
+        setStringValue(party, value, websiteKey);
     }
     
-    function setDataPrivacyUrl(string value) public {
-        setStringValue(msg.sender, value, dataPrivacyUrlKey);
+    function setDataPrivacyUrl(address party, string value) public setterAccessRestriction(party) {
+        setStringValue(party, value, dataPrivacyUrlKey);
     }
 
     /* Getters */
-    function getLegalName(address party) public view getAccessRestriction(party) returns(string) {
+    function getLegalName(address party) public view  returns(string) {
         return getStringValue(party, legalNameKey);
     }
     
-    function getShortName(address party) public view getAccessRestriction(party) returns(string) {
+    function getShortName(address party) public view  returns(string) {
         return getStringValue(party, shortNameKey);
     }
     
-    function getBusinessArea(address party) public view getAccessRestriction(party) returns(string) {
+    function getBusinessArea(address party) public view  returns(string) {
         return getStringValue(party, businessAreaKey);
     }
     
-    function getLegalResidenceCountry(address party) public view getAccessRestriction(party) returns(string) {
+    function getLegalResidenceCountry(address party) public view  returns(string) {
         return getStringValue(party, legalResidenceCountryKey);
     }
     
-    function getWebsite(address party) public view getAccessRestriction(party) returns(string) {
+    function getWebsite(address party) public view  returns(string) {
         return getStringValue(party, websiteKey);
     }
     
-    function getDataPrivacyUrl(address party) public view getAccessRestriction(party) returns(string) {
+    function getDataPrivacyUrl(address party) public view  returns(string) {
         return getStringValue(party, dataPrivacyUrlKey);
     }
 
@@ -88,8 +88,8 @@ contract BasePartyStorageAdapter is WithKimlicContext {
     /// internal methods ///
     function getStorage() view internal returns (BaseStorage);
 
-
-    modifier getAccessRestriction(address party) {
+    modifier setterAccessRestriction(address party) {
+        require(msg.sender == party || msg.sender == getContext().owner());
         _;
     }
 }

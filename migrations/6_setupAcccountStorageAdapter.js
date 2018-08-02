@@ -1,10 +1,8 @@
 /*jshint esversion: 6 */
 
 const AccountStorageAdapter = artifacts.require("./AccountStorageAdapter.sol");
-const { getFormatedConsoleLabel } = require("../commonLogic");
+const { getFormatedConsoleLabel, setValueByPath } = require("../commonLogic/commonLogic");
 const { saveDeployedConfig, getNetworkDeployedConfig, deployedConfigPathConsts } = require("../deployedConfigHelper");
-const { setValueByPath } = require("../commonLogic");
-
 module.exports = function(deployer) {
     console.log(getFormatedConsoleLabel("Setup account storage adapter instance:"));
 

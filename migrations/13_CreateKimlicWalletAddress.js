@@ -1,7 +1,7 @@
 const KimlicContractsContext = artifacts.require("./KimlicContractsContext.sol");
 
 const { getNetworkDeployedConfig, deployedConfigPathConsts, saveDeployedConfig } = require("../deployedConfigHelper");
-const { setValueByPath, getFormatedConsoleLabel } = require("../commonLogic");
+const { setValueByPath, getFormatedConsoleLabel } = require("../commonLogic/commonLogic");
 
 
 module.exports = async function(deployer) {

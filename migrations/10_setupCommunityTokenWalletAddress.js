@@ -2,9 +2,8 @@
 const KimlicToken = artifacts.require("./KimlicToken.sol");
 const RewardingContract = artifacts.require("./RewardingContract.sol");
 
-const { getFormatedConsoleLabel } = require("../commonLogic");
+const { getFormatedConsoleLabel, getValueByPath } = require("../commonLogic/commonLogic");
 const { getNetworkDeployedConfig, deployedConfigPathConsts } = require("../deployedConfigHelper");
-const { getValueByPath } = require("../commonLogic");
 
 module.exports = function(deployer) {
     console.log(getFormatedConsoleLabel("setup community token wallet address"));
@@ -27,6 +26,6 @@ module.exports = function(deployer) {
         kimlicTokenInstance.transfer(communityTokenWallet.address, 10000000 * Math.pow(10, 18));//10^18 its token decimals
 
         console.log(`allowance to spend communityTokenWallet tokens from RewardingContract: ${ 
-            await kimlicTokenInstance.allowance.call(communityTokenWallet.address, RewardingContract.address)}`);
+            await kimlicTokenInstance.allowance.call(communityTokenWallet.address, RewardingContract.address) / Math.pow(10, 18) }`);
     });
 };

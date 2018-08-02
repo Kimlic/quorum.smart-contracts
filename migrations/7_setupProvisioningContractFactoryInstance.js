@@ -1,9 +1,8 @@
 /*jshint esversion: 6 */
 const ProvisioningContractFactory = artifacts.require("./ProvisioningContractFactory.sol");
 
-const { getFormatedConsoleLabel } = require("../commonLogic");
+const { getFormatedConsoleLabel, setValueByPath, getValueByPath, combinePath } = require("../commonLogic/commonLogic");
 const { saveDeployedConfig, getNetworkDeployedConfig, deployedConfigPathConsts } = require("../deployedConfigHelper");
-const { setValueByPath, getValueByPath, combinePath } = require("../commonLogic");
 
 module.exports = function(deployer) {
     console.log(getFormatedConsoleLabel("Setup provisioning contract factory instance:"));

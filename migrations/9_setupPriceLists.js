@@ -1,10 +1,11 @@
 /*jshint esversion: 6 */
 
-let KimlicContractsContext = artifacts.require("./KimlicContractsContext.sol");
-let KimlicContextStorage = artifacts.require("./KimlicContextStorage.sol");
-let PriceList = artifacts.require("./PriceList.sol");
+const KimlicContractsContext = artifacts.require("./KimlicContractsContext.sol");
+const KimlicContextStorage = artifacts.require("./KimlicContextStorage.sol");
+const PriceList = artifacts.require("./PriceList.sol");
 
-let { getFormatedConsoleLabel, emptyAddress, getValueByPath, combinePath } = require("../commonLogic");
+const { getFormatedConsoleLabel, getValueByPath, combinePath } = require("../commonLogic/commonLogic");
+const { emptyAddress } = require("../commonLogic/commonEthereumLogic");
 const { saveDeployedConfig, getNetworkDeployedConfig, deployedConfigPathConsts } = require("../deployedConfigHelper");
 
 
@@ -67,7 +68,7 @@ module.exports = function(deployer) {
 
         accountFields.forEach(async (fieldName) => {
             const price = priceLists[contractCaption][fieldName];
-            console.log(`"${fieldName}" price = ${price} tokens`);
+            console.log(`"${fieldName}" price = ${price} token(s)`);
             await instance.setPrice(fieldName, price * Math.pow(10, 18));//10^18 its token decimals
             currentSetup[fieldName] = price * Math.pow(10, 18);//10^18 its token decimals
         });

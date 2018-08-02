@@ -12,10 +12,11 @@ contract("RelyingPartyStorageAdapter", function() {
     const values = basePartyStorageAdapterHelper.basePartyConsts;
     basePartyStorageAdapterHelper.baseStorageAdapterTest(getAdapter, values);
 
+    const newValues = {};
     const keys =  Object.keys(values);
-    for(let i = 0; i<keys.length; i++){ 
-        values[keys[i]] += "2";
+    for(let i = 0; i<keys.length; i++){
+        const key = keys[i];
+        newValues[key] = values[key] += "2";
     }
-
-    basePartyStorageAdapterHelper.baseStorageAdapterTest(getAdapter, values);
+    basePartyStorageAdapterHelper.baseStorageAdapterTest(getAdapter, newValues);
 });
