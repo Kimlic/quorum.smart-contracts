@@ -9,6 +9,7 @@ const cleanupDeployedConfig = function(network) {
     if (!isConfigLoaded) {
         loadDeployedConfigIntoCache();
     }
+    deployedConfig[network] = {};
 }
 
 const getNetworkDeployedConfig = (network) => {
@@ -24,7 +25,7 @@ const getNetworkDeployedConfig = (network) => {
 
 const loadDeployedConfigIntoCache = () => {
     if (fs.existsSync(fileName)) {
-        deployedConfig = JSON.parse(fs.readFileSync(fileName));
+        deployedConfig = JSON.parse(fs.readFileSync(fileName)) || {};
     }
     isConfigLoaded = true;
 };
