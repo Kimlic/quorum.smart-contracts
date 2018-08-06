@@ -186,7 +186,7 @@ contract("Verification", function() {
         const rewards = getValueByPath(deployedConfig, deployedConfigPathConsts.rewardingContractConfig.rewards.path, []);
 
         const balance = await kimlicToken.balanceOf.call(accountAddress);
-        const rewardingAmount = Object.values(rewards).reduce((a, b) => a + b, 0);
+        const rewardingAmount = Object.values(rewards).reduce((a, b) => a + b, 0) * Math.pow(10, 18);//10^18 its token decimals;
         assert.equal(balance, rewardingAmount.toString());
     });
 });

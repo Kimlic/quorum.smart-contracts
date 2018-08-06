@@ -15,8 +15,8 @@ const getFieldLastVerificationAddress = async (adapter, address, fieldName, from
     return adapter.getFieldLastVerificationAddress.call(address, fieldName, { from: fromAddress });
 };
 
-const getLastDataIndex = async (adapter, address, fieldName, fromAddress) => {
-    return adapter.getFieldHistoryLength.call(address, fieldName, { from: fromAddress });
+const getLastDataIndex = async (adapter, address, fieldName) => {
+    return adapter.getFieldHistoryLength.call(address, fieldName);
 };
 
 let getFieldDetails = async function(adapter, address, fieldName) {

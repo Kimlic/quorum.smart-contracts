@@ -137,6 +137,9 @@ const deployedConfigPathConsts = {//TODO move to config file?
         prices: {
             pathTemplate: "{pricelistName}Config.prices",
         }
+    },
+    deployerAddress: {
+        path: "deployerAddress"
     }
 };
 

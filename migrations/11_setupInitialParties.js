@@ -5,7 +5,7 @@ const ProvisioningContractFactory = artifacts.require("./ProvisioningContractFac
 const AttestationPartyStorageAdapter = artifacts.require("./AttestationPartyStorageAdapter.sol");
 
 const { setupAPAccessToFieldVerification, setupParty } = require("./Helpers/PartyCreatingHelper");
-const { getFormatedConsoleLabel, getValueByPath } = require("../commonLogic/commonLogic");
+const { getFormatedConsoleLabel, getValueByPath, uuidv4 } = require("../commonLogic/commonLogic");
 const { saveDeployedConfig, getNetworkDeployedConfig, deployedConfigPathConsts } = require("../deployedConfigHelper");
 
 
@@ -24,18 +24,18 @@ module.exports = function(deployer) {
         };
 
         const veriffName = "veriff";
-        currentSetup[veriffName] = await setupParty(web3, deployedConfig, contracts, veriffName, veriffName + "p@ssw0rd");
+        currentSetup[veriffName] = await setupParty(web3, deployedConfig, contracts, veriffName, uuidv4() + "p@ssw0rd");
 
         await setupAPAccessToFieldVerification(deployedConfig, AttestationPartyStorageAdapter, veriffName, currentSetup[veriffName].address, 
             ["documents.id_card", "documents.passport", "documents.driver_license", "documents.residence_permit_card"]);
         
         const kimlicName = "kimlic";
-        currentSetup[kimlicName] = await setupParty(web3, deployedConfig, contracts, kimlicName, kimlicName + "p@ssw0rd");
+        currentSetup[kimlicName] = await setupParty(web3, deployedConfig, contracts, kimlicName, uuidv4() + "p@ssw0rd");
             
         await setupAPAccessToFieldVerification(deployedConfig, AttestationPartyStorageAdapter, kimlicName, currentSetup[kimlicName].address, ["email", "phone"]);
 
         const relyingPartyName = "firstRelyingParty";
-        currentSetup[relyingPartyName] = await setupParty(web3, deployedConfig, contracts, relyingPartyName, relyingPartyName + "p@ssw0rd");
+        currentSetup[relyingPartyName] = await setupParty(web3, deployedConfig, contracts, relyingPartyName, uuidv4() + "p@ssw0rd");
         console.log(JSON.stringify(currentSetup, null, 4));
 
         saveDeployedConfig();

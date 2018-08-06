@@ -24,7 +24,15 @@ module.exports = {
     },
     dev: {
       from: "0xfb47cf70193e5f85c8533e1e1ad15a4f21dd1287",
-      host: "40.118.69.43:22000",
+      host: "40.118.69.43",
+      port: 22000,
+      network_id: "10",
+      gasPrice: 0,
+      gas: 4612388
+    },
+    testNode: {
+      from: "0x0bf5a5ed7fecc077a01012a1a7b4d668e8c2eb0f",
+      host: "51.144.109.43",
       port: 22000,
       network_id: "10",
       gasPrice: 0,
@@ -45,7 +53,7 @@ module.exports = {
       port: 22000,
       network_id: "*",
       gasPrice: 0,
-      gas: 4612388
+      gas: 4659999
     },
     KIM2: {
       host: "127.0.0.1",
