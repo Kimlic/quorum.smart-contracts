@@ -2,7 +2,7 @@
 const VerificationContractFactory = artifacts.require("./VerificationContractFactory.sol");
 
 const { getFormatedConsoleLabel, setValueByPath, getValueByPath, combinePath } = require("../commonLogic/commonLogic");
-const { saveDeployedConfig, getNetworkDeployedConfig, deployedConfigPathConsts } = require("../deployedConfigHelper");
+const { getNetworkDeployedConfig, deployedConfigPathConsts, saveDeployedConfig } = require("../deployedConfigHelper");
 
 module.exports = function(deployer) {
     console.log(getFormatedConsoleLabel("Setup verification contract factory tokens lock period:"));
@@ -23,20 +23,21 @@ module.exports = function(deployer) {
             "addresses.living": 30
         };
 
-        accountFields.forEach(async (fieldName) => {
+        const verificationContractFactoryInstance = await VerificationContractFactory.deployed();
+
+        for(const fieldName of accountFields) {
             if (fieldName == "device") {
                 return;
             }
-            const verificationContractFactoryInstance = await VerificationContractFactory.deployed();
 
             const lockPeriod = tokensLockPeriod[fieldName];
             console.log(`${fieldName} lock period: ${lockPeriod}`);
-            await verificationContractFactoryInstance.setTokensLockPeriod(fieldName, lockPeriod);
+            verificationContractFactoryInstance.setTokensLockPeriod(fieldName, lockPeriod);
 
             const path = deployedConfigPathConsts.verificationContractFactory.accountField.tokensLockPeriod.pathTemplate;
-            const configPath = combinePath(path, { accountField: fieldName })
+            const configPath = combinePath(path, { accountField: fieldName });
             setValueByPath(deployedConfig, configPath, lockPeriod);
-        });
-        saveDeployedConfig();
+            saveDeployedConfig();
+        }
     });
 };

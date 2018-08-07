@@ -31,7 +31,7 @@ contract AccountStorageAdapter is Ownable, WithKimlicContext {
         getContext().getAccountStorage().setBool(keccak256(dataKey), true);
     }
 
-    function removeAllowedFieldName(string fieldName) public onlyOwner() {
+    function removeAllowedFieldName(string fieldName) public    {
         require(msg.sender == owner || msg.sender == getContext().owner());
 
         bytes memory dataKey = abi.encode(allowedFieldNamesKey, fieldName);
@@ -61,13 +61,6 @@ contract AccountStorageAdapter is Ownable, WithKimlicContext {
         if (!isEqualStrings(storedData, data)) {
             addNewFieldItem(msg.sender, data, accountFieldName);
         }
-    }
-
-    function setFieldLastVerificationContractAddress(
-        address accountAddress, string accountFieldName, address verificationContractAddress) public {
-
-        uint index = getFieldHistoryLength(accountAddress, accountFieldName);
-        setFieldVerificationContractAddress(accountAddress, accountFieldName, index, verificationContractAddress);
     }
 
     function setFieldVerificationContractAddress(
