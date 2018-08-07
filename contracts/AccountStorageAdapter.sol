@@ -28,6 +28,7 @@ contract AccountStorageAdapter is Ownable, WithKimlicContext {
     }
 
     /// public methods ///
+    
     /// @notice used to define set of attributes valid to be part of user profile
     /// @dev used to define set of attributes valid to be part of user profile. Available only for Kimlic superuser or this contract owner
     /// @param fieldName string code for new data attribute 
