@@ -23,20 +23,21 @@ module.exports = function(deployer) {
             "addresses.living": 30
         };
 
-        accountFields.forEach(async (fieldName) => {
+        const provisioningContractFactoryInstance = await ProvisioningContractFactory.deployed();
+
+        for(fieldName of accountFields) {
             if (fieldName == "device") {
                 return;
             }
-            const provisioningContractFactoryInstance = await ProvisioningContractFactory.deployed();
 
             const lockPeriod = tokensLockPeriod[fieldName];
             console.log(`${fieldName} lock period: ${lockPeriod}`);
-            await provisioningContractFactoryInstance.setTokensLockPeriod(fieldName, lockPeriod);
+            provisioningContractFactoryInstance.setTokensLockPeriod(fieldName, lockPeriod);
 
             const path = deployedConfigPathConsts.provisioningContractFactory.accountField.tokensLockPeriod.pathTemplate;
             const configPath = combinePath(path, { accountField: fieldName })
             setValueByPath(deployedConfig, configPath, lockPeriod);
-        });
-        saveDeployedConfig();
+            saveDeployedConfig();
+        }
     });
 };

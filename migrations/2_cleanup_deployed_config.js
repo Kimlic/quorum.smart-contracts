@@ -2,7 +2,7 @@ const { saveDeployedConfig, cleanupDeployedConfig, getNetworkDeployedConfig, dep
 const truffleConfig = require("../truffle");
 
 module.exports = function(deployer, network, accounts) {
-    cleanupDeployedConfig();
+    cleanupDeployedConfig(web3.version.network);
     let config = getNetworkDeployedConfig(web3.version.network);
     
     config[deployedConfigPathConsts.deployerAddress.path] = truffleConfig.networks[network].from || accounts[0];

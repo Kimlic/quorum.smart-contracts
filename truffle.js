@@ -13,14 +13,14 @@ module.exports = {
       host: "127.0.0.1",
       port: 8545,
       network_id: "10",
-      gas: 4612388
+      gas: 4694118
     },
     kubernetesNode: {
       host: "127.0.0.1",
       port: 22100,
       network_id: "10",
       gasPrice: 0,
-      gas: 4612388
+      gas: 4694118
     },
     dev: {
       from: "0xfb47cf70193e5f85c8533e1e1ad15a4f21dd1287",
@@ -28,7 +28,7 @@ module.exports = {
       port: 22000,
       network_id: "10",
       gasPrice: 0,
-      gas: 4612388
+      gas: 4694118
     },
     testNode: {
       from: "0x0bf5a5ed7fecc077a01012a1a7b4d668e8c2eb0f",
@@ -36,7 +36,7 @@ module.exports = {
       port: 22000,
       network_id: "10",
       gasPrice: 0,
-      gas: 4612388
+      gas: 4694118
     },
     ganache: {
       host: "127.0.0.1",
@@ -59,21 +59,21 @@ module.exports = {
       port: 22001,
       network_id: "10",
       gasPrice: 0,
-      gas: 4612388
+      gas: 4694118
     },
     KIM3: {
       host: "127.0.0.1",
       port: 22002,
       network_id: "10",
       gasPrice: 0,
-      gas: 4612388
+      gas: 4694118
     },
     KIM3: {
       host: "127.0.0.1",
       port: 22004,
       network_id: "10",
       gasPrice: 0,
-      gas: 4612388
+      gas: 4694118
     }
   }
 };

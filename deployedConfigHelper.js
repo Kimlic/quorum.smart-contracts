@@ -9,12 +9,18 @@ const cleanupDeployedConfig = function(network) {
     if (!isConfigLoaded) {
         loadDeployedConfigIntoCache();
     }
+    if (network.length<0){
+        throw "network is empty";
+    }
     deployedConfig[network] = {};
 }
 
 const getNetworkDeployedConfig = (network) => {
     if (!isConfigLoaded) {
         loadDeployedConfigIntoCache();
+    }
+    if (network.length<0){
+        throw "network is empty";
     }
 
     if (!deployedConfig[network]) {
@@ -31,6 +37,7 @@ const loadDeployedConfigIntoCache = () => {
 };
 
 const saveDeployedConfig = () => {
+    console.log("Saving deployed config");
     if(!isConfigLoaded) {
         throw "Config not loaded! Use loadDeployedConfigIntoCache method first."
     }
@@ -38,7 +45,7 @@ const saveDeployedConfig = () => {
 };
 
 
-const deployedConfigPathConsts = {//TODO move to config file?
+const deployedConfigPathConsts = {
     deployedContracts: {
         kimlicContextStorageAddress: {
             path: "deployedContracts.kimlicContextStorageAddress"
