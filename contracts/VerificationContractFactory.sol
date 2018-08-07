@@ -14,12 +14,21 @@ contract VerificationContractFactory is WithKimlicContext {
 
     /// private attributes ///
     mapping(string=>address) private contracts;
+    mapping(string=>uint) private tokensLockPeriod;
 
     /// Constructors ///
     constructor(address contextStorage) public WithKimlicContext(contextStorage) {
     }
 
     /// public methods ///
+    function getTokensLockPeriod(string filedName) view public returns (uint) {
+        return tokensLockPeriod[filedName];
+    }
+
+    function setTokensLockPeriod(string filedName, uint lockPeriod) public returns (uint) {
+        tokensLockPeriod[filedName] = lockPeriod;
+    }
+
     function getVerificationContract(string key) view public returns (address) {
         return contracts[key];
     }

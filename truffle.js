@@ -43,7 +43,6 @@ module.exports = {
       port: 7545,
       network_id: "*",
       gasPrice: 0,
-      gas: 4612388,
       mnemonic:
         "chapter run clever race sure shoot solution aisle possible ridge flock august"
     },
@@ -53,7 +52,7 @@ module.exports = {
       port: 22000,
       network_id: "*",
       gasPrice: 0,
-      gas: 4659999
+      gas: 4694118
     },
     KIM2: {
       host: "127.0.0.1",

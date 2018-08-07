@@ -7,7 +7,6 @@ import "./WithKimlicContext.sol";
 contract ProvisioningContractFactory is WithKimlicContext {
     /// public attributes ///
     mapping(address=>bool) public createdContracts;
-    uint public tokensLockPeriod;
     mapping(string=>address) private contracts;
     
     /// private attributes ///
@@ -15,12 +14,21 @@ contract ProvisioningContractFactory is WithKimlicContext {
     mapping(string=>uint8) private _kimlicWalletInterestPercent;
     mapping(string=>uint8) private _accountInterestPercent;
     mapping(string=>uint8) private _coOwnerInterestPercent;
+    mapping(string=>uint) private tokensLockPeriod;
 
     /// Constructors ///
     constructor (address contextStorage) public WithKimlicContext(contextStorage) {
     }
 
     /// public methods ///
+    function getTokensLockPeriod(string filedName) view public returns (uint) {
+        return tokensLockPeriod[filedName];
+    }
+
+    function setTokensLockPeriod(string filedName, uint lockPeriod) public returns (uint) {
+        tokensLockPeriod[filedName] = lockPeriod;
+    }
+
     function createProvisioningContract(address account, string accountFieldName, string key) 
             public returns(ProvisioningContract createdContract) {
         
@@ -45,10 +53,6 @@ contract ProvisioningContractFactory is WithKimlicContext {
         _kimlicWalletInterestPercent[attributeName] = kimlicWallet;
         _accountInterestPercent[attributeName] = account;
         _coOwnerInterestPercent[attributeName] = coOwner;
-    }
-
-    function setTokensLockPeriod(uint lockPeriod) public {
-        tokensLockPeriod = lockPeriod;
     }
 
     function getProvisioningContract(string key) view public returns (address) {

@@ -14,6 +14,9 @@ module.exports = function(deployer) {
         const accountFields = getValueByPath(deployedConfig, configPath);
 
         accountFields.forEach(async (fieldName) => {
+            if (fieldName == "device") {
+                return;
+            }
             const provisioningContractFactoryInstance = await ProvisioningContractFactory.deployed();
             let interests;
             if (fieldName == "email" || fieldName == "phone") {

@@ -92,9 +92,21 @@ const deployedConfigPathConsts = {//TODO move to config file?
             intersets: {
                 pathTemplate: "provisioningContractFactory.{accountField}.intersets"
             },
+            tokensLockPeriod: {
+                pathTemplate: "provisioningContractFactory.{accountField}.tokensLockPeriod"
+            },
             pathTemplate: "provisioningContractFactory.{accountField}"
         },
         path: "provisioningContractFactory"
+    },
+    verificationContractFactory: {
+        accountField: {
+            tokensLockPeriod: {
+                pathTemplate: "verificationContractFactory.{accountField}.tokensLockPeriod"
+            },
+            pathTemplate: "verificationContractFactory.{accountField}"
+        },
+        path: "verificationContractFactory"
     },
     rewardingContractConfig: {
         rewards: {
