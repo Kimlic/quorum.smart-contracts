@@ -43,7 +43,7 @@ module.exports = function(deployer) {
             const path = deployedConfigPathConsts.provisioningContractFactory.accountField.intersets.pathTemplate;
             const configPath = combinePath(path, { accountField: fieldName })
             setValueByPath(deployedConfig, configPath, interests);
+            saveDeployedConfig();
         });
-        saveDeployedConfig();
     });
 };
