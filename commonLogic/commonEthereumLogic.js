@@ -1,7 +1,7 @@
 
 const emptyAddress = "0x0000000000000000000000000000000000000000";
 
-const createAccountAndSet1EthToBalance = async (web3, coinbase, password = "p@ssw0rd") => {//TODO redesign this method
+const createAccountAndSet1EthToBalance = async (web3, coinbase, password = "p@ssw0rd") => {
     const { accountAddress, accountPassword } = await createAccount(web3, password);
     await sendEthToAccount(web3, coinbase, accountAddress);
     return { accountAddress, accountPassword };

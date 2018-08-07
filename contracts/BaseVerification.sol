@@ -6,6 +6,7 @@ import "./KimlicContractsContext.sol";
 import "./AccountStorageAdapter.sol";
 import "./WithKimlicContext.sol";
 import "./KimlicToken.sol";
+import "./VerificationContractFactory.sol";
 
 contract BaseVerification is Ownable, WithKimlicContext {
     /// public attributes ///
@@ -26,6 +27,11 @@ contract BaseVerification is Ownable, WithKimlicContext {
     /// constructors ///
     constructor(address contextStorage, uint reward, address account, address coOwnerAddress, uint index, string fieldName)
         public WithKimlicContext(contextStorage) Ownable() {
+        
+        KimlicContractsContext context = getContext();
+        VerificationContractFactory factory = context.getVerificationContractFactory();
+        require(msg.sender == address(factory));
+        tokensUnlockAt = block.timestamp + factory.getTokensLockPeriod(accountFieldName) * 1 minutes;
 
         coOwner = coOwnerAddress;
         accountAddress = account;

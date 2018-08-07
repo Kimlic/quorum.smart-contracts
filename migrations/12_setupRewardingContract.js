@@ -26,8 +26,8 @@ module.exports = function(deployer) {
             milestone2Reward: 15
         }
 
-        await rewardingContract.setMilestone1Reward(rewards.milestone1Reward);
-        await rewardingContract.setMilestone2Reward(rewards.milestone2Reward);
+        await rewardingContract.setMilestone1Reward(rewards.milestone1Reward * Math.pow(10, 18));//10^18 its token decimals
+        await rewardingContract.setMilestone2Reward(rewards.milestone2Reward * Math.pow(10, 18));//10^18 its token decimals
         console.log(`rewards: ${JSON.stringify(rewards)}`);
 
         setValueByPath(config, deployedConfigPathConsts.rewardingContractConfig.rewards.path, rewards);
