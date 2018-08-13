@@ -18,6 +18,7 @@ dist
 
 # doxity
 doxity-tmp*
+docs/index.html
 
 build
 .jshintrc
