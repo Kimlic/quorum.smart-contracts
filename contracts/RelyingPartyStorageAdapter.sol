@@ -6,6 +6,9 @@ import "./WithKimlicContext.sol";
 import "./KimlicContractsContext.sol";
 import "./BasePartyStorageAdapter.sol";
 
+/// @title Relying party profiles storage and management
+/// @author Bohdan Grytsenko
+/// @notice Single point to manage RP profiles
 contract RelyingPartyStorageAdapter is BasePartyStorageAdapter {
 
     /// private attributes ///

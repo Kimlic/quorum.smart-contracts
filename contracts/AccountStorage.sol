@@ -5,8 +5,9 @@ import "./KimlicContractsContext.sol";
 import "./BaseStorage.sol";
 import "./WithKimlicContext.sol";
 
-/// @title Contract which serves as access control layer between BaseStorage and AccountStorageAdapter
-/// @author Homer Simpson
+/// @title AccountStorage
+/// @notice Contract which serves as access control layer between BaseStorage and AccountStorageAdapter
+/// @author Bohdan Grytsenko
 contract AccountStorage is BaseStorage, WithKimlicContext {
     
     /// constructors ///

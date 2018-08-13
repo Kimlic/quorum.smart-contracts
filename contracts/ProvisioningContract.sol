@@ -9,6 +9,9 @@ import "./KimlicToken.sol";
 import "./BaseVerification.sol";
 import "./WithKimlicContext.sol";
 
+/// @title Template definition for attribute consumption case
+/// @author Bohdan Grytsenko
+/// @notice Used as template for ProvisioningContractFactory to create provisioning contract instance each time when it's requested
 contract ProvisioningContract is Ownable, WithKimlicContext {
     
     /// public attributes ///
@@ -40,8 +43,8 @@ contract ProvisioningContract is Ownable, WithKimlicContext {
         index = fieldIndex;
     }
 
-    /// public methods ///
-
+    /// @notice checks if requested attribute is already verified
+    /// @return true if requested attribute is already verified, false if not
     function isVerificationFinished() public view returns(bool) {
         AccountStorageAdapter adapter = getContext().getAccountStorageAdapter();
 
@@ -55,11 +58,21 @@ contract ProvisioningContract is Ownable, WithKimlicContext {
         }
     }
 
+    /// @notice executed by Relying party once it ensured verification details for requested attribute are available
     function finalizeProvisioning() public onlyOwner() {
         status = Status.DataProvided;
         sendRewards();
     }
-    
+
+    /**
+    @notice executed by Relying  party to get verification details of requested attribute
+    @return {
+        "data": "attribute hash",
+        "verificationStatus": "attribute verification status",
+        "verificationContractAddress": "verification contract address",
+        "verifiedAt": "verification timestamp, unix epoch format"
+        }    
+    */
     function getData() public view onlyOwner()
         returns(string data, BaseVerification.Status verificationStatus, address verificationContractAddress, uint256 verifiedAt) {
 
@@ -72,6 +85,7 @@ contract ProvisioningContract is Ownable, WithKimlicContext {
         ( verificationStatus, verificationContractAddress, verifiedAt ) = adapter.getFieldVerificationData(account, fieldName, index); 
     }
 
+    /// @notice executed by party which requested attribute provisioning to get tokens back from contract. Tokens will be returned only after certain timestamp defined as tokensUnlockAt
     function withdraw() public onlyOwner() {
         require(block.timestamp >= tokensUnlockAt && status == Status.Created);
 
