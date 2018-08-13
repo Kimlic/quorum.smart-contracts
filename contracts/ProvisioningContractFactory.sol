@@ -4,6 +4,9 @@ import "./KimlicContractsContext.sol";
 import "./ProvisioningContract.sol";
 import "./WithKimlicContext.sol";
 
+/// @title Factory contract for data provisioning process
+/// @author Bohdan Grytsenko
+/// @notice Produces provisioning contract for each case of client attribute consumption by Relying party
 contract ProvisioningContractFactory is WithKimlicContext {
     /// public attributes ///
     mapping(address=>bool) public createdContracts;
@@ -20,15 +23,24 @@ contract ProvisioningContractFactory is WithKimlicContext {
     constructor (address contextStorage) public WithKimlicContext(contextStorage) {
     }
 
-    /// public methods ///
+    /// @notice returns tokens lock period for specific attribute
+    /// @param filedName attribute code
+    /// @return tokens lock period for specific attribute in seconds
     function getTokensLockPeriod(string filedName) view public returns (uint) {
         return tokensLockPeriod[filedName];
     }
 
+    /// @notice defines tokens lock period for specific attribute
+    /// @param filedName attribute code
+    /// @param lockPeriod tokens lock period for specific attribute in seconds
     function setTokensLockPeriod(string filedName, uint lockPeriod) public returns (uint) {
         tokensLockPeriod[filedName] = lockPeriod;
     }
 
+    /// @notice creates provisioning contract for specific client and attribute
+    /// @param account user account address
+    /// @param accountFieldName attribute code
+    /// @param key random string, used to receive created contract address
     function createProvisioningContract(address account, string accountFieldName, string key) 
             public returns(ProvisioningContract createdContract) {
         
@@ -46,6 +58,12 @@ contract ProvisioningContractFactory is WithKimlicContext {
         context.getKimlicToken().transferFrom(msg.sender, createdContractAddress, reward);
     }
 
+    /// @notice defines cashflow split for specific atttribute
+    /// @param attributeName attribute code
+    /// @param communityTokenWallet casflow split for community token wallet
+    /// @param coOwner casflow split for verification co-owner
+    /// @param kimlicWallet cashflow split for Kimlic wallet
+    /// @param attributeName cashflow split for user account
     function setInterestsPercent(string attributeName, uint8 communityTokenWallet, uint8 coOwner, uint8 kimlicWallet, uint8 account) public {
         require((communityTokenWallet + kimlicWallet + account + coOwner) == 100);
 
@@ -55,22 +73,36 @@ contract ProvisioningContractFactory is WithKimlicContext {
         _coOwnerInterestPercent[attributeName] = coOwner;
     }
 
+    /// @notice returns address of created contract
+    /// @param key random string speficied at creation
     function getProvisioningContract(string key) view public returns (address) {
         return contracts[key];
     }
 
+    /// @notice returns cashflow split for CommunityToken wallet
+    /// @param fieldName attribute code
+    /// @return casflow split for community token wallet
     function getCommunityTokenWalletInterestPercent(string fieldName) public view returns(uint8) {
         return _communityTokenWalletInterestPercent[fieldName];
     }
 
+    /// @notice returns cashflow split for Kimlic wallet
+    /// @param fieldName attribute code
+    /// @return casflow split for Kimlic token wallet
     function getKimlicWalletInterestPercent(string fieldName) public view returns(uint8) {
         return _kimlicWalletInterestPercent[fieldName];
     }
 
+    /// @notice returns cashflow split for user account
+    /// @param fieldName attribute code
+    /// @return casflow split for user account
     function getAccountInterestPercent(string fieldName) public view returns(uint8) {
         return _accountInterestPercent[fieldName];
     }
 
+    /// @notice returns cashflow split for verification co-owner
+    /// @param fieldName attribute code
+    /// @return casflow split for verification co-owner
     function getCoOwnerInterestPercent(string fieldName) public view returns(uint8) {
         return _coOwnerInterestPercent[fieldName];
     }

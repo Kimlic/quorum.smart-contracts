@@ -8,6 +8,9 @@ import "./KimlicContractsContext.sol";
 import "./WithKimlicContext.sol";
 import "./KimlicToken.sol";
 
+/// @title Factory contract for data verification process
+/// @author Bohdan Grytsenko
+/// @notice Produces verification contract for each case of client attribute verification requested
 contract VerificationContractFactory is WithKimlicContext {
     /// public attributes ///
     mapping(address=>bool) public createdContracts;
@@ -20,15 +23,22 @@ contract VerificationContractFactory is WithKimlicContext {
     constructor(address contextStorage) public WithKimlicContext(contextStorage) {
     }
 
-    /// public methods ///
+    /// @notice returns tokens lock period for specific attribute
+    /// @param filedName attribute code
+    /// @return tokens lock period for specific attribute in seconds    
     function getTokensLockPeriod(string filedName) view public returns (uint) {
         return tokensLockPeriod[filedName];
     }
 
+    /// @notice defines tokens lock period for specific attribute
+    /// @param filedName attribute code
+    /// @param lockPeriod tokens lock period for specific attribute in seconds
     function setTokensLockPeriod(string filedName, uint lockPeriod) public returns (uint) {
         tokensLockPeriod[filedName] = lockPeriod;
     }
 
+    /// @notice returns address of created contract
+    /// @param key random string speficied at creation
     function getVerificationContract(string key) view public returns (address) {
         return contracts[key];
     }
@@ -48,6 +58,11 @@ contract VerificationContractFactory is WithKimlicContext {
         createBaseVerificationContract(account, attestationPartyAddress, key, "documents.id_card");
     }
     
+    /// @notice creates verification contract for specific client and attribute
+    /// @param account user account address
+    /// @param attestationPartyAddress Attestation party address which going to perform verification
+    /// @param key random string, used to receive created contract address
+    /// @param accountFieldName attribute code
     function createBaseVerificationContract(address account, address attestationPartyAddress, string key, string accountFieldName) public {
         KimlicContractsContext context = getContext();
 

@@ -8,6 +8,9 @@ import "./WithKimlicContext.sol";
 import "./KimlicToken.sol";
 import "./VerificationContractFactory.sol";
 
+/// @title Template definition for attribute verification case
+/// @author Bohdan Grytsenko
+/// @notice Used as template for VerificationContractFactory to create verification contract instance each time when it's requested
 contract BaseVerification is Ownable, WithKimlicContext {
     /// public attributes ///
     string public accountFieldName;
@@ -41,7 +44,8 @@ contract BaseVerification is Ownable, WithKimlicContext {
         _status = Status.Created;
     }
 
-    /// public methods ///
+    /// @notice executed by Attestation party once it has completed attribute verification
+    /// @param verificationResult true is verification passed with positive result, false if not
     function finalizeVerification(bool verificationResult) public onlyOwner() {
         require(_status == Status.Created);
 
@@ -59,10 +63,13 @@ contract BaseVerification is Ownable, WithKimlicContext {
         }
     }
 
+    /// @notice returns attribute value set on user profile and going to be verified by this contract
+    /// @return attribute value
     function getData() view public onlyOwner() returns (string data) {
         return getContext().getAccountStorageAdapter().getFieldMainData(accountAddress, accountFieldName, dataIndex);
     }
 
+    /// @notice executed by party which requested attribute verification to get tokens back from contract. Tokens will be returned only after certain timestamp defined as tokensUnlockAt
     function withdraw() public onlyOwner() {
         require(block.timestamp >= tokensUnlockAt && _status == Status.Created);
         KimlicContractsContext context = getContext();
@@ -74,10 +81,12 @@ contract BaseVerification is Ownable, WithKimlicContext {
         context.getAccountStorageAdapter().setFieldVerificationContractAddress(accountAddress, accountFieldName, dataIndex, address(0));
     }
 
+    /// @notice returns verification status, defined as enum Status { None, Created, Verified, Unverified, Canceled }
     function getStatus() public view readStatusRestriction() returns(Status) {
         return _status;
     }
 
+    /// @notice returns string label of verification status
     function getStatusName() public view readStatusRestriction() returns(string) {
         if (_status == Status.None) {
             return "None";

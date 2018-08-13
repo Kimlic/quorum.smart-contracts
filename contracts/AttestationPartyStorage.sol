@@ -5,6 +5,9 @@ import "./KimlicContractsContext.sol";
 import "./BaseStorage.sol";
 import "./WithKimlicContext.sol";
 
+/// @title AttestationPartyStorage
+/// @notice Contract which serves as access control layer between BaseStorage and AttestationPartyStorageAdapter
+/// @author Bohdan Grytsenko
 contract AttestationPartyStorage is BaseStorage, WithKimlicContext {
     
     /// constructors ///

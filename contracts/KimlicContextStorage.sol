@@ -5,15 +5,21 @@ import "./openzeppelin-solidity/Ownable.sol";
 import "./KimlicContractsContext.sol";
 import "./BaseStorage.sol";
 
+/// @title Root contract
+/// @author Bohdan Grytsenko
+/// @notice Manages address of KimlicContractsContext during deployment, returns it during runtime to any platform member
 contract KimlicContextStorage is BaseStorage, Ownable {
 
     /// constructors ///
 
-    /// public methods ///
+    /// @notice executed during deployment to set address of KimlicContractsContext contract if it was changed and re-deployed
+    /// @param context address of re-deployed KimlicContractsContext contract
     function setContext(address context) public onlyOwner() {
         addressStorage[getContextKey()] = context;
     }
 
+    /// @notice returns current address of KimlicContractsContext contract
+    /// @return context current address of KimlicContractsContext contract
     function getContext() public view returns (KimlicContractsContext context) {
         context = KimlicContractsContext(addressStorage[getContextKey()]);
     }

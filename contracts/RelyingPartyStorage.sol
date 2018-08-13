@@ -5,6 +5,9 @@ import "./KimlicContractsContext.sol";
 import "./BaseStorage.sol";
 import "./WithKimlicContext.sol";
 
+/// @title RelyingPartyStorage
+/// @notice Contract which serves as access control layer between BaseStorage and RelyingPartyStorageAdapter
+/// @author Bohdan Grytsenko
 contract RelyingPartyStorage is BaseStorage, WithKimlicContext {
     
     /// constructors ///
