@@ -11,7 +11,6 @@ import "./BaseVerification.sol";
 /// @author Bohdan Grytsenko
 /// @notice This is layer over BaseStorage which serves as single management point for everything related to user profile: data attributes hashes, access to verification details for each attribute
 /// user rewarding facts, definition of user profile attributes - what are valid attribute codes to be used by all parties on Kimlic platform
-/// @dev All function calls are currently implement without side effects
 contract AccountStorageAdapter is Ownable, WithKimlicContext {
 
     /// public attributes ///
@@ -26,8 +25,6 @@ contract AccountStorageAdapter is Ownable, WithKimlicContext {
 
     constructor (address contextstorage) public WithKimlicContext(contextstorage) {
     }
-
-    /// public methods ///
     
     /// @notice used to define set of attributes valid to be part of user profile
     /// @dev used to define set of attributes valid to be part of user profile. Available only for Kimlic superuser or this contract owner
@@ -98,10 +95,18 @@ contract AccountStorageAdapter is Ownable, WithKimlicContext {
         accountStorage.setAddress(keccak256(verificationContractKey), verificationContractAddress);
     }
 
-    /// @notice used by user profile sync functionality - returns details for specific attribute of particular user
-    /// @dev used by user profile sync functionality - returns details for specific attribute of particular user. Available only for user himself, owner of this contract or Kimlic superuser 
-    /// @param accountAddress user account address
-    /// @param accountFieldName attribute code
+    /**
+     @notice used by user profile sync functionality - returns details for specific attribute of particular user
+     @dev used by user profile sync functionality - returns details for specific attribute of particular user. Available only for user himself, owner of this contract or Kimlic superuser 
+     @param accountAddress user account address
+     @param accountFieldName attribute code
+     @return {
+        "data": "attribute hash",
+        "verificationStatusName": "attribute verification status",
+        "verificationContractAddress": "verification contract address",
+        "verifiedAt": "verification timestamp, unix epoch format"
+        }    
+    */
     function getFieldDetails(address accountAddress, string accountFieldName) 
         public
         view

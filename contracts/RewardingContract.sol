@@ -7,6 +7,9 @@ import "./KimlicContractsContext.sol";
 import "./BaseVerification.sol";
 import "./WithKimlicContext.sol";
 
+/// @title User rewarding contract
+/// @author Bohdan Grytsenko
+/// @notice Tracks milestones achievement and correspondent reward
 contract RewardingContract is Ownable, WithKimlicContext {
     /// public attributes ///
     uint public milestone1Reward;
@@ -21,25 +24,34 @@ contract RewardingContract is Ownable, WithKimlicContext {
     constructor (address contextStorage) public WithKimlicContext(contextStorage) {
     }
 
-    /// public methods ///
+    /// @notice adds attribute to be cosidered for 2nd milestone
+    /// @param fieldName attribute code
     function addMielstone2FieldName(string fieldName) public onlyOwner() {
         require(getContext().getAccountStorageAdapter().isAllowedFieldName(fieldName));
         milestone2FieldNames[fieldName] = true;
     }
 
+    /// @notice removes attribute from being cosidered for 2nd milestone
+    /// @param fieldName attribute code
     function removeMielstone2FieldName(string fieldName) public onlyOwner() {
         delete milestone2FieldNames[fieldName];
     }
 
+    /// @notice defines reward amount for 1st milestone
+    /// @param rewardAmount tokens reward amount
     function setMilestone1Reward(uint rewardAmount) public onlyOwner() {
         milestone1Reward = rewardAmount;
     }
 
+    /// @notice defines reward amount for 2nd milestone
+    /// @param rewardAmount tokens reward amount
     function setMilestone2Reward(uint rewardAmount)  public onlyOwner() {
         milestone2Reward = rewardAmount;
     }
 
-
+    /// @notice triggers a check for specific user and attribute to see if any of milestones conditions reached
+    /// @param accountAddress user account address
+    /// @param accountFieldName attribute code
     function checkMilestones(address accountAddress, string accountFieldName) public {
         require(getContext().getVerificationContractFactory().createdContracts(msg.sender));
         if (isEqualStrings(accountFieldName, email) ||
