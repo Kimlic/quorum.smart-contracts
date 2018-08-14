@@ -22,9 +22,17 @@ module.exports = {
       gasPrice: 0,
       gas: 4694118
     },
-    dev: {
-      from: "0xfb47cf70193e5f85c8533e1e1ad15a4f21dd1287",
-      host: "40.118.69.43",
+    dev_rp: {
+      from: "0x5cdb00a372845c3146a19439f684094f1daa09d6", // RP coinbase
+      host: "51.141.120.215", // RP IP
+      port: 22000,
+      network_id: "10",
+      gasPrice: 0,
+      gas: 4694118
+    },
+    dev_master: {
+      from: "0x0bf5a5ed7fecc077a01012a1a7b4d668e8c2eb0f", // Master coinbase
+      host: "51.144.109.43", // Master IP
       port: 22000,
       network_id: "10",
       gasPrice: 0,

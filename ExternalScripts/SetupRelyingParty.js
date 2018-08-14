@@ -7,8 +7,8 @@ const { setValueByPath, getValueByPath, combinePath } = require("../commonLogic/
 
 
 module.exports = async function(callback) {//Temp script for manual add AP/RP
-    const partyName = "test";
-    const address = "0x0bb5812cdabd4d07497d5364005e8149770db1bf";
+    const partyName = "rp_kimlic";
+    const address = "0x5cdb00a372845c3146a19439f684094f1daa09d6";
     const tokensToSendAmount = 10000 * Math.pow(10, 18);
 
     const deployedConfig = getNetworkDeployedConfig(web3.version.network);
