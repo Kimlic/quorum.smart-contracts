@@ -22,9 +22,7 @@ docs/index.html
 
 build
 .jshintrc
-PartiesConfig.json
 output.txt
-CreatedUsers.json
 
 .idea
 # deployedConfig.json
