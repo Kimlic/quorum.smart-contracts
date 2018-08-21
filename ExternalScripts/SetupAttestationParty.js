@@ -6,7 +6,9 @@ const { getNetworkDeployedConfig, deployedConfigPathConsts, saveDeployedConfig }
 const { sendEthToAccount } = require("../commonLogic/commonEthereumLogic");
 const { setValueByPath, getValueByPath, combinePath } = require("../commonLogic/commonLogic");
 
-
+/**
+ * Script to be run by Kimlic team to perform AP registration procedure
+ */
 module.exports = async function(callback) {//Temp script for manual add AP/RP
     const partyName = "test";
     const address = "0x0bb5812cdabd4d07497d5364005e8149770db1bf";

@@ -16,6 +16,9 @@ const AttestationPartyStorage = artifacts.require("./AttestationPartyStorage.sol
 const { getFormatedConsoleLabel, setValueByPath } = require("../commonLogic/commonLogic");
 const { saveDeployedConfig, getNetworkDeployedConfig, deployedConfigPathConsts } = require("../deployedConfigHelper");
 
+/**
+ * initialization of KimlicContractsContext with addresses of previously deployed contracts
+ */
 module.exports = function(deployer) {
     console.log(getFormatedConsoleLabel("Setup kimlic contracts context instance:"));
     deployer.then(async () => {
