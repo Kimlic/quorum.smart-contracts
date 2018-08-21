@@ -8,7 +8,9 @@ const { getFormatedConsoleLabel, getValueByPath, combinePath } = require("../com
 const { emptyAddress } = require("../commonLogic/commonEthereumLogic");
 const { saveDeployedConfig, getNetworkDeployedConfig, deployedConfigPathConsts } = require("../deployedConfigHelper");
 
-
+/**
+ * Initial setup of PriceList - definition of verification reward and provisioning cost for each attribute
+ */
 module.exports = function(deployer) {
     console.log(getFormatedConsoleLabel(`Setup pricelists`));
     const deployedConfig = getNetworkDeployedConfig(web3.version.network);

@@ -4,6 +4,9 @@ const ProvisioningContractFactory = artifacts.require("./ProvisioningContractFac
 const { getFormatedConsoleLabel, setValueByPath, getValueByPath, combinePath } = require("../commonLogic/commonLogic");
 const { saveDeployedConfig, getNetworkDeployedConfig, deployedConfigPathConsts } = require("../deployedConfigHelper");
 
+/**
+ * Definition of tokens lock timeframe at ProvisionContract for each attribute
+ */
 module.exports = function(deployer) {
     console.log(getFormatedConsoleLabel("Setup provisioning contract factory tokens lock period:"));
 

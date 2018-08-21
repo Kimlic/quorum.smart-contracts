@@ -4,6 +4,9 @@ const KimlicToken = artifacts.require("./KimlicToken.sol");
 const { getNetworkDeployedConfig, deployedConfigPathConsts } = require("../deployedConfigHelper");
 const { getValueByPath } = require("../commonLogic/commonLogic");
 
+/**
+ * Script to be run at AP / RP peer node to grant permissions to Verification / Provisioning factories to take tokens from AP / RP balance
+ */
 module.exports = async function(callback) {//Temp script for manual add AP/RP
     const partyName = "rp_kimlic";
     const address = "0x5cdb00a372845c3146a19439f684094f1daa09d6";

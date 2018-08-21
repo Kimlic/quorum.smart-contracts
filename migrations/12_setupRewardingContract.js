@@ -7,7 +7,9 @@ const RewardingContract = artifacts.require("./RewardingContract.sol");
 const { getFormatedConsoleLabel, getValueByPath, setValueByPath } = require("../commonLogic/commonLogic");
 const { saveDeployedConfig, getNetworkDeployedConfig, deployedConfigPathConsts } = require("../deployedConfigHelper");
 
-
+/**
+ * RewardingContract setup - attributes & reward definition for each milestone
+ */
 module.exports = function(deployer) {
     console.log(getFormatedConsoleLabel(`Setup rewarding contracts`));
 

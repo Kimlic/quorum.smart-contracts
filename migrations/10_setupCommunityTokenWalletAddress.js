@@ -5,6 +5,9 @@ const RewardingContract = artifacts.require("./RewardingContract.sol");
 const { getFormatedConsoleLabel, getValueByPath } = require("../commonLogic/commonLogic");
 const { getNetworkDeployedConfig, deployedConfigPathConsts } = require("../deployedConfigHelper");
 
+/**
+ * CommunityTokenWallet initial setup - permissions for RewardingContract, initial balance allocation
+ */
 module.exports = function(deployer) {
     console.log(getFormatedConsoleLabel("setup community token wallet address"));
 

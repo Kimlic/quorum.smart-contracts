@@ -4,6 +4,9 @@ const VerificationContractFactory = artifacts.require("./VerificationContractFac
 const { getFormatedConsoleLabel, setValueByPath, getValueByPath, combinePath } = require("../commonLogic/commonLogic");
 const { getNetworkDeployedConfig, deployedConfigPathConsts, saveDeployedConfig } = require("../deployedConfigHelper");
 
+/**
+ * Definition of tokens lock timeframe at BaseVerification contract for each attribute
+ */
 module.exports = function(deployer) {
     console.log(getFormatedConsoleLabel("Setup verification contract factory tokens lock period:"));
 

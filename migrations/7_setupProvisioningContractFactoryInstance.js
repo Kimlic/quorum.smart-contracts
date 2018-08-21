@@ -4,6 +4,9 @@ const ProvisioningContractFactory = artifacts.require("./ProvisioningContractFac
 const { getFormatedConsoleLabel, setValueByPath, getValueByPath, combinePath } = require("../commonLogic/commonLogic");
 const { saveDeployedConfig, getNetworkDeployedConfig, deployedConfigPathConsts } = require("../deployedConfigHelper");
 
+/**
+ * Initial setup of ProvisioningContractFactory, definition of cashflow split per attribute
+ */
 module.exports = function(deployer) {
     console.log(getFormatedConsoleLabel("Setup provisioning contract factory instance:"));
 

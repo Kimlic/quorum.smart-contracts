@@ -16,7 +16,9 @@ const { getFormatedConsoleLabel, setValueByPath, uuidv4 } = require("../commonLo
 const { deployedConfigPathConsts, saveDeployedConfig, getNetworkDeployedConfig } = require("../deployedConfigHelper");
 const { createAccountAndSet1EthToBalance } = require("../commonLogic/commonEthereumLogic");
 
-
+/**
+ * deployment of all smart contracts, saving their addresses to config file
+ */
 module.exports = function(deployer) {
     console.log(getFormatedConsoleLabel("deploy all contracts: "));
 

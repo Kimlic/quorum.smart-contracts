@@ -4,7 +4,9 @@ const { addData } = require("../test/Helpers/AccountHelper.js");
 const { getNetworkDeployedConfig, deployedConfigPathConsts, saveDeployedConfig } = require("../deployedConfigHelper");
 const { getValueByPath } = require("../commonLogic/commonLogic");
 
-
+/**
+ * Utility to speed up creation of new user account for dev & test purpose
+ */
 module.exports = async function(callback) {
     const deployedConfig = getNetworkDeployedConfig(web3.version.network);
     const accountAllowedFieldNamesConfigPath = deployedConfigPathConsts.accountStorageAdapter.allowedFieldNames.path;

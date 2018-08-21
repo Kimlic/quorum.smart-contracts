@@ -3,6 +3,10 @@
 const AccountStorageAdapter = artifacts.require("./AccountStorageAdapter.sol");
 const { getFormatedConsoleLabel, setValueByPath } = require("../commonLogic/commonLogic");
 const { saveDeployedConfig, getNetworkDeployedConfig, deployedConfigPathConsts } = require("../deployedConfigHelper");
+
+/**
+ * initialization of AccountStorageAdapter with list of valid user profile attributes
+ */
 module.exports = function(deployer) {
     console.log(getFormatedConsoleLabel("Setup account storage adapter instance:"));
 

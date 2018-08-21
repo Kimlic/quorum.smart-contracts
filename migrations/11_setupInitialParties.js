@@ -9,7 +9,10 @@ const { getFormatedConsoleLabel, getValueByPath, uuidv4 } = require("../commonLo
 const { saveDeployedConfig, getNetworkDeployedConfig, deployedConfigPathConsts } = require("../deployedConfigHelper");
 
 
-
+/**
+ * Creation and setup of initial parties of Kimlic platform. In Production only Kimlic AP will be used. 
+ * Veriff and FirstRelyingParty are created for dev & test purposes mostly
+ */
 module.exports = function(deployer) {
     const deployedConfig = getNetworkDeployedConfig(web3.version.network);
     const configPath = deployedConfigPathConsts.partiesConfig.createdParties.path;
