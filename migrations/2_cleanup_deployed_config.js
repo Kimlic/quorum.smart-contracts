@@ -1,5 +1,4 @@
 const { saveDeployedConfig, cleanupDeployedConfig, getNetworkDeployedConfig, deployedConfigPathConsts } = require("../deployedConfigHelper");
-const truffleConfig = require("../truffle");
 
 /**
  * cleanup of previous migration outputs, saving new one with initial seed data
@@ -7,8 +6,8 @@ const truffleConfig = require("../truffle");
 module.exports = function(deployer, network, accounts) {
     cleanupDeployedConfig(web3.version.network);
     let config = getNetworkDeployedConfig(web3.version.network);
-    
-    config[deployedConfigPathConsts.deployerAddress.path] = truffleConfig.networks[network].from || accounts[0];
+
+    config[deployedConfigPathConsts.deployerAddress.path] = web3.eth.coinbase
     config.networkName = network;
     saveDeployedConfig();
 };
