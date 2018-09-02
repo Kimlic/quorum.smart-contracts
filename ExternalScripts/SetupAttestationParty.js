@@ -10,10 +10,10 @@ const { setValueByPath, getValueByPath, combinePath } = require("../commonLogic/
  * Script to be run by Kimlic team to perform AP registration procedure
  */
 module.exports = async function(callback) {//Temp script for manual add AP/RP
-    const partyName = "test";
-    const address = "0x0bb5812cdabd4d07497d5364005e8149770db1bf";
+    const partyName = "Veriff2";
+    const address = "0x811066cb7bc220e1c745759eb9f8145b5d2e8264";
 
-    const grantAccessToFields = [];
+    const grantAccessToFields = ["documents.id_card", "documents.passport","documents.driver_license","documents.residence_permit_card"];
     const removeAccessToFields = [];
 
     const deployedConfig = getNetworkDeployedConfig(web3.version.network);
@@ -28,7 +28,7 @@ module.exports = async function(callback) {//Temp script for manual add AP/RP
     const tokensToSendAmount = 10000 * Math.pow(10, 18);
     const kimlicTokenInstancePath = deployedConfigPathConsts.deployedContracts.kimlicTokenAddress.path;
     const kimlicTokenInstanceAddress = getValueByPath(deployedConfig, kimlicTokenInstancePath, "0x0");
-    console.log(`kimlicTokenInstanceAddress: ${kimlicTokenInstanceAddress}`)
+    /*console.log(`kimlicTokenInstanceAddress: ${kimlicTokenInstanceAddress}`)
     const kimlicTokenInstance = await KimlicToken.at(kimlicTokenInstanceAddress);
 
 
@@ -36,15 +36,20 @@ module.exports = async function(callback) {//Temp script for manual add AP/RP
     console.log(`main acc balance: ${await kimlicTokenInstance.balanceOf(mainAddress)}`);
     await kimlicTokenInstance.transfer(address, tokensToSendAmount, { from: mainAddress });
 
-    console.log(`balance: ${await kimlicTokenInstance.balanceOf(address)}`);
+    console.log(`balance: ${await kimlicTokenInstance.balanceOf(address)}`);*/
         
     const partyConfigPath = deployedConfigPathConsts.partiesConfig.createdParties.party.address.pathTemplate;
-    setValueByPath(deployedConfig, combinePath(partyConfigPath, { partyName: partyName }));
+    setValueByPath(deployedConfig, combinePath(partyConfigPath, { partyName: partyName }), address);
+    console.log("address saved")
     
     const allowedFieldNamesConfigPath = deployedConfigPathConsts.partiesConfig.createdParties.party.allowedFieldNames.pathTemplate;
     const allowedFieldNames = getValueByPath(deployedConfig, combinePath(allowedFieldNamesConfigPath, { partyName: partyName }), []);
+    console.log(`allowed field names: ${allowedFieldNames}`)
     
-    const adapter = await AttestationPartyStorageAdapter.deployed();
+    const attestationPartyStorageAdapterPath = deployedConfigPathConsts.deployedContracts.attestationPartyStorageAdapterAddress.path;
+    const attestationPartyStorageAdapterAddress = getValueByPath(deployedConfig, attestationPartyStorageAdapterPath, "0x0");
+    console.log(`attestation party storage adapter address: ${attestationPartyStorageAdapterAddress}`)
+    const adapter = await AttestationPartyStorageAdapter.at(attestationPartyStorageAdapterAddress);
     removeAccessToFields.forEach(async (fieldName) => {
         console.log(`Remove access to verify field ${fieldName} from address ${address}`);
         await adapter.removeAccessToFieldVerification(address, fieldName);
@@ -53,16 +58,21 @@ module.exports = async function(callback) {//Temp script for manual add AP/RP
             allowedFieldNames.splice(allowedFieldIndex, 1);
         }
     });
-    grantAccessToFields.forEach(async (fieldName) => {
+
+    for (const fieldName of grantAccessToFields) {
+        
         console.log(`Grant access to verify field ${fieldName} from address ${address}`);
         const allowedFieldIndex = allowedFieldNames.indexOf(fieldName);
         if (allowedFieldIndex < 0) {
             allowedFieldNames.push(fieldName);
             await adapter.addAccessToFieldVerification(address, fieldName);
+            var isAllowed = await adapter.getIsFieldVerificationAllowed(address, fieldName);
+            console.log(`success: ${isAllowed}`)
         }
-    });
+    }
+    /*await grantAccessToFields.forEach(async (fieldName) => {
+    });*/
 
-    console.log("save");
     saveDeployedConfig();
 
     callback.call();

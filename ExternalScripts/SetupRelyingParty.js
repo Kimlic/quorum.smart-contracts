@@ -35,7 +35,7 @@ module.exports = async function(callback) {//Temp script for manual add AP/RP
     console.log(`balance: ${await kimlicTokenInstance.balanceOf(address)}`);
         
     const partyConfigPath = deployedConfigPathConsts.partiesConfig.createdParties.party.address.pathTemplate;
-    setValueByPath(deployedConfig, combinePath(partyConfigPath, { partyName: partyName }));
+    setValueByPath(deployedConfig, combinePath(partyConfigPath, { partyName: partyName }), address);
     
     console.log("save");
     saveDeployedConfig();

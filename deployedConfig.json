@@ -32,7 +32,16 @@
                         "address": "0x85725cd64753040abc6a065d7a833854a4adbc22"
                     }
                 },
-                "rp_kimlic": {}
+                "rp_kimlic": {},
+                "Veriff2": {
+                    "address": "0x811066cb7bc220e1c745759eb9f8145b5d2e8264",
+                    "allowedFieldNames": [
+                        "documents.id_card",
+                        "documents.passport",
+                        "documents.driver_license",
+                        "documents.residence_permit_card"
+                    ]
+                }
             }
         },
         "deployerAddress": "0x0bf5a5ed7fecc077a01012a1a7b4d668e8c2eb0f",
