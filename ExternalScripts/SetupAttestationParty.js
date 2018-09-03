@@ -10,11 +10,11 @@ const { setValueByPath, getValueByPath, combinePath } = require("../commonLogic/
  * Script to be run by Kimlic team to perform AP registration procedure
  */
 module.exports = async function(callback) {//Temp script for manual add AP/RP
-    const partyName = "Veriff2";
-    const address = "0x811066cb7bc220e1c745759eb9f8145b5d2e8264";
+    const partyName = "Veriff3";
+    const address = "0x410c91efed3506d103882891b3f61617f0b96cd3";
 
-    const grantAccessToFields = ["documents.id_card", "documents.passport","documents.driver_license","documents.residence_permit_card"];
-    const removeAccessToFields = [];
+    const grantAccessToFields = [];
+    const removeAccessToFields = ["documents.id_card", "documents.passport","documents.driver_license","documents.residence_permit_card"];
 
     const deployedConfig = getNetworkDeployedConfig(web3.version.network);
     const mainAddressPath = deployedConfigPathConsts.deployerAddress.path;
@@ -25,10 +25,10 @@ module.exports = async function(callback) {//Temp script for manual add AP/RP
 
     console.log(`Send tokens to "${partyName}" account`);
 
-    const tokensToSendAmount = 10000 * Math.pow(10, 18);
+    const tokensToSendAmount = 0 * Math.pow(10, 18);
     const kimlicTokenInstancePath = deployedConfigPathConsts.deployedContracts.kimlicTokenAddress.path;
     const kimlicTokenInstanceAddress = getValueByPath(deployedConfig, kimlicTokenInstancePath, "0x0");
-    /*console.log(`kimlicTokenInstanceAddress: ${kimlicTokenInstanceAddress}`)
+    console.log(`kimlicTokenInstanceAddress: ${kimlicTokenInstanceAddress}`)
     const kimlicTokenInstance = await KimlicToken.at(kimlicTokenInstanceAddress);
 
 
@@ -36,7 +36,7 @@ module.exports = async function(callback) {//Temp script for manual add AP/RP
     console.log(`main acc balance: ${await kimlicTokenInstance.balanceOf(mainAddress)}`);
     await kimlicTokenInstance.transfer(address, tokensToSendAmount, { from: mainAddress });
 
-    console.log(`balance: ${await kimlicTokenInstance.balanceOf(address)}`);*/
+    console.log(`balance: ${await kimlicTokenInstance.balanceOf(address)}`);
         
     const partyConfigPath = deployedConfigPathConsts.partiesConfig.createdParties.party.address.pathTemplate;
     setValueByPath(deployedConfig, combinePath(partyConfigPath, { partyName: partyName }), address);
@@ -50,14 +50,14 @@ module.exports = async function(callback) {//Temp script for manual add AP/RP
     const attestationPartyStorageAdapterAddress = getValueByPath(deployedConfig, attestationPartyStorageAdapterPath, "0x0");
     console.log(`attestation party storage adapter address: ${attestationPartyStorageAdapterAddress}`)
     const adapter = await AttestationPartyStorageAdapter.at(attestationPartyStorageAdapterAddress);
-    removeAccessToFields.forEach(async (fieldName) => {
+    for (const fieldName of removeAccessToFields) {
         console.log(`Remove access to verify field ${fieldName} from address ${address}`);
         await adapter.removeAccessToFieldVerification(address, fieldName);
         const allowedFieldIndex = allowedFieldNames.indexOf(fieldName);
         if (allowedFieldIndex >= 0) {
             allowedFieldNames.splice(allowedFieldIndex, 1);
         }
-    });
+    }
 
     for (const fieldName of grantAccessToFields) {
         
@@ -70,8 +70,6 @@ module.exports = async function(callback) {//Temp script for manual add AP/RP
             console.log(`success: ${isAllowed}`)
         }
     }
-    /*await grantAccessToFields.forEach(async (fieldName) => {
-    });*/
 
     saveDeployedConfig();
 
