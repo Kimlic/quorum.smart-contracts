@@ -5,40 +5,47 @@ const { getNetworkDeployedConfig, deployedConfigPathConsts, saveDeployedConfig }
 const { sendEthToAccount } = require("../commonLogic/commonEthereumLogic");
 const { setValueByPath, getValueByPath, combinePath } = require("../commonLogic/commonLogic");
 
+// Parameters
+
+const rpName = "demoKimlic"
+const rpAddress = "0x64bead472383998573e22b191f20e0cd762fb809"
+const rpTokens = 10000
+
 /**
  * Script to be run by Kimlic team to perform RP registration procedure
  */
-module.exports = async function(callback) {//Temp script for manual add AP/RP
-    const partyName = "rp_kimlic";
-    const address = "0x5cdb00a372845c3146a19439f684094f1daa09d6";
-    const tokensToSendAmount = 10000 * Math.pow(10, 18);
 
-    const deployedConfig = getNetworkDeployedConfig(web3.version.network);
-    const mainAddressPath = deployedConfigPathConsts.deployerAddress.path;
-    const mainAddress = getValueByPath(deployedConfig, mainAddressPath, "0x0");
-    console.log(`mainAddress: ${mainAddress}`)
+// TODO: Successfully started from master node
 
-    sendEthToAccount(web3, mainAddress, address);
+module.exports = async function (callback) { //Temp script for manual add AP/RP
+  const tokensToSendAmount = rpTokens * Math.pow(10, 18);
+  console.log(`tokensToSendAmount: ${tokensToSendAmount}`)
+  const deployedConfig = getNetworkDeployedConfig(web3.version.network);
+  console.log(`deployedConfig: ${deployedConfig}`)
+  const mainAddressPath = deployedConfigPathConsts.deployerAddress.path;
+  console.log(`mainAddressPath: ${mainAddressPath}`)
+  const mainAddress = getValueByPath(deployedConfig, mainAddressPath, "0x0");
+  console.log(`mainAddress: ${mainAddress}`)
 
-    console.log(`Send tokens to "${partyName}" account`);
+  sendEthToAccount(web3, mainAddress, rpAddress);
 
-    const kimlicTokenInstancePath = deployedConfigPathConsts.deployedContracts.kimlicTokenAddress.path;
-    const kimlicTokenInstanceAddress = getValueByPath(deployedConfig, kimlicTokenInstancePath, "0x0");
-    console.log(`kimlicTokenInstanceAddress: ${kimlicTokenInstanceAddress}`)
-    const kimlicTokenInstance = await KimlicToken.at(kimlicTokenInstanceAddress);
+  console.log(`Send tokens to "${rpName}" account`);
 
+  const kimlicTokenInstancePath = deployedConfigPathConsts.deployedContracts.kimlicTokenAddress.path;
+  const kimlicTokenInstanceAddress = getValueByPath(deployedConfig, kimlicTokenInstancePath, "0x0");
+  console.log(`kimlicTokenInstanceAddress: ${kimlicTokenInstanceAddress}`)
+  const kimlicTokenInstance = await KimlicToken.at(kimlicTokenInstanceAddress);
 
-    console.log(`send tokens to account "${tokensToSendAmount / Math.pow(10, 18)}"`);//10^18 its token decimals
-    console.log(`main acc balance: ${await kimlicTokenInstance.balanceOf(mainAddress)}`);
-    await kimlicTokenInstance.transfer(address, tokensToSendAmount, { from: mainAddress });
+  console.log(`send tokens to account "${tokensToSendAmount / Math.pow(10, 18)}"`);//10^18 its token decimals
+  console.log(`main acc balance: ${await kimlicTokenInstance.balanceOf(mainAddress)}`);
+  await kimlicTokenInstance.transfer(rpAddress, tokensToSendAmount, { from: mainAddress });
+  console.log(`balance of RP: ${await kimlicTokenInstance.balanceOf(rpAddress)}`);
 
-    console.log(`balance: ${await kimlicTokenInstance.balanceOf(address)}`);
-        
-    const partyConfigPath = deployedConfigPathConsts.partiesConfig.createdParties.party.address.pathTemplate;
-    setValueByPath(deployedConfig, combinePath(partyConfigPath, { partyName: partyName }), address);
-    
-    console.log("save");
-    saveDeployedConfig();
+  const partyConfigPath = deployedConfigPathConsts.partiesConfig.createdParties.party.address.pathTemplate;
+  setValueByPath(deployedConfig, combinePath(partyConfigPath, { partyName: rpName }), rpAddress);
 
-    callback.call();
+  console.log("save")
+  saveDeployedConfig()
+
+  callback.call()
 }

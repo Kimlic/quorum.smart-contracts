@@ -1,6 +1,6 @@
 {
   "name": "quorum.smart-contracts",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Kimlic smart contracts",
   "main": "truffle.js",
   "directories": {
@@ -22,11 +22,11 @@
   },
   "homepage": "https://github.com/Kimlic/quorum.smart-contracts#readme",
   "devDependencies": {
-    "ganache-cli": "^6.1.3",
-    "solium": "^1.1.7",
-    "truffle": "^4.1.11"
+    "ganache-cli": "^6.1.8",
+    "solium": "^1.1.8",
+    "truffle": "^4.1.14"
   },
   "dependencies": {
-    "truffle-core": "^4.1.13"
+    "truffle-core": "^4.1.14"
   }
 }

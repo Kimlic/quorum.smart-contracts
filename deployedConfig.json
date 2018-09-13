@@ -1,69 +1,25 @@
 {
-    "13602": {
-        "partiesConfig": {
-            "createdParties": {
-                "partyName": {
-                    "allowedFieldNames": []
-                },
-                "veriff": {
-                    "address": "0x17f778be21c9416e271ee2c13fedf31996818575",
-                    "password": "fdce9cfe-477a-4c90-bd2d-a595882d8c9dp@ssw0rd",
-                    "allowedFieldNames": [
-                        "documents.id_card",
-                        "documents.passport",
-                        "documents.driver_license",
-                        "documents.residence_permit_card"
-                    ]
-                },
-                "kimlic": {
-                    "address": "0x7d510875c846dd104a3c6988f5637be4668739d7",
-                    "password": "4466ce77-d8d5-488a-a1d0-211e02bafbe3p@ssw0rd",
-                    "allowedFieldNames": [
-                        "email",
-                        "phone"
-                    ]
-                },
-                "firstRelyingParty": {
-                    "address": "0x5cdb00a372845c3146a19439f684094f1daa09d6",
-                    "password": ""
-                },
-                "test": {
-                    "address": {
-                        "address": "0x85725cd64753040abc6a065d7a833854a4adbc22"
-                    }
-                },
-                "rp_kimlic": {},
-                "Veriff2": {
-                    "address": "0x811066cb7bc220e1c745759eb9f8145b5d2e8264",
-                    "allowedFieldNames": [
-                        "documents.id_card",
-                        "documents.passport",
-                        "documents.driver_license",
-                        "documents.residence_permit_card"
-                    ]
-                }
-            }
-        },
-        "deployerAddress": "0x0bf5a5ed7fecc077a01012a1a7b4d668e8c2eb0f",
-        "networkName": "dev_master",
+    "10": {
+        "deployerAddress": "0x2d53b00ed1a56437b19adc4e6192c6d1b78f708c",
+        "networkName": "master",
         "deployedContracts": {
-            "kimlicContextStorageAddress": "0x4d50b68815da3dc8c605ed80b4ed9a256a66214d",
-            "kimlicContractsContextAddress": "0x08a880c6236ba815285b50a619b3c7c601545a39",
-            "accountStorageAddress": "0x9635be910e86880397ee06a3682ea22cfbcbf19e",
-            "accountStorageAdapterAddress": "0xba5fa42b2e69258f7ad5b551f90dd3e2242f2637",
-            "relyingPartyStorageAdapterAddress": "0xd3ad6caeeb71a26ea9563a30ebcea187d75f4e29",
-            "relyingPartyStorageAddress": "0x0a8f0e1c57ded506ac3c26afed3d684fc3cd5e37",
-            "attestationPartyStorageAdapterAddress": "0xc6e3f6dfddac882ebf9f98f8f89bb515327f1bf8",
-            "attestationPartyStorageAddress": "0x853cbe90b35f322563a463bf5211f5b84077a4b6",
-            "verificationContractFactoryAddress": "0xd516e11dab349589422f79635be40f67478d0aa0",
-            "provisioningContractFactoryAddress": "0xc948ff2a6bc0b534d1a93deb4d21685c1b0a2c42",
-            "kimlicTokenAddress": "0x21254a29753d0ed14852e9f672f8da2b94c30ed5",
-            "rewardingContractAddress": "0x451386dd5b701ca1acb2cda33bed1408a0a6e962"
+            "kimlicContextStorageAddress": "0x2df4143c5f976eb9d2cff8f7c3d8af13e551daf5",
+            "kimlicContractsContextAddress": "0xebd793d67519377d354b6a504eb1bb25857210fe",
+            "accountStorageAddress": "0x3300a2196ad733677942d5ce225be403836e69ea",
+            "accountStorageAdapterAddress": "0x2122c0ce73b0bf44b87802ecb7db761481267374",
+            "relyingPartyStorageAdapterAddress": "0x0d7531100af58dd6e3ce1aafaaca683de3d573cd",
+            "relyingPartyStorageAddress": "0x81555c043d761e6b7c790dd57f4462d2884c0bf0",
+            "attestationPartyStorageAdapterAddress": "0x387d3a3edf42431af442dc2e67bd22c987df6570",
+            "attestationPartyStorageAddress": "0x4ff83404e1777c71cccb5fde5927553128a309ad",
+            "verificationContractFactoryAddress": "0xe7558fea2b95581cf7576f5ff8c08ca0972500b5",
+            "provisioningContractFactoryAddress": "0x1a1496b40099442fb19319230160a89605c90b62",
+            "kimlicTokenAddress": "0xc76abcff71dcead0894ed43d3c860cd8d40a13cf",
+            "rewardingContractAddress": "0x0dc9c3204eccf1c59eb263c5e2c4b4ae16b120b4"
         },
         "accountStorageAdapter": {
             "owner": {
-                "accountAddress": "0x2ee63c8bdae2064a47a08f6c0749d19f3a440e05",
-                "accountPassword": "fd91bec1-a289-4f4b-9e17-9f7772ac7e10"
+                "accountAddress": "0xf4e9d429636991e57f0c15a15f0708456c379db1",
+                "accountPassword": "7c709482-d32e-4d7a-ad85-3ebaa3a3435c"
             },
             "allowedFieldNames": [
                 "email",
@@ -78,7 +34,7 @@
             ]
         },
         "communityTokenWallet": {
-            "address": "0x863d65a040d1ba5246845f73ad6aa564c37443e0",
+            "address": "0x8b43b7de7a64d5874d1ec5e7d775397d4f1799ca",
             "password": "p@ssw0rd"
         },
         "provisioningContractFactory": {
@@ -100,25 +56,27 @@
                 },
                 "tokensLockPeriod": 2
             },
+            "addresses": {
+                "living": {
+                    "intersets": {
+                        "communityTokenWallet": 10,
+                        "coOwner": 20,
+                        "kimlicWallet": 50,
+                        "account": 20
+                    },
+                    "tokensLockPeriod": 30
+                },
+                "billing": {
+                    "intersets": {
+                        "communityTokenWallet": 10,
+                        "coOwner": 20,
+                        "kimlicWallet": 50,
+                        "account": 20
+                    },
+                    "tokensLockPeriod": 30
+                }
+            },
             "documents": {
-                "passport": {
-                    "intersets": {
-                        "communityTokenWallet": 10,
-                        "coOwner": 20,
-                        "kimlicWallet": 50,
-                        "account": 20
-                    },
-                    "tokensLockPeriod": 30
-                },
-                "driver_license": {
-                    "intersets": {
-                        "communityTokenWallet": 10,
-                        "coOwner": 20,
-                        "kimlicWallet": 50,
-                        "account": 20
-                    },
-                    "tokensLockPeriod": 30
-                },
                 "id_card": {
                     "intersets": {
                         "communityTokenWallet": 10,
@@ -136,10 +94,8 @@
                         "account": 20
                     },
                     "tokensLockPeriod": 30
-                }
-            },
-            "addresses": {
-                "billing": {
+                },
+                "passport": {
                     "intersets": {
                         "communityTokenWallet": 10,
                         "coOwner": 20,
@@ -148,7 +104,7 @@
                     },
                     "tokensLockPeriod": 30
                 },
-                "living": {
+                "driver_license": {
                     "intersets": {
                         "communityTokenWallet": 10,
                         "coOwner": 20,
@@ -161,28 +117,53 @@
         },
         "provisioningPriceListConfig": {
             "prices": {
-                "email": 500000000000000000,
-                "documents.driver_license": 2000000000000000000,
-                "addresses.billing": 1500000000000000000,
-                "documents.residence_permit_card": 2000000000000000000,
-                "phone": 1000000000000000000,
-                "documents.id_card": 2000000000000000000,
-                "documents.passport": 2000000000000000000,
                 "addresses.living": 1500000000000000000,
-                "device": null
+                "documents.driver_license": 2000000000000000000,
+                "documents.id_card": 2000000000000000000,
+                "documents.residence_permit_card": 2000000000000000000,
+                "email": 500000000000000000,
+                "phone": 1000000000000000000,
+                "addresses.billing": 1500000000000000000,
+                "device": null,
+                "documents.passport": 2000000000000000000
             }
         },
         "verificationPriceListConfig": {
             "prices": {
-                "email": 500000000000000000,
-                "phone": 1000000000000000000,
+                "addresses.living": 1500000000000000000,
+                "documents.passport": 2000000000000000000,
                 "documents.id_card": 2000000000000000000,
-                "documents.residence_permit_card": 2000000000000000000,
                 "addresses.billing": 1500000000000000000,
                 "device": null,
                 "documents.driver_license": 2000000000000000000,
-                "documents.passport": 2000000000000000000,
-                "addresses.living": 1500000000000000000
+                "email": 500000000000000000,
+                "documents.residence_permit_card": 2000000000000000000,
+                "phone": 1000000000000000000
+            }
+        },
+        "partiesConfig": {
+            "createdParties": {
+                "veriff": {
+                    "address": "0x4ff6e73edbb1fd166d69ad65950d99b29f447421",
+                    "password": "",
+                    "allowedFieldNames": [
+                        "documents.id_card",
+                        "documents.passport",
+                        "documents.driver_license",
+                        "documents.residence_permit_card"
+                    ]
+                },
+                "kimlic": {
+                    "address": "0x2d53b00ed1a56437b19adc4e6192c6d1b78f708c",
+                    "password": "",
+                    "allowedFieldNames": [
+                        "email",
+                        "phone"
+                    ]
+                },
+                "demoKimlic": {
+                    "address": "0x64bead472383998573e22b191f20e0cd762fb809"
+                }
             }
         },
         "rewardingContractConfig": {
@@ -198,8 +179,38 @@
             ]
         },
         "kimlicWallet": {
-            "address": "0xea0b8ba44c16bbbeb95f33f698124b054023e1c3",
+            "address": "0x11dbad873c2eb5a30433c31a491312cc983dce22",
             "password": "kimlicWalletp@ssw0rd"
+        },
+        "verificationContractFactory": {
+            "email": {
+                "tokensLockPeriod": 5
+            },
+            "phone": {
+                "tokensLockPeriod": 2
+            },
+            "documents": {
+                "id_card": {
+                    "tokensLockPeriod": 30
+                },
+                "passport": {
+                    "tokensLockPeriod": 30
+                },
+                "driver_license": {
+                    "tokensLockPeriod": 30
+                },
+                "residence_permit_card": {
+                    "tokensLockPeriod": 30
+                }
+            },
+            "addresses": {
+                "billing": {
+                    "tokensLockPeriod": 30
+                },
+                "living": {
+                    "tokensLockPeriod": 30
+                }
+            }
         }
     }
 }
